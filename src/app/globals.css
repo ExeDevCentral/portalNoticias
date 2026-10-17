@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-:root {
+:root,
+[data-theme="dark"] {
   --paper: #0B0F17;
   --paper-elevated: #131B2A;
   --paper-card: #182234;
@@ -13,6 +14,16 @@
   --blue-glow: rgba(0, 119, 182, 0.35);
   --amber-alert: #F59E0B;
   --marker-yellow: #F59E0B;
+
+  /* Variables específicas para Hero y Tarjetas en modo oscuro */
+  --hero-bg-text: rgba(241, 245, 249, 0.05);
+  --hero-glow-1: rgba(230, 57, 70, 0.12);
+  --hero-glow-2: rgba(0, 119, 182, 0.08);
+  --card-shadow-side: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  --card-shadow-center: 0 28px 60px -15px rgba(0, 0, 0, 0.75);
+  --card-img-overlay: linear-gradient(to top, var(--paper-card) 0%, rgba(11, 15, 23, 0.45) 50%, rgba(11, 15, 23, 0.15) 100%);
+  --control-btn-bg: var(--paper-elevated);
+  --control-btn-border: var(--ink-faint);
   
   --font-serif-display: 'Fraunces', Georgia, serif;
   --font-serif-body: 'Newsreader', Garamond, Georgia, serif;
@@ -26,13 +37,23 @@
   --paper-card: #FFFFFF;
   --ink: #0F172A;
   --ink-soft: #475569;
-  --ink-faint: #E2E8F0;
-  --red-urgent: #D90429;
-  --red-glow: rgba(217, 4, 41, 0.25);
-  --blue-parana: #0077B6;
-  --blue-glow: rgba(0, 119, 182, 0.2);
+  --ink-faint: #CBD5E1;
+  --red-urgent: #C81E14;
+  --red-glow: rgba(200, 30, 20, 0.15);
+  --blue-parana: #0284C7;
+  --blue-glow: rgba(2, 132, 199, 0.15);
   --amber-alert: #D97706;
   --marker-yellow: #FBBF24;
+
+  /* Variables específicas para Hero y Tarjetas en modo claro con máximo contraste editorial */
+  --hero-bg-text: rgba(15, 23, 42, 0.06);
+  --hero-glow-1: rgba(200, 30, 20, 0.05);
+  --hero-glow-2: rgba(2, 132, 199, 0.04);
+  --card-shadow-side: 0 8px 24px -4px rgba(15, 23, 42, 0.08), 0 2px 8px -1px rgba(15, 23, 42, 0.05);
+  --card-shadow-center: 0 20px 48px -10px rgba(15, 23, 42, 0.16), 0 4px 16px -2px rgba(15, 23, 42, 0.08);
+  --card-img-overlay: linear-gradient(to top, var(--paper-card) 0%, rgba(255, 255, 255, 0.3) 45%, transparent 100%);
+  --control-btn-bg: #FFFFFF;
+  --control-btn-border: #CBD5E1;
 }
 
 * {
@@ -600,6 +621,10 @@ body {
 
 .orbital-card:hover {
   box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.65), 0 0 25px var(--red-glow);
+}
+
+[data-theme="light"] .orbital-card:hover {
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.16), 0 0 20px var(--red-glow);
 }
 
 /* Custom Scrollbar for subtle feel */

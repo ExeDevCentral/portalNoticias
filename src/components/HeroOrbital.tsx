@@ -209,7 +209,7 @@ export default function HeroOrbital() {
       style={{
         paddingTop: '20px',
         paddingBottom: '36px',
-        background: `radial-gradient(circle at ${((mousePos.x + 1) / 2) * 100}% ${((mousePos.y + 1) / 2) * 100}%, rgba(230, 57, 70, 0.12) 0%, rgba(0, 119, 182, 0.08) 35%, transparent 70%)`,
+        background: `radial-gradient(circle at ${((mousePos.x + 1) / 2) * 100}% ${((mousePos.y + 1) / 2) * 100}%, var(--hero-glow-1) 0%, var(--hero-glow-2) 35%, transparent 70%)`,
         borderBottom: '1px solid var(--ink-faint)',
       }}
     >
@@ -223,8 +223,7 @@ export default function HeroOrbital() {
           transform: `translate(-50%, ${scrollY * 0.22}px) rotate(${mousePos.x * 1.5}deg)`,
           fontSize: 'clamp(3.5rem, 11vw, 10rem)',
           lineHeight: 0.85,
-          color: 'var(--ink-faint)',
-          opacity: 0.35,
+          color: 'var(--hero-bg-text)',
           whiteSpace: 'nowrap',
           pointerEvents: 'none',
           zIndex: 0,
@@ -403,8 +402,8 @@ export default function HeroOrbital() {
                     : '1px solid var(--ink-faint)',
                   overflow: 'hidden',
                   boxShadow: isCenter
-                    ? `0 28px 60px -15px rgba(0, 0, 0, 0.75), 0 0 25px ${story.accentColor}33`
-                    : '0 12px 30px -10px rgba(0, 0, 0, 0.5)',
+                    ? `var(--card-shadow-center), 0 0 25px ${story.accentColor}33`
+                    : 'var(--card-shadow-side)',
                 }}
               >
                 {/* 1. Header Imagen con Cinemagraph & Foto Viva */}
@@ -646,8 +645,7 @@ export default function HeroOrbital() {
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      background:
-                        'linear-gradient(to top, var(--paper-card) 0%, rgba(11, 15, 23, 0.45) 50%, rgba(11, 15, 23, 0.15) 100%)',
+                      background: 'var(--card-img-overlay)',
                       pointerEvents: 'none',
                     }}
                   />
