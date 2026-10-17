@@ -3,10 +3,36 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import HeroOrbital from '../components/HeroOrbital';
+import CronicasRosarinas, { RosarioSection } from '../components/CronicasRosarinas';
 import { IconSun, IconMoon, IconArrowRight } from '../components/Icons';
+
+const sectionToStoryIndex: Record<RosarioSection, number> = {
+  portada: 0,
+  seguridad: 1,
+  futbol: 2,
+  economia: 3,
+  cultura: 4,
+};
+
+const storyIndexToSection: Record<number, RosarioSection> = {
+  0: 'portada',
+  1: 'seguridad',
+  2: 'futbol',
+  3: 'economia',
+  4: 'cultura',
+};
+
+const NAV_ITEMS: { key: RosarioSection; label: string }[] = [
+  { key: 'portada', label: 'Portada 3D' },
+  { key: 'seguridad', label: 'Seguridad & Ciudad' },
+  { key: 'economia', label: 'Economía & Puerto' },
+  { key: 'futbol', label: "Fútbol: Newell's / Central" },
+  { key: 'cultura', label: 'Cultura & Noche' },
+];
 
 export default function HomePage() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [selectedSection, setSelectedSection] = useState<RosarioSection>('portada');
 
   useEffect(() => {
     const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
@@ -23,6 +49,17 @@ export default function HomePage() {
     setTheme(next);
     localStorage.setItem('theme', next);
     document.documentElement.dataset.theme = next;
+  };
+
+  const handleSelectSection = (section: RosarioSection) => {
+    setSelectedSection(section);
+  };
+
+  const handleStoryChange = (index: number) => {
+    const nextSection = storyIndexToSection[index];
+    if (nextSection) {
+      setSelectedSection(nextSection);
+    }
   };
 
   return (
@@ -94,7 +131,7 @@ export default function HomePage() {
               PORTAL REGIONAL 24HS
             </span>
             <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', letterSpacing: '0.1em' }}>
-              AGREGADOR & SALA DE REDACCIÓN EN VIVO
+              PAGO DE LOS ARROYOS & HISTORIA VIVA
             </span>
             <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--red-urgent)', fontWeight: 'bold' }}>
               ● CABLES EN DIRECTO
@@ -126,12 +163,12 @@ export default function HomePage() {
               margin: '0 auto',
             }}
           >
-            "La velocidad de los cables, la jerarquía de un gran diario"
+            &ldquo;La velocidad de los cables, la jerarquía de un gran diario y la memoria rebelde de las barrancas&rdquo;
           </p>
 
           <div className="rule-double" />
 
-          {/* Barra de Navegación del Diario */}
+          {/* Barra de Navegación Interactiva del Diario */}
           <nav
             className="font-mono"
             style={{
@@ -146,14 +183,32 @@ export default function HomePage() {
               gap: '12px',
             }}
           >
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-              <Link href="/" style={{ color: 'var(--ink)', textDecoration: 'none', borderBottom: '2px solid var(--red-urgent)' }}>
-                Portada 3D
-              </Link>
-              <span style={{ color: 'var(--ink-soft)', cursor: 'pointer' }}>Seguridad & Ciudad</span>
-              <span style={{ color: 'var(--ink-soft)', cursor: 'pointer' }}>Economía & Puerto</span>
-              <span style={{ color: 'var(--ink-soft)', cursor: 'pointer' }}>Fútbol: Newell&apos;s / Central</span>
-              <span style={{ color: 'var(--ink-soft)', cursor: 'pointer' }}>Cultura & Noche</span>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+              {NAV_ITEMS.map((item) => {
+                const isSelected = selectedSection === item.key;
+                return (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => handleSelectSection(item.key)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: '6px 0',
+                      color: isSelected ? 'var(--ink)' : 'var(--ink-soft)',
+                      borderBottom: isSelected ? '2px solid var(--red-urgent)' : '2px solid transparent',
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.82rem',
+                      fontWeight: isSelected ? 700 : 500,
+                      textTransform: 'uppercase',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
             </div>
             <div>
               <Link
@@ -184,11 +239,14 @@ export default function HomePage() {
       </div>
 
       {/* SECCIÓN HERO ORBITAL 3D CON MICROANIMACIONES Y PARALLAX */}
-      <HeroOrbital />
+      <HeroOrbital
+        selectedIndex={sectionToStoryIndex[selectedSection]}
+        onStoryChange={handleStoryChange}
+      />
 
       <div className="editorial-container" style={{ marginTop: '36px' }}>
 
-        {/* Ticker / Fe de Erratas Rotativa */}
+        {/* Ticker / Fe de Erratas Rotativa de Rosario */}
         <div
           className="font-mono"
           style={{
@@ -206,9 +264,15 @@ export default function HomePage() {
             FE DE ERRATAS:
           </span>
           <span style={{ color: 'var(--ink)' }}>
-            En la edición de ayer donde dijimos <em>"Las negociaciones avanzan favorablemente"</em>, debió decir <em>"Nadie se habló durante cuatro horas y pidieron medialunas"</em>.
+            En la edición de ayer donde dijimos <em>&ldquo;Un vecino porteño afirmó que el río Paraná es marrón y sin encanto&rdquo;</em>, debió decir <em>&ldquo;El susodicho fue escoltado pacíficamente de vuelta a la Autopista a Buenos Aires sin derecho a despedirse del carlitos&rdquo;</em>.
           </span>
         </div>
+
+        {/* SISTEMA DE CRÓNICAS HISTÓRICAS & MANUAL AL PASO (BELGRANO, URQUIZA & CLUBS) */}
+        <CronicasRosarinas
+          activeSection={selectedSection}
+          onSelectSection={handleSelectSection}
+        />
 
         {/* Grilla Principal Asimétrica */}
         <main
@@ -217,19 +281,20 @@ export default function HomePage() {
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '36px',
             alignItems: 'start',
+            marginTop: '20px',
           }}
         >
           {/* Columna Principal: Lead Story (65% del peso visual) */}
           <article style={{ gridColumn: 'span 2' }}>
-            <span className="badge-deadpan">SEGÚN FUENTES QUE PREFIEREN NO EXISTIR</span>
+            <span className="badge-deadpan">INFORME ESPECIAL • PAGO DE LOS ARROYOS</span>
 
             {/* Gesto firma: Titular tachado oficial + Titular satírico */}
             <h2 style={{ margin: '10px 0 16px 0' }}>
               <span className="strikethrough-official">
-                Gobierno anuncia histórico paquete de medidas de shock para estabilizar de una vez por todas la economía
+                Historiadores sugieren que Rosario pudo haber sido la tranquila capital federal de una república pacífica y previsible
               </span>
               <span className="satirical-correction" style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)' }}>
-                Autoridades anuncian que seguirán anunciando anuncios hasta que la realidad decida cooperar
+                Urquiza y Belgrano confirman desde la eternidad que la insubordinación cívica y el clásico del domingo fueron la única opción razonable
               </span>
             </h2>
 
@@ -244,34 +309,34 @@ export default function HomePage() {
                 paddingLeft: '16px',
               }}
             >
-              En una conferencia de prensa convocada con carácter de urgencia, los voceros aseguraron que el nuevo plan entrará en vigencia inmediatamente después de que alguien encuentre el archivo en la computadora.
+              Desde las barrancas donde don Manuel desobedeció a Buenos Aires izando dos paños de cielo hasta las terminales portuarias que cargan cincuenta millones de toneladas de cereal, la ciudad continúa su pacto secreto: alimentar a la nación mientras reniega cortésmente de su burocracia centralista.
             </p>
 
             {/* Foto de Prensa Tratada */}
             <div className="press-photo-container" style={{ maxHeight: '420px', marginBottom: '8px' }}>
               <img
-                src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80"
-                alt="Conferencia oficial de prensa solemne"
+                src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"
+                alt="Barrancas del Paraná frente a Rosario al atardecer"
                 className="press-photo"
                 style={{ height: '380px' }}
               />
             </div>
             <div className="press-caption">
-              FOTO DE ARCHIVO: Funcionarios observando con seriedad institucional un gráfico que apunta directamente hacia abajo con elegancia geométrica. (Foto: Agencia Prensa Abierta)
+              REGISTRO GRÁFICO: El río Paraná en su curso majestuoso frente a Rosario. A la izquierda, la memoria de las baterías de Belgrano; a lo lejos, las siluetas de buques graneleros aguardando turno en la Hidrovía. (Foto: Archivo Histórico Editorial)
             </div>
 
             {/* Cuerpo de la crónica con método periodístico */}
             <div style={{ marginTop: '20px', fontSize: '1.1rem', lineHeight: 1.7 }}>
               <p style={{ marginBottom: '16px' }}>
-                <strong>GINEBRA / BUENOS AIRES (De nuestros enviados especiales).</strong> Con la solemnidad que amerita una catástrofe que ocurre cada quince días, las autoridades gubernamentales presentaron esta mañana el documento titulado <em>"Hacia una certidumbre plausible 2026-2035"</em>, compuesto por ochenta páginas encuadernadas en espiral plástico.
+                <strong>ROSARIO (De nuestra Redacción en las Barrancas).</strong> Ningún conquistador con capa y espada pisó jamás este suelo para clavar una cruz fundacional. Rosario es hija natural de la conveniencia ribereña, el trueque ganadero y la irrevocable sospecha de que cualquier orden emanada de Buenos Aires requiere al menos dos semanas de análisis escéptico antes de ser ignorada con caballerosidad.
               </p>
               <p style={{ marginBottom: '16px' }}>
                 <span className="highlight-marker">
-                  "El problema de los planes anteriores no fue su inviabilidad matemática, sino que fueron puestos en práctica en este planeta"
-                </span>, explicó un asesor de alto rango que solicitó estricto anonimato porque aún le quedan dos meses de contrato de monotributo.
+                  &ldquo;A don Bernardino Rivadavia le daba taquicardia que tuviésemos bandera propia; a don Bartolomé Mitre le daba urticaria que tuviésemos puerto ultramarino&rdquo;
+                </span>, reflexiona un habitué de la esquina de Córdoba y San Martín mientras remueve un cortado con la cucharita de alpaca. &ldquo;Nos vetaron la capital tres veces por miedo a que el país se gobernara mirando al agua dulce en lugar de mirar a Europa&rdquo;.
               </p>
               <p style={{ marginBottom: '16px' }}>
-                El acto culminó con un saludo protocolar de cinco segundos y la firma simbólica de una carpeta vacía que luego fue archivada bajo la categoría de asuntos pendientes e inaplazables.
+                El resultado es este milagro laico: una metrópoli de un millón y medio de habitantes que no le reza a los próceres porteños, que inventó su propio sándwich con ketchup caliente y que resuelve todas sus angustias existenciales cada seis meses en una cancha de fútbol dividida en dos mitades irreconciliables.
               </p>
             </div>
 
@@ -291,20 +356,20 @@ export default function HomePage() {
                   LO REAL, QUE ES PEOR:
                 </span>
                 <span className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)' }}>
-                  FUENTE: REUTERS / LA NACIÓN
+                  FUENTE: BOLSA DE COMERCIO DE ROSARIO & HISTORIA CONSTITUCIONAL
                 </span>
               </div>
               <p style={{ fontSize: '0.95rem', color: 'var(--ink)', marginBottom: '8px' }}>
-                Cable original verídico: <em>"Ministro ratifica metas de inflación del 2% mientras el índice interanual roza el 180% en los registros oficiales."</em>
+                Dato verídico: <em>El Congreso Nacional sancionó por ley la designación de Rosario como Capital Federal de la República en 1868, 1869 y 1873. El presidente Bartolomé Mitre la vetó la primera vez; Domingo Faustino Sarmiento la vetó en las dos ocasiones siguientes alegando razones de seguridad portuaria.</em>
               </p>
               <a
-                href="https://www.reuters.com"
+                href="https://www.bcr.com.ar"
                 target="_blank"
                 rel="noreferrer"
                 className="font-mono"
                 style={{ fontSize: '0.75rem', color: 'var(--ink-soft)', textDecoration: 'underline' }}
               >
-                ➔ Comparar con el despacho original de prensa oficial
+                ➔ Consultar archivo documental en la Bolsa de Comercio de Rosario
               </a>
             </div>
           </article>
@@ -313,7 +378,7 @@ export default function HomePage() {
           <aside style={{ borderLeft: '1px solid var(--ink-faint)', paddingLeft: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <h3 className="font-mono" style={{ fontSize: '0.9rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                Última Hora
+                Cables Rosarinos
               </h3>
               <span className="badge-urgent badge-deadpan" style={{ margin: 0 }}>EN VIVO</span>
             </div>
@@ -322,52 +387,55 @@ export default function HomePage() {
               {/* Cable 1 */}
               <div style={{ borderBottom: '1px solid var(--ink-faint)', paddingBottom: '16px' }}>
                 <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', marginBottom: '4px' }}>
-                  15:20 GMT • GEOPOLÍTICA (POR DECIR ALGO)
+                  16:20 GMT • PUERTO & HIDROVÍA
                 </div>
                 <h4 style={{ fontSize: '1.15rem', lineHeight: 1.25, marginBottom: '6px' }}>
                   <span className="strikethrough-official" style={{ fontSize: '0.85rem' }}>
-                    Cumbre del Clima concluye con histórico acuerdo no vinculante
+                    Aduana central promete agilizar trámites en 72 días hábiles
                   </span>
                   <span className="satirical-correction">
-                    Líderes mundiales acuerdan preocuparse con mayor intensidad visual en 2030
+                    Cincuenta buques Panamax cargan soja en San Lorenzo mientras el capitán griego pide un carlitos tostado
                   </span>
                 </h4>
                 <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
-                  Los 190 mandatarios volaron de regreso en 140 jets privados distintos para reflexionar sobre la huella de carbono individual.
+                  Las terminales del cordón industrial completaron la carga en tiempo récord al ritmo de cumbia santafesina.
                 </p>
               </div>
 
               {/* Cable 2 */}
               <div style={{ borderBottom: '1px solid var(--ink-faint)', paddingBottom: '16px' }}>
                 <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', marginBottom: '4px' }}>
-                  14:05 GMT • SOCIEDAD & TECNOLOGÍA
+                  15:45 GMT • ANILLO DIGITAL & SEGURIDAD
                 </div>
                 <h4 style={{ fontSize: '1.15rem', lineHeight: 1.25, marginBottom: '6px' }}>
                   <span className="strikethrough-official" style={{ fontSize: '0.85rem' }}>
-                    Nueva actualización de sistema promete revolucionar la productividad laboral
+                    Centro de monitoreo implementa reconocimiento biométrico de alta fidelidad
                   </span>
                   <span className="satirical-correction">
-                    Tres millones de empleados pierden la mañana aprendiendo dónde quedó el botón de imprimir
+                    Cámaras con IA confunden a hincha de Newell&apos;s con uno de Central por idéntica cara de sufrimiento previo al clásico
                   </span>
                 </h4>
                 <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
-                  La compañía desarrolladora describió el cambio como <em>"más intuitivo para quien programó la interfaz"</em>.
+                  El algoritmo municipal determinó que el nivel de estrés coronario en ambos simpatizantes era estadísticamente indistinguible.
                 </p>
               </div>
 
               {/* Cable 3 */}
               <div style={{ borderBottom: '1px solid var(--ink-faint)', paddingBottom: '16px' }}>
                 <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', marginBottom: '4px' }}>
-                  12:45 GMT • ECONOMÍA CASERA
+                  14:10 GMT • MANUAL PARA EXTRANJEROS
                 </div>
                 <h4 style={{ fontSize: '1.15rem', lineHeight: 1.25, marginBottom: '6px' }}>
                   <span className="strikethrough-official" style={{ fontSize: '0.85rem' }}>
-                    Especialistas recomiendan diversificar cartera de ahorros familiares
+                    Turista confiesa que simpatiza con un equipo porteño durante un asado familiar
                   </span>
                   <span className="satirical-correction">
-                    Familia tipo reparte sus últimos tres mil pesos en cuatro bolsillos diferentes
+                    Mesa entera guarda silencio piadoso y le convida otra porción de costillar por caridad humana
                   </span>
                 </h4>
+                <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
+                  El incidente culminó sin heridos tras una explicación didáctica de tres horas sobre el partido de los leprosos de 1920.
+                </p>
               </div>
 
               {/* Caja de Promoción de la Sala de Redacción */}
@@ -380,13 +448,13 @@ export default function HomePage() {
                 }}
               >
                 <span className="font-mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--red-urgent)' }}>
-                  TERMINAL DE REDACCIÓN
+                  SALA DE CABLES 24HS
                 </span>
                 <h4 className="font-display" style={{ margin: '8px 0', fontSize: '1.2rem' }}>
-                  ¿Querés transformar cables del mundo en vivo?
+                  ¿Querés transformar cables en tiempo real?
                 </h4>
                 <p style={{ fontSize: '0.85rem', color: 'var(--ink-soft)', marginBottom: '14px' }}>
-                  Buscá noticias internacionales de agencias abiertas y mirá cómo el redactor WebSocket las convierte en periodismo satírico.
+                  Buscá noticias de agencias abiertas y mirá cómo el redactor satírico de Rosario las convierte en crónicas filosas.
                 </p>
                 <Link
                   href="/redaccion"
@@ -425,14 +493,26 @@ export default function HomePage() {
           }}
         >
           <div>
-            <strong>EL DIARIO SERIO</strong> — Publicación periódica de ficción periodística y sátira institucional.
+            <strong>ROSARIO EN TIEMPO REAL</strong> — Crónica histórica, sala de redacción en vivo y memoria del Pago de los Arroyos.
             <br />
-            Cualquier parecido con la realidad es negligencia exclusiva de los acontecimientos mundiales.
+            Homenaje perpetuo a don Manuel Belgrano, don Justo José de Urquiza y la Mesa de los Galanes.
           </div>
           <div style={{ display: 'flex', gap: '16px' }}>
-            <span>AVISO LEGAL</span>
+            <button
+              type="button"
+              onClick={() => handleSelectSection('futbol')}
+              style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}
+            >
+              MANUAL DE CLUBES
+            </button>
             <span>•</span>
-            <span>MANUAL DE ESTILO</span>
+            <button
+              type="button"
+              onClick={() => handleSelectSection('portada')}
+              style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}
+            >
+              BELGRANO 1812
+            </button>
             <span>•</span>
             <Link href="/redaccion" style={{ color: 'var(--red-urgent)', textDecoration: 'none', fontWeight: 'bold' }}>
               REDACCIÓN [SYS]
@@ -443,3 +523,4 @@ export default function HomePage() {
     </div>
   );
 }
+

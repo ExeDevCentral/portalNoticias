@@ -117,8 +117,29 @@ function getKenBurnsClass(storyId: string): string {
   }
 }
 
-export default function HeroOrbital() {
-  const [activeIndex, setActiveIndex] = useState(0);
+interface HeroOrbitalProps {
+  selectedIndex?: number;
+  onStoryChange?: (index: number) => void;
+}
+
+export default function HeroOrbital({
+  selectedIndex,
+  onStoryChange,
+}: Readonly<HeroOrbitalProps>) {
+  const [internalIndex, setInternalIndex] = useState(0);
+  const activeIndex = selectedIndex ?? internalIndex;
+
+  const setActiveIndex = useCallback(
+    (newIndex: number | ((prev: number) => number)) => {
+      const resolved = typeof newIndex === 'function' ? newIndex(activeIndex) : newIndex;
+      setInternalIndex(resolved);
+      if (onStoryChange) {
+        onStoryChange(resolved);
+      }
+    },
+    [activeIndex, onStoryChange]
+  );
+
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [targetMousePos, setTargetMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
