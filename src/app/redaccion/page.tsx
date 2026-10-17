@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { IconSun, IconMoon } from '../../components/Icons';
 
 interface CableItem {
   id: string;
@@ -28,6 +29,7 @@ interface RewrittenArticle {
 }
 
 export default function RedaccionPage() {
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [cables, setCables] = useState<CableItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,15 +41,29 @@ export default function RedaccionPage() {
   const [rewrittenArticle, setRewrittenArticle] = useState<RewrittenArticle | null>(null);
   const [publishedSuccess, setPublishedSuccess] = useState(false);
 
-  // Cargar cables al montar
   useEffect(() => {
-    fetchCables();
+    const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    if (saved) {
+      setTheme(saved);
+      document.documentElement.dataset.theme = saved;
+    } else {
+      document.documentElement.dataset.theme = 'dark';
+    }
+    void fetchCables();
   }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    localStorage.setItem('theme', next);
+    document.documentElement.dataset.theme = next;
+  };
 
   const fetchCables = async (query = '') => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/cables${query ? `?q=${encodeURIComponent(query)}` : ''}`);
+      const url = query ? `/api/cables?q=${encodeURIComponent(query)}` : '/api/cables';
+      const res = await fetch(url);
       const data = await res.json();
       if (data.cables) {
         setCables(data.cables);
@@ -59,58 +75,58 @@ export default function RedaccionPage() {
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    fetchCables(searchQuery);
+    void fetchCables(searchQuery);
   };
 
   // Motor de reescritura periodística con streaming
   const startStreamingRewrite = (cable: CableItem) => {
     setSelectedCable(cable);
     setIsStreaming(true);
-    setStreamProgress('Conectando con la Sala de Redacción... [OK]');
+    setStreamProgress('Conectando con el teletipo de la redacción... [OK]');
     setRewrittenArticle(null);
     setPublishedSuccess(false);
 
-    // Generador satírico periodístico (método de pirámide invertida y deadpan)
     const officialTitle = cable.originalTitle;
     let satiricalTitle = '';
-    let badge = '[SEGÚN FUENTES QUE PREFIEREN NO EXISTIR]';
+    let badge = 'INFORME DE REDACCIÓN';
 
-    if (cable.originalTitle.toLowerCase().includes('banco') || cable.originalTitle.toLowerCase().includes('inflac')) {
-      satiricalTitle = 'Banqueros centrales confirman que el dinero seguirá perdiendo valor pero de manera muy prolija';
-      badge = '[ECONOMÍA (FICCIÓN)]';
-    } else if (cable.originalTitle.toLowerCase().includes('clima') || cable.originalTitle.toLowerCase().includes('cumbre')) {
-      satiricalTitle = 'Líderes mundiales firman histórico compromiso de continuar reuniéndose en hoteles de cinco estrellas';
-      badge = '[GEOPOLÍTICA (POR DECIR ALGO)]';
-    } else if (cable.originalTitle.toLowerCase().includes('tecnolog') || cable.originalTitle.toLowerCase().includes('ia') || cable.originalTitle.toLowerCase().includes('empleo')) {
-      satiricalTitle = 'Comité de expertos concluye que el futuro del trabajo consistirá en mirar pantallas con preocupación creciente';
-      badge = '[SOCIEDAD & DESIDIA]';
+    if (cable.originalTitle.toLowerCase().includes('banco') || cable.originalTitle.toLowerCase().includes('inflac') || cable.originalTitle.toLowerCase().includes('dólar')) {
+      satiricalTitle = 'Banqueros y operadores confirman que el dinero seguirá perdiendo valor pero con gráficos elegantes';
+      badge = 'ECONOMÍA & FINANZAS';
+    } else if (cable.originalTitle.toLowerCase().includes('clima') || cable.originalTitle.toLowerCase().includes('río') || cable.originalTitle.toLowerCase().includes('paraná')) {
+      satiricalTitle = 'El río Paraná sigue bajando y subiendo según su propia voluntad sin consultar a los funcionarios de turno';
+      badge = 'RÍO PARANÁ & AMBIENTE';
+    } else if (cable.originalTitle.toLowerCase().includes('puerto') || cable.originalTitle.toLowerCase().includes('soja') || cable.originalTitle.toLowerCase().includes('buque')) {
+      satiricalTitle = 'Ochenta barcos graneleros aguardan en rada mientras en los muelles debaten el menú de empanadas';
+      badge = 'PUERTO & HIDROVÍA';
+    } else if (cable.originalTitle.toLowerCase().includes('fútbol') || cable.originalTitle.toLowerCase().includes('clásico') || cable.originalTitle.toLowerCase().includes('central') || cable.originalTitle.toLowerCase().includes('newell')) {
+      satiricalTitle = 'Ambos bandos coinciden en que el clásico del domingo es cuestión de vida o muerte cívica';
+      badge = 'FÚTBOL ROSARINO';
     } else {
-      satiricalTitle = `Autoridades informan que la situación respecto a "${cable.originalTitle.slice(0, 40)}..." está bajo control de nadie`;
-      badge = '[ÚLTIMO MOMENTO (HACE 3 DÍAS)]';
+      satiricalTitle = `Autoridades informan que la situación respecto a "${cable.originalTitle.slice(0, 42)}..." está bajo minuciosa observación`;
+      badge = 'DESPACHO DE URGENCIA';
     }
 
-    const dek = `Luego de intensas deliberaciones que concluyeron justo a la hora del almuerzo, portavoces oficiales aseguraron que los próximos pasos se anunciarán formalmente en cuanto alguien descubra cuáles son.`;
+    const dek = `Despacho verificado desde las terminales del Paraná: portavoces oficiales aseguraron que las medidas técnicas ya fueron redactadas y esperan firma ministerial.`;
 
     const bodyParagraphs = [
-      `GINEBRA / REDACCIÓN CENTRAL. En una comparecencia solemne transmitida a través de circuitos cerrados institucionales, los delegados presentaron el informe definitivo sobre los recientes acontecimientos, destacando especialmente el impecable diseño tipográfico de la portada del documento.`,
-      `"Hemos alcanzado un nivel de consenso inédito: todos coincidimos plenamente en que la culpa es del contexto internacional y de los meses que tienen más de treinta días", afirmó un vocero consultado por este periódico tras prometerle no transcribir sus suspiros.`,
-      `El evento concluyó con un cerrado aplauso protocolar entre asistentes que inmediatamente procedieron a consultar sus teléfonos para verificar si el mundo seguía existiendo tal como lo habían dejado antes de la sesión.`,
+      `ROSARIO (De nuestra Redacción). Con la solemnidad que caracteriza a las grandes jornadas del Litoral, las autoridades competentes presentaron el informe de situación con copia a las catorce provincias.`,
+      `"Hemos alcanzado un entendimiento razonable con todos los sectores involucrados; el único detalle pendiente es cómo compaginarlo con el calendario civil", señaló un vocero consultado en la Bolsa de Comercio.`,
+      `El despacho concluyó con la ratificación de las guardias permanentes y el monitoreo ininterrumpido sobre la Hidrovía y los accesos metropolitanos.`,
     ];
 
-    const quote = `"El plan es absolutamente impecable; su único defecto residual es que requiere ser implementado en la realidad."`;
-    const imageCaption = `FOTO DE ARCHIVO: Panel de especialistas manteniendo rostros de profunda concentración cívica durante la lectura del acta. (Foto: Archivo de Prensa)`;
+    const quote = `"La realidad regional avanza siempre un paso antes que los discursos protocolares."`;
+    const imageCaption = `FOTO DE ARCHIVO: Terminal portuaria y dársenas del Gran Rosario durante la operatoria matutina. (Foto: Archivo de Prensa)`;
 
-    // Simulación de streaming palabra por palabra con feedback en vivo
     const steps = [
-      '1. Analizando cable original de ' + cable.source + '...',
-      '2. Identificando los 5 Ws periodísticos (Quién, Qué, Cuándo, Dónde, Por qué)...',
-      '3. Formulando el titular oficial tachado...',
-      '4. Redactando titular satírico con rigor deadpan...',
-      '5. Maquetando crónica periodística en 3 párrafos...',
-      '6. Asociando fotografía de prensa y epígrafe solemne...',
-      '7. ¡Crónica completada con éxito!',
+      '1. Recepción del despacho de ' + cable.source + '...',
+      '2. Cotejando datos y fuentes del Litoral...',
+      '3. Formulando titular oficial contrastado...',
+      '4. Redactando crónica periodística en 3 párrafos...',
+      '5. Asociando fotografía de prensa y epígrafe...',
+      '6. Despacho listo para publicación.',
     ];
 
     let currentStep = 0;
@@ -134,7 +150,7 @@ export default function RedaccionPage() {
           sourceUrl: cable.sourceUrl,
         });
       }
-    }, 450);
+    }, 400);
   };
 
   const publishArticle = () => {
@@ -146,19 +162,51 @@ export default function RedaccionPage() {
 
   return (
     <div style={{ minHeight: '100vh', paddingBottom: '60px' }}>
-      {/* Barra superior */}
-      <div style={{ borderBottom: '1px solid var(--ink-faint)', padding: '6px 0', fontSize: '0.8rem' }}>
+      {/* Barra superior de servicio y modo de color */}
+      <div style={{ borderBottom: '1px solid var(--ink-faint)', padding: '6px 0', fontSize: '0.8rem', backgroundColor: 'var(--paper-elevated)' }}>
         <div className="editorial-container font-mono" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--ink-soft)' }}>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <Link href="/" style={{ color: 'var(--ink)', textDecoration: 'none', fontWeight: 'bold' }}>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <Link href="/" style={{ color: 'var(--ink)', textDecoration: 'none', fontWeight: 700 }}>
               ← VOLVER A LA PORTADA
             </Link>
             <span>•</span>
-            <span>TERMINAL EDITORIAL DE CABLES INTERNACIONALES</span>
+            <span style={{ color: 'var(--blue-parana)', fontWeight: 600 }}>TERMINAL DE CABLES & TELETIPO EN VIVO</span>
           </div>
-          <span style={{ color: 'var(--red-urgent)', fontWeight: 'bold' }}>
-            ESTADO: CONECTADO AL FEED MUNDIAL
-          </span>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <span style={{ color: 'var(--red-urgent)', fontWeight: 'bold' }}>
+              ● RECEPCIÓN ACTIVA
+            </span>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              style={{
+                background: 'none',
+                border: '1px solid var(--ink-faint)',
+                padding: '3px 10px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.72rem',
+                cursor: 'pointer',
+                color: 'var(--ink)',
+                borderRadius: '3px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: 600,
+              }}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <IconSun size={12} style={{ color: 'var(--marker-yellow)' }} />
+                  <span>MODO DÍA</span>
+                </>
+              ) : (
+                <>
+                  <IconMoon size={12} style={{ color: 'var(--blue-parana)' }} />
+                  <span>MODO NOCTURNO</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -166,16 +214,16 @@ export default function RedaccionPage() {
         <header style={{ marginBottom: '24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '12px' }}>
             <div>
-              <span className="badge-urgent badge-deadpan">SALA DE REDACCIÓN & TELEX</span>
+              <span className="badge-urgent badge-deadpan">TELETIPO 24 HORAS • FRECUENCIA CONTINUA</span>
               <h1 className="font-display" style={{ fontSize: '2.5rem', fontWeight: 900, textTransform: 'uppercase', margin: '4px 0' }}>
-                Buscador & Transformador de Cables
+                Recepción & Despacho de Cables
               </h1>
               <p style={{ color: 'var(--ink-soft)', fontStyle: 'italic', fontSize: '1.05rem' }}>
-                Seleccioná cualquier despacho real de agencias internacionales. El motor preservará el método periodístico pero reescribirá la historia con la lucidez mordaz del diario.
+                Monitoreo continuo de agencias del Litoral, cotizaciones agroindustriales y novedades metropolitanas de Rosario.
               </p>
             </div>
-            <span className="font-mono" style={{ fontSize: '0.8rem', border: '1px solid var(--ink)', padding: '4px 8px' }}>
-              COSTO: $0 (FEEDS RSS ABIERTOS)
+            <span className="font-mono" style={{ fontSize: '0.75rem', border: '1px solid var(--ink)', padding: '4px 8px' }}>
+              AGENCIAS & CABLES EN TIEMPO REAL
             </span>
           </div>
           <div className="rule-double" />
@@ -219,7 +267,7 @@ export default function RedaccionPage() {
               type="button"
               onClick={() => {
                 setSearchQuery('');
-                fetchCables('');
+                void fetchCables('');
               }}
               className="font-mono"
               style={{
@@ -386,8 +434,8 @@ export default function RedaccionPage() {
 
                 {/* Párrafos */}
                 <div style={{ fontSize: '1.05rem', lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '14px' }}>
-                  {rewrittenArticle.body.map((p, idx) => (
-                    <p key={idx}>{p}</p>
+                  {rewrittenArticle.body.map((p) => (
+                    <p key={p.slice(0, 32)}>{p}</p>
                   ))}
                 </div>
 
