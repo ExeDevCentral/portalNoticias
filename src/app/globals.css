@@ -1,0 +1,623 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --paper: #0B0F17;
+  --paper-elevated: #131B2A;
+  --paper-card: #182234;
+  --ink: #F1F5F9;
+  --ink-soft: #94A3B8;
+  --ink-faint: #1E293B;
+  --red-urgent: #E63946;
+  --red-glow: rgba(230, 57, 70, 0.4);
+  --blue-parana: #0077B6;
+  --blue-glow: rgba(0, 119, 182, 0.35);
+  --amber-alert: #F59E0B;
+  --marker-yellow: #F59E0B;
+  
+  --font-serif-display: 'Fraunces', Georgia, serif;
+  --font-serif-body: 'Newsreader', Garamond, Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+[data-theme="light"] {
+  --paper: #F8F9FA;
+  --paper-elevated: #FFFFFF;
+  --paper-card: #FFFFFF;
+  --ink: #0F172A;
+  --ink-soft: #475569;
+  --ink-faint: #E2E8F0;
+  --red-urgent: #D90429;
+  --red-glow: rgba(217, 4, 41, 0.25);
+  --blue-parana: #0077B6;
+  --blue-glow: rgba(0, 119, 182, 0.2);
+  --amber-alert: #D97706;
+  --marker-yellow: #FBBF24;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tipografías utilitarias */
+.font-display {
+  font-family: var(--font-serif-display);
+}
+
+.font-body {
+  font-family: var(--font-serif-body);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Filetes y bordes clásicos de prensa */
+.rule-double {
+  border-top: 3px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 6px;
+  margin: 8px 0;
+}
+
+.rule-single {
+  border-top: 1px solid var(--ink);
+  margin: 12px 0;
+}
+
+.rule-faint {
+  border-top: 1px solid var(--ink-faint);
+  margin: 10px 0;
+}
+
+/* Gesto Firma: Titular tachado en rojo urgente con fe de erratas */
+.strikethrough-official {
+  text-decoration: line-through;
+  text-decoration-color: var(--red-urgent);
+  text-decoration-thickness: 3px;
+  color: var(--ink-soft);
+  display: block;
+  font-size: 0.9em;
+  line-height: 1.3;
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+.satirical-correction {
+  color: var(--ink);
+  font-family: var(--font-serif-display);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* Badges con tono deadpan austero */
+.badge-deadpan {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  background-color: var(--ink);
+  color: var(--paper);
+  margin-bottom: 8px;
+}
+
+.badge-urgent {
+  background-color: var(--red-urgent);
+  color: #FFFFFF;
+}
+
+.badge-outline {
+  background-color: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--ink-faint);
+}
+
+/* Cita con marcador amarillo */
+.highlight-marker {
+  background-color: var(--marker-yellow);
+  color: #15130F;
+  padding: 2px 8px;
+  font-style: italic;
+  font-weight: 600;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Sello de Sátira */
+.satire-stamp {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--red-urgent);
+  border: 2px solid var(--red-urgent);
+  padding: 2px 6px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: inline-block;
+  transform: rotate(-1deg);
+}
+
+/* Tratamiento de fotos de prensa */
+.press-photo-container {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--ink-faint);
+  border: 1px solid var(--ink);
+}
+
+.press-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.1) saturate(0.85);
+}
+
+.press-caption {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  padding: 6px 4px;
+  line-height: 1.4;
+  border-bottom: 1px solid var(--ink-faint);
+}
+
+/* Responsive containers */
+.editorial-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ========================================================
+   3D PERSPECTIVE & ORBITAL CAROUSEL SYSTEM
+   ======================================================== */
+
+.perspective-stage {
+  perspective: 1400px;
+  perspective-origin: center center;
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Micro-animaciones continuas */
+@keyframes liveDotPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 6px rgba(230, 57, 70, 0);
+  }
+}
+
+.animate-live-pulse {
+  animation: liveDotPulse 2s infinite ease-in-out;
+}
+
+@keyframes orbitalFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+}
+
+.animate-orbital-float {
+  animation: orbitalFloat 6s ease-in-out infinite;
+}
+
+@keyframes marqueeInfinite {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeInfinite 35s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scanlineShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.shimmer-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.shimmer-effect:hover::after {
+  animation: scanlineShimmer 1.4s ease-in-out infinite;
+}
+
+/* ========================================================
+   LIVING PHOTOS & CINEMAGRAPH ATMOSPHERIC SYSTEM
+   ======================================================== */
+
+/* Ken Burns continuous breathing motion */
+@keyframes kenBurnsRiver {
+  0% {
+    transform: scale(1.04) translate(0%, 0%);
+  }
+  50% {
+    transform: scale(1.15) translate(-1.5%, -1%);
+  }
+  100% {
+    transform: scale(1.04) translate(0%, 0%);
+  }
+}
+
+@keyframes kenBurnsTraffic {
+  0% {
+    transform: scale(1.05) translate(0%, 0%);
+  }
+  50% {
+    transform: scale(1.18) translate(1%, -1.5%);
+  }
+  100% {
+    transform: scale(1.05) translate(0%, 0%);
+  }
+}
+
+@keyframes kenBurnsStadium {
+  0% {
+    transform: scale(1.03) translate(0%, 0%);
+  }
+  50% {
+    transform: scale(1.16) translate(-1%, 0.8%);
+  }
+  100% {
+    transform: scale(1.03) translate(0%, 0%);
+  }
+}
+
+@keyframes kenBurnsPort {
+  0% {
+    transform: scale(1.04) translate(0%, 0%);
+  }
+  50% {
+    transform: scale(1.14) translate(1.2%, -1%);
+  }
+  100% {
+    transform: scale(1.04) translate(0%, 0%);
+  }
+}
+
+@keyframes kenBurnsCulture {
+  0% {
+    transform: scale(1.05) translate(0%, 0%);
+  }
+  50% {
+    transform: scale(1.17) translate(-1.2%, -1.2%);
+  }
+  100% {
+    transform: scale(1.05) translate(0%, 0%);
+  }
+}
+
+.animate-kenburns-river {
+  animation: kenBurnsRiver 12s ease-in-out infinite alternate;
+}
+
+.animate-kenburns-traffic {
+  animation: kenBurnsTraffic 10s ease-in-out infinite alternate;
+}
+
+.animate-kenburns-stadium {
+  animation: kenBurnsStadium 11s ease-in-out infinite alternate;
+}
+
+.animate-kenburns-port {
+  animation: kenBurnsPort 13s ease-in-out infinite alternate;
+}
+
+.animate-kenburns-culture {
+  animation: kenBurnsCulture 9s ease-in-out infinite alternate;
+}
+
+/* 1. Agua & Bruma del Río Paraná */
+@keyframes waterGlimmer {
+  0% {
+    opacity: 0.2;
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-4px) scaleY(1.08);
+  }
+  100% {
+    opacity: 0.2;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes riverMistDrift {
+  0% {
+    transform: translateX(-15%);
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateX(15%);
+    opacity: 0.25;
+  }
+}
+
+.animate-water-glimmer {
+  animation: waterGlimmer 3.5s ease-in-out infinite;
+}
+
+.animate-mist-drift {
+  animation: riverMistDrift 14s ease-in-out infinite alternate;
+}
+
+/* 2. Haces de Tráfico de Circunvalación */
+@keyframes trafficStreakRed {
+  0% {
+    transform: translateY(120%) translateX(-20px) scaleY(0.4);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-120%) translateX(20px) scaleY(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes trafficStreakWhite {
+  0% {
+    transform: translateY(-120%) translateX(15px) scaleY(0.4);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(120%) translateX(-15px) scaleY(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes radarScanline {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.45;
+  }
+  70% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(200%);
+    opacity: 0;
+  }
+}
+
+.animate-traffic-red-1 {
+  animation: trafficStreakRed 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-traffic-red-2 {
+  animation: trafficStreakRed 3.1s cubic-bezier(0.4, 0, 0.2, 1) infinite 1.2s;
+}
+
+.animate-traffic-white-1 {
+  animation: trafficStreakWhite 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.5s;
+}
+
+.animate-radar-scan {
+  animation: radarScanline 4s linear infinite;
+}
+
+/* 3. Flashes de Estadio en el Clásico */
+@keyframes cameraFlashA {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  4% { opacity: 1; transform: scale(1.6); }
+  8% { opacity: 0; transform: scale(1); }
+  22% { opacity: 0; }
+  24% { opacity: 0.85; transform: scale(1.4); }
+  28% { opacity: 0; }
+}
+
+@keyframes cameraFlashB {
+  0%, 100% { opacity: 0; transform: scale(0.6); }
+  12% { opacity: 0; }
+  15% { opacity: 0.95; transform: scale(1.8); }
+  18% { opacity: 0; }
+  45% { opacity: 0; }
+  48% { opacity: 0.8; transform: scale(1.3); }
+  52% { opacity: 0; }
+}
+
+@keyframes floodlightSweep {
+  0% {
+    transform: rotate(-15deg) translateX(-40%);
+    opacity: 0.2;
+  }
+  50% {
+    transform: rotate(5deg) translateX(20%);
+    opacity: 0.4;
+  }
+  100% {
+    transform: rotate(-15deg) translateX(-40%);
+    opacity: 0.2;
+  }
+}
+
+.animate-flash-a {
+  animation: cameraFlashA 3.8s ease-out infinite;
+}
+
+.animate-flash-b {
+  animation: cameraFlashB 4.2s ease-out infinite 1.3s;
+}
+
+.animate-floodlight {
+  animation: floodlightSweep 8s ease-in-out infinite;
+}
+
+/* 4. Niebla Portuaria */
+@keyframes portWaterFlow {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.05) translateY(-3px);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 0.3;
+  }
+}
+
+.animate-port-water {
+  animation: portWaterFlow 4.5s ease-in-out infinite;
+}
+
+/* 5. Luces Bokeh & Neón Cultural */
+@keyframes neonPulseGlow {
+  0%, 100% {
+    opacity: 0.35;
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.4));
+  }
+  50% {
+    opacity: 0.75;
+    filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.8));
+  }
+}
+
+@keyframes bokehDrift {
+  0% {
+    transform: translateY(10px) translateX(-5px) scale(0.9);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-8px) translateX(6px) scale(1.15);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(10px) translateX(-5px) scale(0.9);
+    opacity: 0.3;
+  }
+}
+
+.animate-neon-glow {
+  animation: neonPulseGlow 3s ease-in-out infinite;
+}
+
+.animate-bokeh-drift {
+  animation: bokehDrift 5s ease-in-out infinite;
+}
+
+/* Glassmorphism Editorial */
+.glass-editorial {
+  background: rgba(19, 27, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .glass-editorial {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+/* Card 3D Depth Styling */
+.orbital-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, opacity 0.4s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.orbital-card:hover {
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.65), 0 0 25px var(--red-glow);
+}
+
+/* Custom Scrollbar for subtle feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-faint);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-soft);
+}
+
