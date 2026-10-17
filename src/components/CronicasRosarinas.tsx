@@ -84,7 +84,7 @@ export default function CronicasRosarinas({
             }}
           >
             <IconFeather size={13} />
-            <span>SISTEMA DE CRÓNICAS HISTÓRICAS & MANUAL AL PASO</span>
+            <span>CRÓNICAS HISTÓRICAS & MEMORIA REGIONAL</span>
           </div>
           <h2
             className="font-display"
@@ -107,7 +107,7 @@ export default function CronicasRosarinas({
               margin: '4px 0 0 0',
             }}
           >
-            La historia de Rosario contada con la gravedad de Belgrano, la ambición de Urquiza y la ironía filosa de un café en El Cairo.
+            Memoria fluvial, desacato cívico y el destino federal forjado en las barrancas del Paraná.
           </p>
         </div>
 

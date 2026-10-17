@@ -438,7 +438,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* Caja de Promoción de la Sala de Redacción */}
+              {/* Despacho de Cables & Teletipo */}
               <div
                 style={{
                   border: '2px solid var(--ink)',
@@ -448,13 +448,13 @@ export default function HomePage() {
                 }}
               >
                 <span className="font-mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--red-urgent)' }}>
-                  SALA DE CABLES 24HS
+                  SERVICIO DE TELETIPO 24HS
                 </span>
                 <h4 className="font-display" style={{ margin: '8px 0', fontSize: '1.2rem' }}>
-                  ¿Querés transformar cables en tiempo real?
+                  Despachos Fluviales & Regionales
                 </h4>
                 <p style={{ fontSize: '0.85rem', color: 'var(--ink-soft)', marginBottom: '14px' }}>
-                  Buscá noticias de agencias abiertas y mirá cómo el redactor satírico de Rosario las convierte en crónicas filosas.
+                  Flujo ininterrumpido de cables de agencias, cotizaciones del puerto y novedades metropolitanas.
                 </p>
                 <Link
                   href="/redaccion"
@@ -469,7 +469,7 @@ export default function HomePage() {
                     display: 'block',
                   }}
                 >
-                  ABRIR SALA DE CABLES ➔
+                  ABRIR TERMINAL DE CABLES ➔
                 </Link>
               </div>
             </div>
