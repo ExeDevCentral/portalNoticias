@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   IconFeather,
   IconQuote,
   IconShield,
+  IconBook,
+  IconAnchor,
 } from './Icons';
 
 export type RosarioSection = 'portada' | 'seguridad' | 'economia' | 'futbol' | 'cultura';
@@ -14,10 +16,42 @@ interface CronicasRosarinasProps {
   onSelectSection: (section: RosarioSection) => void;
 }
 
+type DossierTab = 'panoramica' | 'belgrano' | 'urquiza' | 'antropologia';
+
+const CRONICA_TABS: { key: RosarioSection; label: string }[] = [
+  { key: 'portada', label: '1812: Barrancas' },
+  { key: 'seguridad', label: 'Seguridad & Ciudad' },
+  { key: 'economia', label: '1852: Puerto Urquiza' },
+  { key: 'futbol', label: 'Manual Fútbol' },
+  { key: 'cultura', label: 'Pichincha & Noche' },
+];
+
+const DOSSIER_TABS: { key: DossierTab; label: string }[] = [
+  { key: 'panoramica', label: 'Visión Comparativa' },
+  { key: 'belgrano', label: 'Dossier Belgrano (1812)' },
+  { key: 'urquiza', label: 'Dossier Urquiza (1852)' },
+  { key: 'antropologia', label: 'Ensayo Antropológico' },
+];
+
+function renderDossierIcon(key: DossierTab) {
+  switch (key) {
+    case 'panoramica':
+      return <IconFeather size={12} />;
+    case 'belgrano':
+      return <IconBook size={12} />;
+    case 'urquiza':
+      return <IconAnchor size={12} />;
+    case 'antropologia':
+      return <IconShield size={12} />;
+  }
+}
+
 export default function CronicasRosarinas({
   activeSection,
   onSelectSection,
 }: Readonly<CronicasRosarinasProps>) {
+  const [dossierTab, setDossierTab] = useState<DossierTab>('panoramica');
+
   return (
     <section id="cronicas-rosarinas" style={{ marginTop: '40px' }}>
       {/* Encabezado del Sistema Editorial */}
@@ -86,15 +120,7 @@ export default function CronicasRosarinas({
             flexWrap: 'wrap',
           }}
         >
-          {(
-            [
-              { key: 'portada', label: '1812: Barrancas' },
-              { key: 'seguridad', label: 'Seguridad & Ciudad' },
-              { key: 'economia', label: '1852: Puerto Urquiza' },
-              { key: 'futbol', label: 'Manual Fútbol' },
-              { key: 'cultura', label: 'Pichincha & Noche' },
-            ] as const
-          ).map((tab) => {
+          {CRONICA_TABS.map((tab) => {
             const isActive = activeSection === tab.key;
             return (
               <button
@@ -121,135 +147,303 @@ export default function CronicasRosarinas({
         </div>
       </div>
 
-      {/* BLOQUE ESPECIAL: EL PARLAMENTO DE LOS PATRICIOS (BELGRANO & URQUIZA) */}
+      {/* =========================================================================
+          BLOQUE DE PROFUNDIDAD HISTÓRICA & ANTROPOLÓGICA: BELGRANO Y URQUIZA
+         ========================================================================= */}
       <div
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '24px',
-          marginBottom: '40px',
+          border: '1px solid var(--ink-faint)',
+          backgroundColor: 'var(--paper-elevated)',
+          padding: '24px',
+          marginBottom: '36px',
         }}
       >
-        {/* Despacho Manuel Belgrano */}
+        {/* Cabecera del Dossier Académico-Literario */}
         <div
           style={{
-            backgroundColor: 'var(--paper-elevated)',
-            border: '1px solid var(--ink-faint)',
-            borderTop: '4px solid var(--blue-parana)',
-            padding: '20px 22px',
-            position: 'relative',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderBottom: '1px solid var(--ink-faint)',
+            paddingBottom: '14px',
+            marginBottom: '20px',
+            flexWrap: 'wrap',
+            gap: '12px',
           }}
         >
-          <div
-            className="font-mono"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              fontSize: '0.72rem',
-              color: 'var(--ink-soft)',
-              marginBottom: '10px',
-            }}
-          >
-            <span style={{ fontWeight: 700, color: 'var(--blue-parana)', letterSpacing: '0.08em' }}>
-              EL DESPACHO DEL GENERAL (1812)
+          <div>
+            <span
+              className="font-mono"
+              style={{
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                color: 'var(--blue-parana)',
+                letterSpacing: '0.08em',
+              }}
+            >
+              INVESTIGACIÓN HISTÓRICA & ANTROPOLÓGICA
             </span>
-            <span>BATERÍA LIBERTAD • BARRANCAS</span>
+            <h3
+              className="font-display"
+              style={{
+                fontSize: '1.45rem',
+                margin: '4px 0 0 0',
+                fontWeight: 800,
+              }}
+            >
+              Los Dos Padres Involuntarios: Manuel Belgrano y Justo José de Urquiza
+            </h3>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            <div style={{ color: 'var(--blue-parana)', marginTop: '2px' }}>
-              <IconQuote size={24} />
-            </div>
-            <div>
-              <p
-                className="font-body"
+          {/* Pestañas del Dossier */}
+          <div className="font-mono" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {DOSSIER_TABS.map((tab) => {
+              const isCurrent = dossierTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setDossierTab(tab.key)}
+                  style={{
+                    backgroundColor: isCurrent ? 'var(--ink)' : 'var(--paper)',
+                    color: isCurrent ? 'var(--paper)' : 'var(--ink-soft)',
+                    border: '1px solid var(--ink-faint)',
+                    padding: '5px 12px',
+                    fontSize: '0.74rem',
+                    cursor: 'pointer',
+                    fontWeight: isCurrent ? 700 : 500,
+                    borderRadius: '2px',
+                    transition: 'all 0.15s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  {renderDossierIcon(tab.key)}
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* CONTENIDO 1: VISIÓN COMPARATIVA PANORÁMICA */}
+        {dossierTab === 'panoramica' && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '24px',
+            }}
+          >
+            {/* Tarjeta Belgrano */}
+            <div
+              style={{
+                backgroundColor: 'var(--paper)',
+                border: '1px solid var(--ink-faint)',
+                borderTop: '4px solid var(--blue-parana)',
+                padding: '20px',
+              }}
+            >
+              <div
+                className="font-mono"
                 style={{
-                  fontSize: '1.05rem',
-                  lineHeight: 1.5,
-                  fontStyle: 'italic',
-                  color: 'var(--ink)',
-                  margin: '0 0 10px 0',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.72rem',
+                  color: 'var(--blue-parana)',
+                  fontWeight: 700,
+                  marginBottom: '8px',
                 }}
               >
-                &ldquo;Vengo al Pago de los Arroyos, monto dos baterías de cañones frente a las islas y mando a coser una bandera celeste y blanca porque los soldados no sabían a quién jurarle lealtad. Desde Buenos Aires, don Bernardino Rivadavia me escribe furioso ordenándome que la esconda en un cajón para no disgustar al embajador inglés. Hice lo que cualquier caballero sensato haría en Rosario: la izé de todas formas, apagué el teléfono y me marché a caballo rumbo a Jujuy.&rdquo;
+                <span>LA DIMENSIÓN ÉTICA Y SIMBÓLICA (1812)</span>
+                <span>BARRANCAS DEL PARANÁ</span>
+              </div>
+              <h4 className="font-display" style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>
+                Manuel Belgrano: El símbolo sin linaje colonial
+              </h4>
+              <p className="font-body" style={{ fontSize: '0.96rem', lineHeight: 1.6, color: 'var(--ink-soft)', margin: 0 }}>
+                En una comarca ribereña sin cabildo formal, Belgrano comprendió que un ejército patriota no podía luchar con estandartes ajenos. Su creación de la enseña nacional en las barrancas y su posterior negativa a esconderla tras la amonestación del Triunvirato legaron a Rosario su rasgo primordial: <em>la legitimidad del desacato cuando la causa es justa</em>.
               </p>
               <div
                 className="font-mono"
                 style={{
-                  fontSize: '0.76rem',
-                  color: 'var(--ink-soft)',
+                  marginTop: '14px',
+                  paddingTop: '10px',
                   borderTop: '1px dashed var(--ink-faint)',
-                  paddingTop: '8px',
+                  fontSize: '0.74rem',
+                  color: 'var(--ink)',
                 }}
               >
-                <strong>Manuel Belgrano</strong> — Creador de la Bandera, desobediente profesional del Triunvirato y primer ciudadano honorario de las barrancas.
+                <strong>Hito antropológico:</strong> Juramento civil ante vecinos y milicianos el 27 de febrero de 1812.
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Despacho Justo José de Urquiza */}
-        <div
-          style={{
-            backgroundColor: 'var(--paper-elevated)',
-            border: '1px solid var(--ink-faint)',
-            borderTop: '4px solid var(--amber-alert)',
-            padding: '20px 22px',
-            position: 'relative',
-          }}
-        >
-          <div
-            className="font-mono"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              fontSize: '0.72rem',
-              color: 'var(--ink-soft)',
-              marginBottom: '10px',
-            }}
-          >
-            <span style={{ fontWeight: 700, color: 'var(--amber-alert)', letterSpacing: '0.08em' }}>
-              EL DECRETO DEL CAUDILLO (1852)
-            </span>
-            <span>PRESIDENCIA DE LA CONFEDERACIÓN</span>
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            <div style={{ color: 'var(--amber-alert)', marginTop: '2px' }}>
-              <IconQuote size={24} />
-            </div>
-            <div>
-              <p
-                className="font-body"
+            {/* Tarjeta Urquiza */}
+            <div
+              style={{
+                backgroundColor: 'var(--paper)',
+                border: '1px solid var(--ink-faint)',
+                borderTop: '4px solid var(--amber-alert)',
+                padding: '20px',
+              }}
+            >
+              <div
+                className="font-mono"
                 style={{
-                  fontSize: '1.05rem',
-                  lineHeight: 1.5,
-                  fontStyle: 'italic',
-                  color: 'var(--ink)',
-                  margin: '0 0 10px 0',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.72rem',
+                  color: 'var(--amber-alert)',
+                  fontWeight: 700,
+                  marginBottom: '8px',
                 }}
               >
-                &ldquo;Rosario era una modesta villa de pescadores y cuatreros hasta que derroté a Rosas en Caseros y firmé el decreto que la declaró Ciudad. Necesitaba un puerto ultramarino con agallas para ahogar financieramente la soberbia de la Aduana de Buenos Aires. Tres veces promulgó el Congreso que Rosario debía ser la Capital Federal de la República Argentina; tres veces la vetó el celo porteño. Hoy sacan por estas aguas el cereal que alimenta a medio planeta, y todavía en Retiro creen que Santa Fe termina en San Nicolás.&rdquo;
+                <span>LA DIMENSIÓN GEOPOLÍTICA & ECONÓMICA (1852)</span>
+                <span>CONFEDERACIÓN ARGENTINA</span>
+              </div>
+              <h4 className="font-display" style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>
+                Justo José de Urquiza: El puerto rebelde y la metrópoli autoforjada
+              </h4>
+              <p className="font-body" style={{ fontSize: '0.96rem', lineHeight: 1.6, color: 'var(--ink-soft)', margin: 0 }}>
+                Al derrocar a Rosas, Urquiza elevó por decreto a la Villa a la jerarquía de Ciudad y puerto de ultramar para disputar la exclusividad aduanera porteña. La postergación de Rosario como Capital de la República (tres veces sancionada por el Congreso y tres veces vetada por Mitre y Sarmiento) consolidó la doctrina de Nicasio Oroño: <em>Rosario, hija de su propio esfuerzo</em>.
               </p>
               <div
                 className="font-mono"
                 style={{
-                  fontSize: '0.76rem',
-                  color: 'var(--ink-soft)',
+                  marginTop: '14px',
+                  paddingTop: '10px',
                   borderTop: '1px dashed var(--ink-faint)',
-                  paddingTop: '8px',
+                  fontSize: '0.74rem',
+                  color: 'var(--ink)',
                 }}
               >
-                <strong>Justo José de Urquiza</strong> — General en Jefe del Ejército Grande, Presidente de la Confederación y padrino fundador del puerto rebelde.
+                <strong>Hito antropológico:</strong> Ley de Derechos Diferenciales de 1854 y apertura directa al comercio atlántico.
               </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* CONTENIDO 2: DOSSIER PROFUNDO MANUEL BELGRANO */}
+        {dossierTab === 'belgrano' && (
+          <div style={{ backgroundColor: 'var(--paper)', padding: '22px', border: '1px solid var(--ink-faint)' }}>
+            <div className="font-mono" style={{ fontSize: '0.74rem', color: 'var(--blue-parana)', fontWeight: 700, marginBottom: '6px' }}>
+              MANUEL BELGRANO EN EL PAGO DE LOS ARROYOS (FEBRERO DE 1812)
+            </div>
+            <h4 className="font-display" style={{ fontSize: '1.5rem', margin: '0 0 12px 0' }}>
+              La invención de un símbolo en una orilla sin cabildo: antropología del juramento
+            </h4>
+            <div style={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              <p style={{ marginBottom: '14px' }}>
+                A diferencia de Santa Fe la Vieja o Buenos Aires, el caserío de la Capilla del Rosario no poseía acta de fundación real ni linaje de encomenderos. Hacia febrero de 1812, cuando el coronel Manuel Belgrano arribó con el encargo de vigilar los corsarios realistas que bajaban desde Montevideo, encontró un poblado de hacendados, troperos y pescadores sin escudo aristocrático.
+              </p>
+              <div
+                style={{
+                  borderLeft: '3px solid var(--blue-parana)',
+                  paddingLeft: '16px',
+                  margin: '18px 0',
+                  fontStyle: 'italic',
+                  color: 'var(--ink)',
+                  display: 'flex',
+                  gap: '12px',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <div style={{ color: 'var(--blue-parana)', flexShrink: 0, marginTop: '2px' }}>
+                  <IconQuote size={18} />
+                </div>
+                <div>
+                  &ldquo;Siendo preciso enarbolar bandera y no teniéndola, la mandé hacer blanca y celeste, conforme a los colores de la escarapela nacional. Espero que sea de la aprobación de Vuestra Excelencia.&rdquo;
+                  <div className="font-mono" style={{ fontSize: '0.75rem', fontStyle: 'normal', color: 'var(--ink-soft)', marginTop: '4px' }}>
+                    — Oficio de Manuel Belgrano al Primer Triunvirato, Batería Libertad, 27 de febrero de 1812.
+                  </div>
+                </div>
+              </div>
+              <p style={{ marginBottom: '14px' }}>
+                La respuesta de Bernardino Rivadavia y el Triunvirato (3 de marzo de 1812) fue fulminante: ordenaron destruir la bandera o sepultarla bajo reserva por prudencia ante la diplomacia británica, que aún exigía sostener la ficción de fidelidad a Fernando VII. Para cuando el correo porteño llegó al Paraná, Belgrano ya marchaba al mando del Ejército del Norte. Al enterarse meses después en Jujuy, Belgrano respondió con una dignidad epistolar que aún resuena: <em>«La guardaré silenciosamente para enarbolarla el día de una gran victoria»</em>.
+              </p>
+              <p style={{ margin: 0 }}>
+                <strong>Lectura antropológica:</strong> Rosario adoptó este momento fundante como una liturgia cívica laica. Cosme Maciel izando el paño, María Catalina Echeverría de Vidal cosiéndolo en su hogar y el pueblo en silencio frente a las islas del Espinillo fundaron una memoria basada no en la obediencia cortesana, sino en la audacia civil comunitaria.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* CONTENIDO 3: DOSSIER PROFUNDO JUSTO JOSÉ DE URQUIZA */}
+        {dossierTab === 'urquiza' && (
+          <div style={{ backgroundColor: 'var(--paper)', padding: '22px', border: '1px solid var(--ink-faint)' }}>
+            <div className="font-mono" style={{ fontSize: '0.74rem', color: 'var(--amber-alert)', fontWeight: 700, marginBottom: '6px' }}>
+              JUSTO JOSÉ DE URQUIZA Y EL PUERTO DE LA CONFEDERACIÓN (1852–1873)
+            </div>
+            <h4 className="font-display" style={{ fontSize: '1.5rem', margin: '0 0 12px 0' }}>
+              La geopolítica del río abierto y la capital que la oligarquía vetó tres veces
+            </h4>
+            <div style={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              <p style={{ marginBottom: '14px' }}>
+                El 5 de agosto de 1852, a instancias del gobernador santafesino Domingo Crespo, el Director Provisorio de la Confederación, Justo José de Urquiza, firmó el decreto que elevó a la modesta Villa del Rosario al rango de <strong>Ciudad</strong>. Urquiza comprendía que la libre navegación de los ríos interiores (garantizada en la Constitución de 1853) carecía de sentido práctico sin un puerto de aguas profundas que compitiera de igual a igual con el monopolio de Buenos Aires.
+              </p>
+              <div
+                style={{
+                  borderLeft: '3px solid var(--amber-alert)',
+                  paddingLeft: '16px',
+                  margin: '18px 0',
+                  fontStyle: 'italic',
+                  color: 'var(--ink)',
+                  display: 'flex',
+                  gap: '12px',
+                  alignItems: 'flex-start',
+                }}
+              >
+                <div style={{ color: 'var(--amber-alert)', flexShrink: 0, marginTop: '2px' }}>
+                  <IconQuote size={18} />
+                </div>
+                <div>
+                  &ldquo;Rosario no es una dársena provincial: es la boca del comercio del interior de la República. Quien pretenda someterla a la aduana de una sola provincia condena a la Confederación a la miseria perpetua.&rdquo;
+                  <div className="font-mono" style={{ fontSize: '0.75rem', fontStyle: 'normal', color: 'var(--ink-soft)', marginTop: '4px' }}>
+                    — Justo José de Urquiza, Mensaje a la Legislatura de Paraná, 1854.
+                  </div>
+                </div>
+              </div>
+              <p style={{ marginBottom: '14px' }}>
+                La posterior promulgación de la <strong>Ley de Derechos Diferenciales (1854)</strong> —que rebajaba aranceles a las naves que atracaran directamente en el Paraná sin tocar Buenos Aires— produjo una de las transformaciones demográficas más vertiginosas del continente: Rosario saltó de 3.000 pobladores a más de 23.000 en 1869, atrayendo comerciantes genoveses, financistas británicos y marineros del Danubio.
+              </p>
+              <p style={{ margin: 0 }}>
+                <strong>La tragedia constitucional de la Capital:</strong> Entre 1868 y 1873, el Congreso de la Nación sancionó por ley el traslado de la Capital de la República a Rosario en tres ocasiones sucesivas. Las tres leyes fueron vetadas: la primera por Bartolomé Mitre (1868) y las dos siguientes por Domingo Faustino Sarmiento (1869 y 1873). Esta frustración forjó en la sociedad rosarina una desconfianza instintiva hacia el poder central y un orgullo secular por su condición de metrópoli mercantil que no vive del erario estatal.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* CONTENIDO 4: ENSAYO ANTROPOLÓGICO INTEGRAL */}
+        {dossierTab === 'antropologia' && (
+          <div style={{ backgroundColor: 'var(--paper)', padding: '22px', border: '1px solid var(--ink-faint)' }}>
+            <div className="font-mono" style={{ fontSize: '0.74rem', color: 'var(--red-urgent)', fontWeight: 700, marginBottom: '6px' }}>
+              ENSAYO DE SOCIOLOGÍA HISTÓRICA REGIONAL
+            </div>
+            <h4 className="font-display" style={{ fontSize: '1.5rem', margin: '0 0 12px 0' }}>
+              La paradoja rosarina: Huérfana de conquistador, hija del río y el trabajo
+            </h4>
+            <div style={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              <p style={{ marginBottom: '14px' }}>
+                La matriz cultural de Rosario se explica por una singularidad antropológica: es la única gran concentración urbana de la Argentina que nunca tuvo fundador con título nobiliario ni fue sede virreinal, eclesiástica o burocrática. Mientras Córdoba se edificaba en torno a la teología y Buenos Aires sobre el privilegio fiscal de su Aduana, Rosario creció como una colonia fenicia: dependiente exclusivamente de su calado náutico, el acopio de granos y la inventiva de sus habitantes.
+              </p>
+              <p style={{ marginBottom: '14px' }}>
+                De <strong>Belgrano</strong> heredó la dimensión moral: el orgullo de haber sido el escenario de la primera gran desobediencia cívica de la patria, donde un símbolo nacional nació del paño cosido por una vecina y no de la heráldica real.
+              </p>
+              <p style={{ marginBottom: '14px' }}>
+                De <strong>Urquiza</strong> recibió la dimensión material: la confirmación de que la riqueza del interior del país podía dialogar directamente con el Atlántico y Europa sin pedir la venia de los salones porteños.
+              </p>
+              <p style={{ margin: 0 }}>
+                En la intersección de ambas fuerzas floreció la personalidad rosarina moderna: apasionada, escéptica de los dogmas oficiales, refractaria a los mandatos foráneos y consumida por dos amores viscerales: el río Paraná que se va al mar y la pelota de cuero que rueda cada domingo en el Parque o en Arroyito.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* SECCIÓN FÚTBOL: MANUAL PARA EXTRANJEROS (SELECCIONADA O INTEGRADA) */}
+      {/* =========================================================================
+          SECCIÓN FÚTBOL: MANUAL PARA EXTRANJEROS (CENTRAL, NEWELL'S & APODOS)
+         ========================================================================= */}
       <div
         style={{
           border: '2px solid var(--ink)',
@@ -530,7 +724,7 @@ export default function CronicasRosarinas({
               </span>
             </h3>
             <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
-              Hacia 1930, el barrio de Pichincha era el epicentro prostibulario y prostibulario más temido y cinematográfico del Río de la Plata, gobernado por rufianes polacos y franceses con bigote engominado. Hoy los viejos burdeles son cervecerías artesanales donde diseñadores gráficos discuten tipografías comiendo un Carlitos tostado con lomito y queso derretido. La metamorfosis urbana fue total, salvo por la humedad del río, que sigue entrando sin pedir permiso por la calle Jujuy.
+              Hacia 1930, el barrio de Pichincha era el epicentro prostibulario más temido y cinematográfico del Río de la Plata, gobernado por rufianes polacos y franceses con bigote engominado. Hoy los viejos burdeles son cervecerías artesanales donde diseñadores gráficos discuten tipografías comiendo un Carlitos tostado con lomito y queso derretido. La metamorfosis urbana fue total, salvo por la humedad del río, que sigue entrando sin pedir permiso por la calle Jujuy.
             </p>
             <div className="font-mono" style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', borderTop: '1px solid var(--ink-faint)', paddingTop: '10px' }}>
               PATRIMONIO INMATERIAL: El Carlitos tostado en pan de miga con manteca y ketchup no se negocia. Cualquier intento de ponerle palta es delito federal.
