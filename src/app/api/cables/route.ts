@@ -1,5 +1,23 @@
 import { NextResponse } from 'next/server';
 import Parser from 'rss-parser';
+import type { CableItem } from '@/types/cables';
+
+const ALLOWED_IMAGE_HOSTS = [
+  'images.unsplash.com',
+  'ichef.bbci.co.uk',
+  'imagenes.elpais.com',
+  'vdmedia.elpais.com',
+  'www.infobae.com',
+];
+
+function isAllowedImage(url: string): boolean {
+  try {
+    const { hostname, protocol } = new URL(url);
+    return protocol === 'https:' && ALLOWED_IMAGE_HOSTS.includes(hostname);
+  } catch {
+    return false;
+  }
+}
 
 const parser = new Parser({
   headers: {
@@ -30,7 +48,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('q')?.toLowerCase() || '';
 
-  const results: any[] = [];
+  const results: CableItem[] = [];
 
   for (const feed of PUBLIC_FEEDS) {
     try {
@@ -42,7 +60,7 @@ export async function GET(request: Request) {
           const match = item.content.match(/<img[^>]+src="([^">]+)"/);
           if (match) imageUrl = match[1];
         }
-        if (!imageUrl) {
+        if (!imageUrl || !isAllowedImage(imageUrl)) {
           // Foto de prensa solemne de archivo de alta fidelidad
           const fallbackPhotos = [
             'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1000&q=80',
