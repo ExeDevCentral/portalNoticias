@@ -10,15 +10,19 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "drizzle-orm": "^0.45.4",
     "next": "^15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rss-parser": "^3.13.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^22.13.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "drizzle-kit": "^0.31.11",
     "typescript": "^5.7.3",
     "vitest": "^5.0.5"
   }
