@@ -17,10 +17,10 @@ import {
 import { slugify } from '../utils/slugify';
 
 export class NewsRepository {
-  constructor(private db: BetterSQLite3Database<typeof schema>) {}
+  constructor(private readonly db: BetterSQLite3Database<typeof schema>) {}
 
   async createNewsItem(
-    item: Omit<InsertNewsItem, 'id' | 'createdAt'> & { id?: string; createdAt?: Date }
+    item: Omit<InsertNewsItem, 'id' | 'createdAt' | 'slug'> & { id?: string; slug?: string; createdAt?: Date }
   ): Promise<NewsItem | null> {
     // Check duplicate by sourceUrl
     const existing = this.db
