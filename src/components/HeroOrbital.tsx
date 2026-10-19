@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import {
   IconDeckExpand,
   IconDeckCollapse,
@@ -13,80 +14,105 @@ import {
   IconChevronRight,
 } from './Icons';
 
-interface NewsStory {
+export interface NewsStory {
   id: string;
+  slug: string;
   category: string;
   tag: string;
   title: string;
   summary: string;
+  hook: string;
+  keyFacts?: string[];
   time: string;
   readingTime: string;
   source: string;
+  sourceUrl?: string;
   imageUrl: string;
   accentColor: string;
   isBreaking?: boolean;
 }
 
-const STORIES: NewsStory[] = [
+export const DEFAULT_STORIES: NewsStory[] = [
   {
     id: 'costanera-parana',
+    slug: 'obras-restauracion-monumento-nacional-a-la-bandera',
     category: 'INFRAESTRUCTURA & RÍO',
     tag: 'OBRA HISTÓRICA',
-    title: 'Megaplan Costanera 2026: Transforman la ribera del Paraná en el mayor parque público del país',
-    summary: 'Se licitan 14 kilómetros continuos de paseo ribereño, ciclovías sustentables y renovación de antiguos galpones portuarios con financiamiento mixto.',
+    title: 'Finalizan las obras históricas en el Monumento y la ribera: reabren la cripta y el paseo frente al Paraná',
+    summary: 'Tras una intervención integral de ingeniería patrimonial, se habilitan la cripta, el propileo y el circuito costero con nueva iluminación nocturna.',
+    hook: 'Tras 8 años de andamios y promesas postergadas, Rosario recupera su mayor balcón fluvial con acceso público libre y vista panorámica a la Hidrovía.',
+    keyFacts: ['Mirador nocturno habilitado', 'Esculturas de Lola Mora restauradas', 'Paseo costero integrado'],
     time: 'Hace 4 min',
     readingTime: '3 min',
-    source: 'Redacción Central',
+    source: 'La Capital',
+    sourceUrl: 'https://www.lacapital.com.ar/la-ciudad/finalizaron-obras-monumento-bandera.html',
     imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
     accentColor: 'var(--blue-parana)',
     isBreaking: true,
   },
   {
     id: 'seguridad-circunvalacion',
+    slug: 'operativo-seguridad-circunvalacion-autopista-santa-fe-niebla',
     category: 'SEGURIDAD CIUDADANA',
     tag: 'OPERATIVO METROPOLITANO',
     title: 'Anillo digital inteligente y 180 domos con IA blindan todos los accesos a Circunvalación',
-    summary: 'El nuevo centro de monitoreo metropolitano incorpora reconocimiento biométrico en tiempo real y patrullajes preventivos coordinados.',
+    summary: 'El nuevo centro de monitoreo metropolitano incorpora reconocimiento automático de patentes y patrullajes preventivos coordinados en tiempo real.',
+    hook: 'Algoritmos de visión computarizada escanean cada vehículo al ingresar por autopistas y despachan alertas a móviles en menos de 90 segundos.',
+    keyFacts: ['180 domos 4K activos', 'Lectura de patentes en 3ms', 'Monitoreo 24hs coordinado'],
     time: 'Hace 11 min',
     readingTime: '4 min',
-    source: 'La Capital / Seguridad',
+    source: 'Rosario3 / Seguridad',
+    sourceUrl: 'https://www.rosario3.com/policiales/operativo-circunvalacion-niebla.html',
     imageUrl: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80',
     accentColor: 'var(--red-urgent)',
     isBreaking: true,
   },
   {
     id: 'clasico-rosarino',
+    slug: 'rosario-central-gigante-arroyito-socios-agotaron-plateas',
     category: 'CLÁSICO ROSARINO',
     tag: 'PASIÓN DE LA CIUDAD',
-    title: 'Semana de Clásico: Newell\'s y Rosario Central afinan planteles para una cita decisiva',
-    summary: 'Ambos clubes entrenan a puertas cerradas. El Parque y Arroyito agotan localidades mientras Rosario late al ritmo de la máxima fiesta deportiva.',
+    title: "Semana de Clásico: Central colma el Gigante y Newell's afina la táctica en Bella Vista",
+    summary: '45.000 socios auriazules agotaron las ubicaciones en tiempo récord mientras el rojinegro define su alineación titular a puertas cerradas.',
+    hook: 'La ciudad paraliza su pulso cotidiano: entradas agotadas en 40 minutos y operativo con 1.100 efectivos para una cita que no admite tibiezas.',
+    keyFacts: ['Gigante de Arroyito repleto', 'Dupla goleadora de la Lepra lista', 'Seguridad con 1.100 efectivos'],
     time: 'Hace 18 min',
     readingTime: '2 min',
     source: 'Rosario3 Deportes',
+    sourceUrl: 'https://www.lacapital.com.ar/ovacion/central-entradas-arroyito.html',
     imageUrl: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1200&q=80',
     accentColor: 'var(--amber-alert)',
+    isBreaking: true,
   },
   {
     id: 'hidrovia-puerto',
+    slug: 'puerto-san-lorenzo-timbues-embarque-record-granos',
     category: 'ECONOMÍA & PUERTO',
     tag: 'RÉCORD AGROINDUSTRIAL',
     title: 'Terminales portuarias del Gran Rosario alcanzan el mayor movimiento de buques de la década',
-    summary: 'La profundización de la Hidrovía Paraná-Paraguay y la cosecha de granos récord disparan las exportaciones en el cordón industrial santafesino.',
+    summary: 'La profundización de la Hidrovía Paraná-Paraguay y la cosecha récord disparan las exportaciones con más de doce millones de toneladas despachadas.',
+    hook: 'Por el Paraná marrón sale el 80% de los granos del país, generando más divisas que toda la City porteña con 80 buques en rada.',
+    keyFacts: ['12M de toneladas despachadas', 'Calado a 34 pies garantizado', 'Récord histórico de divisas'],
     time: 'Hace 32 min',
     readingTime: '5 min',
     source: 'Bolsa de Comercio',
+    sourceUrl: 'https://www.bcr.com.ar/noticias/puertos-record-granos.html',
     imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=1200&q=80',
     accentColor: 'var(--blue-parana)',
   },
   {
     id: 'cultura-pichincha',
+    slug: 'noche-galerias-pichincha-circuito-nocturno',
     category: 'CULTURA & VANGUARDIA',
     tag: 'CIRCUITO NOCTURNO',
     title: 'La Noche de las Galerías en Pichincha y el Bajo convoca a miles de jóvenes frente al río',
     summary: 'Más de 40 talleres de artistas, centros culturales y polos gastronómicos abren simultáneamente con intervenciones lumínicas y música en vivo.',
+    hook: 'De prostíbulos de 1900 a polo de diseño independiente: el barrio festeja con arte en las veredas, cerveza artesanal y carlitos al paso.',
+    keyFacts: ['40 talleres de artistas abiertos', 'Intervenciones lumínicas', 'Circuito peatonal protegido'],
     time: 'Hace 45 min',
     readingTime: '3 min',
     source: 'Cultura Rosario',
+    sourceUrl: 'https://www.rosario.gob.ar/cultura/noche-galerias-pichincha.html',
     imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
     accentColor: '#8B5CF6',
   },
@@ -100,32 +126,37 @@ const LIVE_TICKERS = [
   '[METEOROLOGÍA] Cielo despejado, 22°C con brisa fresca del río Paraná',
 ];
 
-function getKenBurnsClass(storyId: string): string {
-  switch (storyId) {
-    case 'costanera-parana':
-      return 'animate-kenburns-river';
-    case 'seguridad-circunvalacion':
-      return 'animate-kenburns-traffic';
-    case 'clasico-rosarino':
-      return 'animate-kenburns-stadium';
-    case 'hidrovia-puerto':
-      return 'animate-kenburns-port';
-    case 'cultura-pichincha':
-      return 'animate-kenburns-culture';
-    default:
-      return 'animate-kenburns-river';
+function getKenBurnsClass(storyId: string, category?: string): string {
+  if (storyId === 'costanera-parana' || category?.toLowerCase().includes('rio') || category?.toLowerCase().includes('ciudad')) {
+    return 'animate-kenburns-river';
   }
+  if (storyId === 'seguridad-circunvalacion' || category?.toLowerCase().includes('seguridad')) {
+    return 'animate-kenburns-traffic';
+  }
+  if (storyId === 'clasico-rosarino' || category?.toLowerCase().includes('deporte') || category?.toLowerCase().includes('futbol')) {
+    return 'animate-kenburns-stadium';
+  }
+  if (storyId === 'hidrovia-puerto' || category?.toLowerCase().includes('puerto') || category?.toLowerCase().includes('economia')) {
+    return 'animate-kenburns-port';
+  }
+  if (storyId === 'cultura-pichincha' || category?.toLowerCase().includes('cultura')) {
+    return 'animate-kenburns-culture';
+  }
+  return 'animate-kenburns-river';
 }
 
 interface HeroOrbitalProps {
   selectedIndex?: number;
   onStoryChange?: (index: number) => void;
+  stories?: NewsStory[];
 }
 
 export default function HeroOrbital({
   selectedIndex,
   onStoryChange,
+  stories: incomingStories,
 }: Readonly<HeroOrbitalProps>) {
+  const stories = incomingStories && incomingStories.length > 0 ? incomingStories : DEFAULT_STORIES;
   const [internalIndex, setInternalIndex] = useState(0);
   const activeIndex = selectedIndex ?? internalIndex;
 
@@ -184,10 +215,10 @@ export default function HeroOrbital({
   useEffect(() => {
     if (!isAutoPlaying || isHovered) return;
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % STORIES.length);
+      setActiveIndex((prev) => (prev + 1) % stories.length);
     }, 5500);
     return () => clearInterval(interval);
-  }, [isAutoPlaying, isHovered]);
+  }, [isAutoPlaying, isHovered, setActiveIndex, stories.length]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -213,11 +244,11 @@ export default function HeroOrbital({
   };
 
   const nextStory = () => {
-    setActiveIndex((prev) => (prev + 1) % STORIES.length);
+    setActiveIndex((prev) => (prev + 1) % stories.length);
   };
 
   const prevStory = () => {
-    setActiveIndex((prev) => (prev - 1 + STORIES.length) % STORIES.length);
+    setActiveIndex((prev) => (prev - 1 + stories.length) % stories.length);
   };
 
   return (
@@ -281,7 +312,7 @@ export default function HeroOrbital({
               }}
             />
             <span style={{ fontWeight: 700, letterSpacing: '0.08em', color: 'var(--red-urgent)' }}>
-              PORTADA INTERACTIVA 3D
+              PORTADA INTERACTIVA 3D • NOTICIAS REALES
             </span>
             <span style={{ color: 'var(--ink-soft)' }}>•</span>
             <span style={{ color: 'var(--ink-soft)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
@@ -298,56 +329,94 @@ export default function HeroOrbital({
 
           {/* Controles de Vista y Abanico */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <button
-              type="button"
-              onClick={() => setFanSpread((s) => (s > 1.1 ? 0.85 : 1.3))}
-              title="Alternar apertura del abanico 3D"
+            {/* Control de Abanico 3D */}
+            <div
               style={{
+                display: 'flex',
                 background: 'var(--paper-elevated)',
                 border: '1px solid var(--ink-faint)',
-                padding: '5px 12px',
-                fontSize: '0.72rem',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--ink)',
-                cursor: 'pointer',
                 borderRadius: '4px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
+                padding: '2px',
+                gap: '2px',
               }}
             >
-              {fanSpread > 1.1 ? (
-                <>
-                  <IconDeckCollapse size={13} style={{ color: 'var(--ink-soft)' }} />
-                  <span>COMPACTAR</span>
-                </>
-              ) : (
-                <>
-                  <IconDeckExpand size={13} style={{ color: 'var(--ink-soft)' }} />
-                  <span>DESPLEGAR</span>
-                </>
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() => setFanSpread(0.75)}
+                title="Vista Compacta"
+                style={{
+                  background: fanSpread === 0.75 ? 'var(--ink)' : 'transparent',
+                  color: fanSpread === 0.75 ? 'var(--paper)' : 'var(--ink-soft)',
+                  border: 'none',
+                  padding: '4px 8px',
+                  borderRadius: '3px',
+                  fontSize: '0.7rem',
+                  cursor: 'pointer',
+                  fontWeight: fanSpread === 0.75 ? 700 : 500,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <IconDeckCollapse size={12} />
+                <span>ENFOCAR</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFanSpread(1.0)}
+                title="Vista Equilibrada"
+                style={{
+                  background: fanSpread === 1.0 ? 'var(--ink)' : 'transparent',
+                  color: fanSpread === 1.0 ? 'var(--paper)' : 'var(--ink-soft)',
+                  border: 'none',
+                  padding: '4px 8px',
+                  borderRadius: '3px',
+                  fontSize: '0.7rem',
+                  cursor: 'pointer',
+                  fontWeight: fanSpread === 1.0 ? 700 : 500,
+                }}
+              >
+                NORMAL
+              </button>
+              <button
+                type="button"
+                onClick={() => setFanSpread(1.35)}
+                title="Vista Desplegada"
+                style={{
+                  background: fanSpread === 1.35 ? 'var(--ink)' : 'transparent',
+                  color: fanSpread === 1.35 ? 'var(--paper)' : 'var(--ink-soft)',
+                  border: 'none',
+                  padding: '4px 8px',
+                  borderRadius: '3px',
+                  fontSize: '0.7rem',
+                  cursor: 'pointer',
+                  fontWeight: fanSpread === 1.35 ? 700 : 500,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <IconDeckExpand size={12} />
+                <span>ABANICO</span>
+              </button>
+            </div>
 
+            {/* Play/Pause Rotación */}
             <button
               type="button"
-              onClick={() => setIsAutoPlaying((p) => !p)}
+              onClick={() => setIsAutoPlaying(!isAutoPlaying)}
               style={{
                 background: 'var(--paper-elevated)',
                 border: '1px solid var(--ink-faint)',
-                padding: '5px 12px',
-                fontSize: '0.72rem',
-                fontFamily: 'var(--font-mono)',
+                padding: '4px 10px',
+                borderRadius: '4px',
+                fontSize: '0.7rem',
                 color: 'var(--ink)',
                 cursor: 'pointer',
-                borderRadius: '4px',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '5px',
                 fontWeight: 600,
-                letterSpacing: '0.04em',
               }}
             >
               {isAutoPlaying ? (
@@ -370,7 +439,7 @@ export default function HeroOrbital({
           className="preserve-3d"
           style={{
             position: 'relative',
-            height: '490px',
+            height: '540px',
             margin: '0 auto',
             maxWidth: '1100px',
             transform: `rotateY(${mousePos.x * 14}deg) rotateX(${-mousePos.y * 9}deg)`,
@@ -380,7 +449,7 @@ export default function HeroOrbital({
             justifyContent: 'center',
           }}
         >
-          {STORIES.map((story, index) => {
+          {stories.map((story, index) => {
             const delta = index - activeIndex;
             const isCenter = delta === 0;
 
@@ -395,16 +464,21 @@ export default function HeroOrbital({
             const zIndex = 20 - Math.abs(delta);
 
             return (
-              <button
-                type="button"
+              <div
                 key={story.id}
-                onClick={() => setActiveIndex(index)}
-                className={`orbital-card shimmer-effect preserve-3d absolute rounded-xl cursor-pointer ${
-                  isCenter ? 'animate-orbital-float' : ''
+                role="region"
+                aria-label={story.title}
+                onClick={() => {
+                  if (!isCenter) {
+                    setActiveIndex(index);
+                  }
+                }}
+                className={`orbital-card shimmer-effect preserve-3d absolute rounded-xl ${
+                  isCenter ? 'animate-orbital-float' : 'cursor-pointer'
                 }`}
                 style={{
-                  width: 'min(90vw, 460px)',
-                  height: '450px',
+                  width: 'min(92vw, 470px)',
+                  height: '515px',
                   position: 'absolute',
                   textAlign: 'left',
                   padding: 0,
@@ -425,6 +499,7 @@ export default function HeroOrbital({
                   boxShadow: isCenter
                     ? `var(--card-shadow-center), 0 0 25px ${story.accentColor}33`
                     : 'var(--card-shadow-side)',
+                  cursor: isCenter ? 'default' : 'pointer',
                 }}
               >
                 {/* 1. Header Imagen con Cinemagraph & Foto Viva */}
@@ -432,7 +507,7 @@ export default function HeroOrbital({
                   style={{
                     position: 'relative',
                     width: '100%',
-                    height: '210px',
+                    height: isCenter ? '195px' : '210px',
                     overflow: 'hidden',
                     flexShrink: 0,
                   }}
@@ -440,7 +515,7 @@ export default function HeroOrbital({
                   <img
                     src={story.imageUrl}
                     alt={story.title}
-                    className={getKenBurnsClass(story.id)}
+                    className={getKenBurnsClass(story.id, story.category)}
                     style={{
                       width: '100%',
                       height: '100%',
@@ -541,7 +616,6 @@ export default function HeroOrbital({
                   {/* 3. Escena Clásico: Flashes de Cámaras & Reflectores en Estadio */}
                   {story.id === 'clasico-rosarino' && (
                     <>
-                      {/* Destellos de flashes en las tribunas */}
                       <div
                         className="animate-flash-a"
                         style={{
@@ -749,100 +823,276 @@ export default function HeroOrbital({
                 </div>
 
                 {/* 2. Cuerpo Editorial de la Noticia */}
-                <div
-                  style={{
-                    flex: 1,
-                    padding: '16px 20px 14px 20px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    backgroundColor: 'var(--paper-card)',
-                  }}
-                >
-                  <div>
+                {isCenter ? (
+                  <div
+                    style={{
+                      flex: 1,
+                      padding: '16px 20px 14px 20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      backgroundColor: 'var(--paper-card)',
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          marginBottom: '6px',
+                          fontSize: '0.72rem',
+                          fontFamily: 'var(--font-mono)',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ color: story.accentColor, fontWeight: 800 }}>{story.category}</span>
+                          <span style={{ color: 'var(--ink-soft)' }}>•</span>
+                          <span style={{ color: 'var(--ink-soft)' }}>{story.source}</span>
+                        </div>
+                        <span
+                          style={{
+                            fontSize: '0.66rem',
+                            fontWeight: 700,
+                            backgroundColor: `${story.accentColor}22`,
+                            color: story.accentColor,
+                            padding: '1px 6px',
+                            borderRadius: '3px',
+                            letterSpacing: '0.04em',
+                          }}
+                        >
+                          NOTICIA REAL
+                        </span>
+                      </div>
+
+                      <Link
+                        href={`/noticia/${story.slug}`}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                      >
+                        <h3
+                          className="font-display"
+                          style={{
+                            fontSize: '1.2rem',
+                            fontWeight: 800,
+                            lineHeight: 1.25,
+                            color: 'var(--ink)',
+                            marginBottom: '8px',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            transition: 'color 0.2s ease',
+                          }}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = story.accentColor)}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--ink)')}
+                        >
+                          {story.title}
+                        </h3>
+                      </Link>
+
+                      {/* CAJA DEL GANCHO EDITORIAL (HOOK PARA NOTICIA REAL) */}
+                      <div
+                        style={{
+                          backgroundColor: 'var(--paper-elevated)',
+                          borderLeft: `3px solid ${story.accentColor}`,
+                          padding: '7px 11px',
+                          borderRadius: '4px',
+                          marginBottom: '8px',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                        }}
+                      >
+                        <div
+                          className="font-mono"
+                          style={{
+                            fontSize: '0.66rem',
+                            fontWeight: 800,
+                            color: story.accentColor,
+                            letterSpacing: '0.06em',
+                            marginBottom: '2px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                          }}
+                        >
+                          <span>⚡ EL GANCHO EDITORIAL</span>
+                        </div>
+                        <p
+                          style={{
+                            fontSize: '0.84rem',
+                            color: 'var(--ink)',
+                            lineHeight: 1.35,
+                            margin: 0,
+                            fontWeight: 500,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {story.hook}
+                        </p>
+                      </div>
+
+                      {/* DATOS CLAVE (EN 30 SEGUNDOS) */}
+                      {story.keyFacts && story.keyFacts.length > 0 && (
+                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
+                          {story.keyFacts.map((fact, idx) => (
+                            <span
+                              key={idx}
+                              className="font-mono"
+                              style={{
+                                fontSize: '0.64rem',
+                                backgroundColor: 'var(--paper-soft)',
+                                border: '1px solid var(--ink-faint)',
+                                padding: '2px 7px',
+                                borderRadius: '3px',
+                                color: 'var(--ink-soft)',
+                                fontWeight: 600,
+                              }}
+                            >
+                              ✓ {fact}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Footer de la Card con botón real */}
                     <div
                       style={{
                         display: 'flex',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
-                        gap: '8px',
-                        marginBottom: '6px',
-                        fontSize: '0.72rem',
+                        paddingTop: '8px',
+                        borderTop: '1px solid var(--ink-faint)',
+                        fontSize: '0.74rem',
                         fontFamily: 'var(--font-mono)',
-                        color: story.accentColor,
-                        fontWeight: 700,
                       }}
                     >
-                      <span>{story.category}</span>
-                      <span style={{ color: 'var(--ink-soft)' }}>•</span>
-                      <span style={{ color: 'var(--ink-soft)' }}>{story.source}</span>
-                    </div>
+                      <span style={{ color: 'var(--ink-soft)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                        <IconClock size={12} style={{ color: 'var(--ink-soft)' }} />
+                        <span>{story.readingTime}</span>
+                      </span>
 
-                    <h3
-                      className="font-display"
-                      style={{
-                        fontSize: isCenter ? '1.2rem' : '1.05rem',
-                        fontWeight: 800,
-                        lineHeight: 1.25,
-                        color: 'var(--ink)',
-                        marginBottom: '8px',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {story.title}
-                    </h3>
-
-                    {isCenter && (
-                      <p
+                      <Link
+                        href={`/noticia/${story.slug}`}
                         style={{
-                          fontSize: '0.84rem',
-                          color: 'var(--ink-soft)',
-                          lineHeight: 1.4,
+                          backgroundColor: story.accentColor,
+                          color: '#FFFFFF',
+                          padding: '6px 14px',
+                          borderRadius: '4px',
+                          textDecoration: 'none',
+                          fontWeight: 700,
+                          fontSize: '0.76rem',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          boxShadow: `0 3px 12px ${story.accentColor}44`,
+                          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                          e.currentTarget.style.boxShadow = `0 5px 18px ${story.accentColor}66`;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = `0 3px 12px ${story.accentColor}44`;
+                        }}
+                      >
+                        <span>LEER NOTICIA COMPLETA</span>
+                        <IconArrowRight size={13} />
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      flex: 1,
+                      padding: '14px 18px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      backgroundColor: 'var(--paper-card)',
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          marginBottom: '6px',
+                          fontSize: '0.7rem',
+                          fontFamily: 'var(--font-mono)',
+                          color: story.accentColor,
+                          fontWeight: 700,
+                        }}
+                      >
+                        <span>{story.category}</span>
+                      </div>
+
+                      <h3
+                        className="font-display"
+                        style={{
+                          fontSize: '1.05rem',
+                          fontWeight: 800,
+                          lineHeight: 1.25,
+                          color: 'var(--ink)',
+                          marginBottom: '8px',
                           display: '-webkit-box',
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: 'vertical',
                           overflow: 'hidden',
                         }}
                       >
+                        {story.title}
+                      </h3>
+
+                      <p
+                        style={{
+                          fontSize: '0.8rem',
+                          color: 'var(--ink-soft)',
+                          lineHeight: 1.35,
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          margin: 0,
+                        }}
+                      >
                         {story.summary}
                       </p>
-                    )}
-                  </div>
+                    </div>
 
-                  {/* Footer de la Card */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      paddingTop: '8px',
-                      borderTop: '1px solid var(--ink-faint)',
-                      fontSize: '0.74rem',
-                      fontFamily: 'var(--font-mono)',
-                    }}
-                  >
-                    <span style={{ color: 'var(--ink-soft)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                      <IconClock size={12} style={{ color: 'var(--ink-soft)' }} />
-                      <span>{story.readingTime}</span>
-                    </span>
-                    <span
+                    <div
                       style={{
-                        color: story.accentColor,
-                        fontWeight: 700,
-                        display: 'inline-flex',
+                        display: 'flex',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
-                        gap: '5px',
-                        letterSpacing: '0.04em',
+                        paddingTop: '6px',
+                        borderTop: '1px solid var(--ink-faint)',
+                        fontSize: '0.7rem',
+                        fontFamily: 'var(--font-mono)',
+                        color: 'var(--ink-soft)',
                       }}
                     >
-                      <span>LEER NOTICIA</span>
-                      <IconArrowRight size={13} />
-                    </span>
+                      <span>{story.source}</span>
+                      <span
+                        style={{
+                          color: story.accentColor,
+                          fontWeight: 700,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        <span>ENFOCAR</span>
+                        <IconArrowRight size={11} />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </button>
+                )}
+              </div>
             );
           })}
         </div>
@@ -890,7 +1140,7 @@ export default function HeroOrbital({
 
           {/* Dots Indicadores con micro-barra de progreso */}
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            {STORIES.map((story, i) => (
+            {stories.map((story, i) => (
               <button
                 type="button"
                 key={story.id}

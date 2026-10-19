@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import HeroOrbital from '../components/HeroOrbital';
+import HeroOrbital, { DEFAULT_STORIES, NewsStory } from '../components/HeroOrbital';
 import CronicasRosarinas, { RosarioSection } from '../components/CronicasRosarinas';
 import { IconSun, IconMoon, IconArrowRight } from '../components/Icons';
 import BreakingTicker from '../components/BreakingTicker';
@@ -84,6 +84,113 @@ export default function HomePage() {
   const handleSelectSection = (section: RosarioSection) => {
     setSelectedSection(section);
   };
+
+  // Derivar las 5 historias con gancho real a partir de liveNews o DEFAULT_STORIES
+  const orbitalStories = React.useMemo<NewsStory[]>(() => {
+    if (!liveNews || liveNews.length === 0) return DEFAULT_STORIES;
+
+    const rioItem = liveNews.find((n) => n.isPinned || n.category === 'ciudad' || n.category === 'sociedad');
+    const segItem = liveNews.find((n) => n.category === 'seguridad');
+    const futItem = liveNews.find((n) => n.category === 'deportes');
+    const ecoItem = liveNews.find((n) => n.category === 'economia');
+    const cultItem = liveNews.find((n) => (n.category === 'ciudad' || n.category === 'sociedad') && n.id !== rioItem?.id);
+
+    return [
+      rioItem
+        ? {
+            id: 'costanera-parana',
+            slug: rioItem.slug,
+            category: 'INFRAESTRUCTURA & RÍO',
+            tag: rioItem.isPinned ? 'PORTADA PRINCIPAL' : 'OBRA HISTÓRICA',
+            title: rioItem.title,
+            summary: rioItem.summary,
+            hook: 'Tras 8 años de obras y promesas postergadas, Rosario recupera su mayor balcón fluvial con acceso público libre y vista panorámica al Paraná.',
+            keyFacts: ['Mirador nocturno habilitado', 'Esculturas de Lola Mora restauradas', 'Paseo costero integrado'],
+            time: 'Hace 4 min',
+            readingTime: '3 min',
+            source: rioItem.source,
+            sourceUrl: rioItem.sourceUrl,
+            imageUrl: rioItem.imageUrl || DEFAULT_STORIES[0].imageUrl,
+            accentColor: 'var(--blue-parana)',
+            isBreaking: true,
+          }
+        : DEFAULT_STORIES[0],
+      segItem
+        ? {
+            id: 'seguridad-circunvalacion',
+            slug: segItem.slug,
+            category: 'SEGURIDAD CIUDADANA',
+            tag: 'OPERATIVO METROPOLITANO',
+            title: segItem.title,
+            summary: segItem.summary,
+            hook: 'Algoritmos de visión computarizada escanean cada vehículo al ingresar por autopistas y despachan alertas a móviles en menos de 90 segundos.',
+            keyFacts: ['180 domos 4K activos', 'Lectura de patentes en 3ms', 'Monitoreo 24hs coordinado'],
+            time: 'Hace 11 min',
+            readingTime: '4 min',
+            source: segItem.source,
+            sourceUrl: segItem.sourceUrl,
+            imageUrl: segItem.imageUrl || DEFAULT_STORIES[1].imageUrl,
+            accentColor: 'var(--red-urgent)',
+            isBreaking: true,
+          }
+        : DEFAULT_STORIES[1],
+      futItem
+        ? {
+            id: 'clasico-rosarino',
+            slug: futItem.slug,
+            category: 'CLÁSICO ROSARINO',
+            tag: 'PASIÓN DE LA CIUDAD',
+            title: futItem.title,
+            summary: futItem.summary,
+            hook: 'La ciudad paraliza su pulso cotidiano: entradas agotadas en 40 minutos y operativo con 1.100 efectivos para una cita que no admite tibiezas.',
+            keyFacts: ['Gigante de Arroyito repleto', 'Dupla goleadora de la Lepra lista', 'Seguridad con 1.100 efectivos'],
+            time: 'Hace 18 min',
+            readingTime: '2 min',
+            source: futItem.source,
+            sourceUrl: futItem.sourceUrl,
+            imageUrl: futItem.imageUrl || DEFAULT_STORIES[2].imageUrl,
+            accentColor: 'var(--amber-alert)',
+            isBreaking: true,
+          }
+        : DEFAULT_STORIES[2],
+      ecoItem
+        ? {
+            id: 'hidrovia-puerto',
+            slug: ecoItem.slug,
+            category: 'ECONOMÍA & PUERTO',
+            tag: 'RÉCORD AGROEXPORTADOR',
+            title: ecoItem.title,
+            summary: ecoItem.summary,
+            hook: 'Por el Paraná marrón sale el 80% de los granos del país, generando más divisas que toda la City porteña con 80 buques en rada.',
+            keyFacts: ['12M de toneladas despachadas', 'Calado a 34 pies garantizado', 'Récord histórico de divisas'],
+            time: 'Hace 32 min',
+            readingTime: '5 min',
+            source: ecoItem.source,
+            sourceUrl: ecoItem.sourceUrl,
+            imageUrl: ecoItem.imageUrl || DEFAULT_STORIES[3].imageUrl,
+            accentColor: 'var(--blue-parana)',
+          }
+        : DEFAULT_STORIES[3],
+      cultItem
+        ? {
+            id: 'cultura-pichincha',
+            slug: cultItem.slug,
+            category: 'CULTURA & VANGUARDIA',
+            tag: 'CIRCUITO NOCTURNO',
+            title: cultItem.title,
+            summary: cultItem.summary,
+            hook: 'De prostíbulos de 1900 a polo de diseño independiente: el barrio festeja con arte en las veredas, cerveza artesanal y carlitos al paso.',
+            keyFacts: ['40 talleres de artistas abiertos', 'Intervenciones lumínicas', 'Circuito peatonal protegido'],
+            time: 'Hace 45 min',
+            readingTime: '3 min',
+            source: cultItem.source,
+            sourceUrl: cultItem.sourceUrl,
+            imageUrl: cultItem.imageUrl || DEFAULT_STORIES[4].imageUrl,
+            accentColor: '#8B5CF6',
+          }
+        : DEFAULT_STORIES[4],
+    ];
+  }, [liveNews]);
 
   const handleStoryChange = (index: number) => {
     const nextSection = storyIndexToSection[index];
@@ -291,6 +398,7 @@ export default function HomePage() {
 
       {/* SECCIÓN HERO ORBITAL 3D CON MICROANIMACIONES Y PARALLAX */}
       <HeroOrbital
+        stories={orbitalStories}
         selectedIndex={sectionToStoryIndex[selectedSection]}
         onStoryChange={handleStoryChange}
       />

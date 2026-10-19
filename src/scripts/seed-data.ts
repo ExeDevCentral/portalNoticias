@@ -108,6 +108,25 @@ export async function seedDatabase(repo: NewsRepository) {
     publishedAt: new Date(Date.now() - 3600000 * 8),
   });
 
+  // Culture: Pichincha & Noche
+  await repo.createNewsItem({
+    title: 'La Noche de las Galerías en Pichincha y el Bajo convoca a miles de jóvenes frente al río',
+    slug: 'noche-galerias-pichincha-circuito-nocturno',
+    summary: 'Más de 40 talleres de artistas, centros culturales y polos gastronómicos abren simultáneamente con intervenciones lumínicas y música en vivo.',
+    content: `
+      <p>PICHINCHA. El histórico barrio bohemio vivió una nueva edición de su circuito cultural a cielo abierto.</p>
+      <p>Vecinos y visitantes recorrieron los antiguos almacenes y galpones reciclados sobre bulevar Oroño y calle Alvear, disfrutando de exposiciones fotográficas, ferias de vinilos y gastronomía local con cerveza artesanal y carlitos al paso.</p>
+      <p>"Rosario respira arte independiente y autogestionado en cada esquina", destacaron los colectivos culturales organizadores.</p>
+    `,
+    imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+    source: 'Cultura Rosario',
+    sourceUrl: 'https://www.rosario.gob.ar/cultura/noche-galerias-pichincha.html',
+    category: 'ciudad',
+    isUrgent: false,
+    isPinned: false,
+    publishedAt: new Date(Date.now() - 3600000 * 9),
+  });
+
   // Live Alert
   await repo.createLiveAlert({
     title: 'Precaución en el Puente Rosario-Victoria por ráfagas de viento del sudeste',
