@@ -5,6 +5,11 @@ import Link from 'next/link';
 import HeroOrbital from '../components/HeroOrbital';
 import CronicasRosarinas, { RosarioSection } from '../components/CronicasRosarinas';
 import { IconSun, IconMoon, IconArrowRight } from '../components/Icons';
+import BreakingTicker from '../components/BreakingTicker';
+import LiveFeedWire from '../components/LiveFeedWire';
+import CategoryBlock from '../components/CategoryBlock';
+import Footer from '../components/Footer';
+import { NewsItem } from '../db/schema';
 
 const sectionToStoryIndex: Record<RosarioSection, number> = {
   portada: 0,
@@ -33,6 +38,13 @@ const NAV_ITEMS: { key: RosarioSection; label: string }[] = [
 export default function HomePage() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [selectedSection, setSelectedSection] = useState<RosarioSection>('portada');
+  const [liveNews, setLiveNews] = useState<NewsItem[]>([]);
+  const [urgentNews, setUrgentNews] = useState<{ id: string; title: string; slug?: string }[]>([]);
+  const [categoryNews, setCategoryNews] = useState<{
+    deportes: NewsItem[];
+    seguridad: NewsItem[];
+    economia: NewsItem[];
+  }>({ deportes: [], seguridad: [], economia: [] });
 
   useEffect(() => {
     const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
@@ -42,6 +54,23 @@ export default function HomePage() {
     } else {
       document.documentElement.dataset.theme = 'dark';
     }
+
+    fetch('/api/news')
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success && res.data) {
+          if (res.data.feed) setLiveNews(res.data.feed);
+          if (res.data.urgent) setUrgentNews(res.data.urgent);
+          if (res.data.byCategory) {
+            setCategoryNews({
+              deportes: res.data.byCategory.deportes || [],
+              seguridad: res.data.byCategory.seguridad || [],
+              economia: res.data.byCategory.economia || [],
+            });
+          }
+        }
+      })
+      .catch((err) => console.error('Error fetching live news:', err));
   }, []);
 
   const toggleTheme = () => {
@@ -111,6 +140,8 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {urgentNews.length > 0 && <BreakingTicker items={urgentNews} />}
 
       <div className="editorial-container">
         {/* Cabecera Principal del Periódico */}
@@ -376,149 +407,108 @@ export default function HomePage() {
 
           {/* Columna Lateral: Última Hora & Cables Breves */}
           <aside style={{ borderLeft: '1px solid var(--ink-faint)', paddingLeft: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 className="font-mono" style={{ fontSize: '0.9rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                Cables Rosarinos
-              </h3>
-              <span className="badge-urgent badge-deadpan" style={{ margin: 0 }}>EN VIVO</span>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {/* Cable 1 */}
-              <div style={{ borderBottom: '1px solid var(--ink-faint)', paddingBottom: '16px' }}>
-                <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', marginBottom: '4px' }}>
-                  16:20 GMT • PUERTO & HIDROVÍA
+            {liveNews.length > 0 ? (
+              <LiveFeedWire initialItems={liveNews} />
+            ) : (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <h3 className="font-mono" style={{ fontSize: '0.9rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                    Cables Rosarinos
+                  </h3>
+                  <span className="badge-urgent badge-deadpan" style={{ margin: 0 }}>EN VIVO</span>
                 </div>
-                <h4 style={{ fontSize: '1.15rem', lineHeight: 1.25, marginBottom: '6px' }}>
-                  <span className="strikethrough-official" style={{ fontSize: '0.85rem' }}>
-                    Aduana central promete agilizar trámites en 72 días hábiles
-                  </span>
-                  <span className="satirical-correction">
-                    Cincuenta buques Panamax cargan soja en San Lorenzo mientras el capitán griego pide un carlitos tostado
-                  </span>
-                </h4>
-                <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
-                  Las terminales del cordón industrial completaron la carga en tiempo récord al ritmo de cumbia santafesina.
-                </p>
-              </div>
 
-              {/* Cable 2 */}
-              <div style={{ borderBottom: '1px solid var(--ink-faint)', paddingBottom: '16px' }}>
-                <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', marginBottom: '4px' }}>
-                  15:45 GMT • ANILLO DIGITAL & SEGURIDAD
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {/* Cable 1 */}
+                  <div style={{ borderBottom: '1px solid var(--ink-faint)', paddingBottom: '16px' }}>
+                    <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', marginBottom: '4px' }}>
+                      16:20 GMT • PUERTO & HIDROVÍA
+                    </div>
+                    <h4 style={{ fontSize: '1.15rem', lineHeight: 1.25, marginBottom: '6px' }}>
+                      <span className="strikethrough-official" style={{ fontSize: '0.85rem' }}>
+                        Aduana central promete agilizar trámites en 72 días hábiles
+                      </span>
+                      <span className="satirical-correction">
+                        Cincuenta buques Panamax cargan soja en San Lorenzo mientras el capitán griego pide un carlitos tostado
+                      </span>
+                    </h4>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
+                      Las terminales del cordón industrial completaron la carga en tiempo récord al ritmo de cumbia santafesina.
+                    </p>
+                  </div>
+
+                  {/* Cable 2 */}
+                  <div style={{ borderBottom: '1px solid var(--ink-faint)', paddingBottom: '16px' }}>
+                    <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', marginBottom: '4px' }}>
+                      15:45 GMT • ANILLO DIGITAL & SEGURIDAD
+                    </div>
+                    <h4 style={{ fontSize: '1.15rem', lineHeight: 1.25, marginBottom: '6px' }}>
+                      <span className="strikethrough-official" style={{ fontSize: '0.85rem' }}>
+                        Centro de monitoreo implementa reconocimiento biométrico de alta fidelidad
+                      </span>
+                      <span className="satirical-correction">
+                        Cámaras con IA confunden a hincha de Newell&apos;s con uno de Central por idéntica cara de sufrimiento previo al clásico
+                      </span>
+                    </h4>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
+                      El algoritmo municipal determinó que el nivel de estrés coronario en ambos simpatizantes era estadísticamente indistinguible.
+                    </p>
+                  </div>
+
+                  {/* Despacho de Cables & Teletipo */}
+                  <div
+                    style={{
+                      border: '2px solid var(--ink)',
+                      padding: '16px',
+                      backgroundColor: 'var(--paper-elevated)',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <span className="font-mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--red-urgent)' }}>
+                      SERVICIO DE TELETIPO 24HS
+                    </span>
+                    <h4 className="font-display" style={{ margin: '8px 0', fontSize: '1.2rem' }}>
+                      Despachos Fluviales & Regionales
+                    </h4>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--ink-soft)', marginBottom: '14px' }}>
+                      Flujo ininterrumpido de cables de agencias, cotizaciones del puerto y novedades metropolitanas.
+                    </p>
+                    <Link
+                      href="/redaccion"
+                      style={{
+                        backgroundColor: 'var(--ink)',
+                        color: 'var(--paper)',
+                        padding: '8px 16px',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.78rem',
+                        textDecoration: 'none',
+                        fontWeight: 700,
+                        display: 'block',
+                      }}
+                    >
+                      ABRIR TERMINAL DE CABLES ➔
+                    </Link>
+                  </div>
                 </div>
-                <h4 style={{ fontSize: '1.15rem', lineHeight: 1.25, marginBottom: '6px' }}>
-                  <span className="strikethrough-official" style={{ fontSize: '0.85rem' }}>
-                    Centro de monitoreo implementa reconocimiento biométrico de alta fidelidad
-                  </span>
-                  <span className="satirical-correction">
-                    Cámaras con IA confunden a hincha de Newell&apos;s con uno de Central por idéntica cara de sufrimiento previo al clásico
-                  </span>
-                </h4>
-                <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
-                  El algoritmo municipal determinó que el nivel de estrés coronario en ambos simpatizantes era estadísticamente indistinguible.
-                </p>
               </div>
-
-              {/* Cable 3 */}
-              <div style={{ borderBottom: '1px solid var(--ink-faint)', paddingBottom: '16px' }}>
-                <div className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', marginBottom: '4px' }}>
-                  14:10 GMT • MANUAL PARA EXTRANJEROS
-                </div>
-                <h4 style={{ fontSize: '1.15rem', lineHeight: 1.25, marginBottom: '6px' }}>
-                  <span className="strikethrough-official" style={{ fontSize: '0.85rem' }}>
-                    Turista confiesa que simpatiza con un equipo porteño durante un asado familiar
-                  </span>
-                  <span className="satirical-correction">
-                    Mesa entera guarda silencio piadoso y le convida otra porción de costillar por caridad humana
-                  </span>
-                </h4>
-                <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
-                  El incidente culminó sin heridos tras una explicación didáctica de tres horas sobre el partido de los leprosos de 1920.
-                </p>
-              </div>
-
-              {/* Despacho de Cables & Teletipo */}
-              <div
-                style={{
-                  border: '2px solid var(--ink)',
-                  padding: '16px',
-                  backgroundColor: 'var(--paper-elevated)',
-                  textAlign: 'center',
-                }}
-              >
-                <span className="font-mono" style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--red-urgent)' }}>
-                  SERVICIO DE TELETIPO 24HS
-                </span>
-                <h4 className="font-display" style={{ margin: '8px 0', fontSize: '1.2rem' }}>
-                  Despachos Fluviales & Regionales
-                </h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--ink-soft)', marginBottom: '14px' }}>
-                  Flujo ininterrumpido de cables de agencias, cotizaciones del puerto y novedades metropolitanas.
-                </p>
-                <Link
-                  href="/redaccion"
-                  style={{
-                    backgroundColor: 'var(--ink)',
-                    color: 'var(--paper)',
-                    padding: '8px 16px',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.78rem',
-                    textDecoration: 'none',
-                    fontWeight: 700,
-                    display: 'block',
-                  }}
-                >
-                  ABRIR TERMINAL DE CABLES ➔
-                </Link>
-              </div>
-            </div>
+            )}
           </aside>
         </main>
 
-        <div className="rule-double" style={{ marginTop: '48px' }} />
+        <div className="rule-double" style={{ marginTop: '48px', marginBottom: '32px' }} />
 
-        {/* Footer Institucional */}
-        <footer
-          className="font-mono"
-          style={{
-            padding: '20px 0',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontSize: '0.75rem',
-            color: 'var(--ink-soft)',
-            flexWrap: 'wrap',
-            gap: '16px',
-          }}
-        >
-          <div>
-            <strong>ROSARIO EN TIEMPO REAL</strong> — Crónica histórica, sala de redacción en vivo y memoria del Pago de los Arroyos.
-            <br />
-            Homenaje perpetuo a don Manuel Belgrano, don Justo José de Urquiza y la Mesa de los Galanes.
-          </div>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <button
-              type="button"
-              onClick={() => handleSelectSection('futbol')}
-              style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}
-            >
-              MANUAL DE CLUBES
-            </button>
-            <span>•</span>
-            <button
-              type="button"
-              onClick={() => handleSelectSection('portada')}
-              style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}
-            >
-              BELGRANO 1812
-            </button>
-            <span>•</span>
-            <Link href="/redaccion" style={{ color: 'var(--red-urgent)', textDecoration: 'none', fontWeight: 'bold' }}>
-              REDACCIÓN [SYS]
-            </Link>
-          </div>
-        </footer>
+        {/* Bloques temáticos dinámicos */}
+        {categoryNews.deportes.length > 0 && (
+          <CategoryBlock title="Fútbol Rosarino: Newell's y Central" categoryKey="deportes" items={categoryNews.deportes} />
+        )}
+        {categoryNews.seguridad.length > 0 && (
+          <CategoryBlock title="Seguridad & Ciudad" categoryKey="seguridad" items={categoryNews.seguridad} />
+        )}
+        {categoryNews.economia.length > 0 && (
+          <CategoryBlock title="Economía & Puerto" categoryKey="economia" items={categoryNews.economia} />
+        )}
+
+        <Footer />
       </div>
     </div>
   );
