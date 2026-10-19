@@ -7,9 +7,11 @@ export interface FeedSource {
 }
 
 export const DEFAULT_FEEDS: FeedSource[] = [
-  { name: 'La Capital', url: 'https://www.lacapital.com.ar/rss/noticias.xml' },
-  { name: 'Rosario3', url: 'https://www.rosario3.com/rss/noticias.xml' },
+  { name: 'La Capital', url: 'https://www.lacapital.com.ar/rss/home.xml' },
   { name: 'El Ciudadano', url: 'https://www.elciudadanoweb.com/feed/' },
+  { name: 'Clarín', url: 'https://www.clarin.com/rss/lo-ultimo/' },
+  { name: 'La Nación', url: 'https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml' },
+  { name: 'Ámbito Financiero', url: 'https://www.ambito.com/rss/home.xml' },
 ];
 
 export interface SyncResult {

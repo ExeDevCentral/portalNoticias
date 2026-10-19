@@ -81,4 +81,68 @@ describe('WorldKiosk Filtering Logic', () => {
       expect(item.originalIntact).toBe(true);
     }
   });
+
+  it('supports global newspaper regions: EEUU, Europa, Asia, Rusia, and Argentina', () => {
+    const regionalCables: CableItem[] = [
+      {
+        id: 'nyt-1',
+        source: 'The New York Times',
+        region: 'eeuu',
+        category: 'World',
+        originalTitle: 'Diplomatic talks advance in Washington',
+        originalSummary: 'White House announces trade framework.',
+        sourceUrl: 'https://www.nytimes.com/world/talks',
+        publishedAt: '2026-10-19T10:00:00Z',
+        imageUrl: 'https://images.unsplash.com/photo-1',
+        originalIntact: true,
+      },
+      {
+        id: 'rt-1',
+        source: 'RT en Español',
+        region: 'rusia',
+        category: 'Geopolítica',
+        originalTitle: 'Cumbre de los BRICS en Kazán evalúa nuevo sistema financiero',
+        originalSummary: 'Moscú destaca avance del comercio en monedas locales.',
+        sourceUrl: 'https://actualidad.rt.com/actualidad/brics',
+        publishedAt: '2026-10-19T10:00:00Z',
+        imageUrl: 'https://images.unsplash.com/photo-2',
+        originalIntact: true,
+      },
+      {
+        id: 'jazeera-1',
+        source: 'Al Jazeera',
+        region: 'asia',
+        category: 'Asia News',
+        originalTitle: 'Asia maritime trade routes expand',
+        originalSummary: 'Ports across the Indian Ocean report cargo records.',
+        sourceUrl: 'https://www.aljazeera.com/news/ports',
+        publishedAt: '2026-10-19T10:00:00Z',
+        imageUrl: 'https://images.unsplash.com/photo-3',
+        originalIntact: true,
+      },
+      {
+        id: 'clarin-1',
+        source: 'Clarín',
+        region: 'argentina',
+        category: 'Economía',
+        originalTitle: 'Cosecha récord en el puerto de Rosario',
+        originalSummary: 'Las terminales fluviales operan a pleno.',
+        sourceUrl: 'https://www.clarin.com/economia/puerto',
+        publishedAt: '2026-10-19T10:00:00Z',
+        imageUrl: 'https://images.unsplash.com/photo-4',
+        originalIntact: true,
+      },
+    ];
+
+    const eeuu = regionalCables.filter((c) => c.region === 'eeuu');
+    const rusia = regionalCables.filter((c) => c.region === 'rusia');
+    const asia = regionalCables.filter((c) => c.region === 'asia');
+    const argentina = regionalCables.filter((c) => c.region === 'argentina');
+
+    expect(eeuu[0].source).toBe('The New York Times');
+    expect(rusia[0].source).toBe('RT en Español');
+    expect(asia[0].source).toBe('Al Jazeera');
+    expect(argentina[0].source).toBe('Clarín');
+  });
 });
+

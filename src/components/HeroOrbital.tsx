@@ -974,34 +974,62 @@ export default function HeroOrbital({
                         <span>{story.readingTime}</span>
                       </span>
 
-                      <Link
-                        href={`/noticia/${story.slug}`}
-                        style={{
-                          backgroundColor: story.accentColor,
-                          color: '#FFFFFF',
-                          padding: '6px 14px',
-                          borderRadius: '4px',
-                          textDecoration: 'none',
-                          fontWeight: 700,
-                          fontSize: '0.76rem',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          boxShadow: `0 3px 12px ${story.accentColor}44`,
-                          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-1px)';
-                          e.currentTarget.style.boxShadow = `0 5px 18px ${story.accentColor}66`;
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = `0 3px 12px ${story.accentColor}44`;
-                        }}
-                      >
-                        <span>LEER NOTICIA COMPLETA</span>
-                        <IconArrowRight size={13} />
-                      </Link>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        {story.sourceUrl && (
+                          <a
+                            href={story.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={`Leer directamente en la fuente oficial (${story.source})`}
+                            style={{
+                              backgroundColor: 'transparent',
+                              color: 'var(--ink)',
+                              border: '1px solid var(--ink-faint)',
+                              padding: '6px 12px',
+                              borderRadius: '4px',
+                              textDecoration: 'none',
+                              fontWeight: 700,
+                              fontSize: '0.74rem',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '5px',
+                              transition: 'all 0.15s ease',
+                            }}
+                          >
+                            <span>{story.source}</span>
+                            <span>↗</span>
+                          </a>
+                        )}
+
+                        <Link
+                          href={`/noticia/${story.slug}`}
+                          style={{
+                            backgroundColor: story.accentColor,
+                            color: '#FFFFFF',
+                            padding: '6px 14px',
+                            borderRadius: '4px',
+                            textDecoration: 'none',
+                            fontWeight: 700,
+                            fontSize: '0.76rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            boxShadow: `0 3px 12px ${story.accentColor}44`,
+                            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-1px)';
+                            e.currentTarget.style.boxShadow = `0 5px 18px ${story.accentColor}66`;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = `0 3px 12px ${story.accentColor}44`;
+                          }}
+                        >
+                          <span>LEER COMPLETA</span>
+                          <IconArrowRight size={13} />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 ) : (

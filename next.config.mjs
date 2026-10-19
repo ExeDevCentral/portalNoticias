@@ -31,6 +31,50 @@ const nextConfig = {
           protocol: 'https',
           hostname: 'static.dw.com',
         },
+        {
+          protocol: 'https',
+          hostname: 'static01.nyt.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'cnnespanol.cnn.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'i.guim.co.uk',
+        },
+        {
+          protocol: 'https',
+          hostname: 'actualidad-rt.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'cdni.rt.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'cdn.sputniknews.lat',
+        },
+        {
+          protocol: 'https',
+          hostname: 'www.aljazeera.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'resizer.glanacion.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'media.lacapital.com.ar',
+        },
+        {
+          protocol: 'https',
+          hostname: 'media.ambito.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'elciudadanoweb.com',
+        },
       ],
     },
 };

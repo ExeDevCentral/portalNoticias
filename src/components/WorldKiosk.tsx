@@ -4,20 +4,23 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import type { CableItem } from '@/types/cables';
 
-type ScopeKey = 'all' | 'nacional' | 'internacional' | 'rosario';
+type ScopeKey = 'all' | 'eeuu' | 'europa' | 'asia' | 'rusia' | 'argentina';
 
 interface ScopeOption {
   key: ScopeKey;
   label: string;
   icon: string;
+  badge: string;
   description: string;
 }
 
 const SCOPES: ScopeOption[] = [
-  { key: 'all', label: 'Todos los Diarios', icon: '🌍', description: 'Cobertura mundial y nacional unificada' },
-  { key: 'nacional', label: 'Prensa Nacional', icon: '🇦🇷', description: 'Clarín, La Nación, Infobae, Página 12' },
-  { key: 'internacional', label: 'Diarios del Mundo', icon: '🌐', description: 'BBC Mundo, El País, DW, The Guardian' },
-  { key: 'rosario', label: 'Diarios de Rosario', icon: '⚓', description: 'La Capital, Rosario3, El Ciudadano' },
+  { key: 'all', label: 'Todos los Diarios', icon: '🌍', badge: 'MUNDIAL', description: 'Cobertura unificada de los mejores diarios del mundo' },
+  { key: 'eeuu', label: 'EEUU', icon: '🇺🇸', badge: 'ESTADOS UNIDOS', description: 'The New York Times, CNN en Español' },
+  { key: 'europa', label: 'Europa', icon: '🇪🇺', badge: 'UNIÓN EUROPEA & UK', description: 'BBC Mundo, El País, DW Español, The Guardian' },
+  { key: 'asia', label: 'Asia', icon: '🌏', badge: 'MEDIO ORIENTE & ASIA', description: 'Al Jazeera' },
+  { key: 'rusia', label: 'Rusia', icon: '🇷🇺', badge: 'EURASIA', description: 'RT en Español, Sputnik Mundo' },
+  { key: 'argentina', label: 'Argentina & Rosario', icon: '🇦🇷', badge: 'NACIONAL & LITORAL', description: 'Clarín, La Nación, Infobae, Ámbito, La Capital' },
 ];
 
 interface NewspaperBrand {
@@ -31,74 +34,29 @@ interface NewspaperBrand {
 }
 
 const NEWSPAPER_DIRECTORY: Record<string, NewspaperBrand> = {
-  'Clarín': {
-    name: 'Clarín',
-    badge: 'CLARÍN',
-    flag: '🇦🇷',
-    scope: 'nacional',
-    tagline: 'El gran diario argentino',
-    accentColor: '#DC2626',
+  'The New York Times': {
+    name: 'The New York Times',
+    badge: 'NYT',
+    flag: '🇺🇸',
+    scope: 'eeuu',
+    tagline: 'All the news that’s fit to print',
+    accentColor: '#111827',
     textColor: '#FFFFFF',
   },
-  'La Nación': {
-    name: 'La Nación',
-    badge: 'LA NACIÓN',
-    flag: '🇦🇷',
-    scope: 'nacional',
-    tagline: 'Tradición y análisis político',
-    accentColor: '#1E3A8A',
-    textColor: '#FFFFFF',
-  },
-  'Infobae': {
-    name: 'Infobae',
-    badge: 'INFOBAE',
-    flag: '🌎',
-    scope: 'nacional',
-    tagline: 'Periodismo digital en tiempo real',
-    accentColor: '#EA580C',
-    textColor: '#FFFFFF',
-  },
-  'Página 12': {
-    name: 'Página 12',
-    badge: 'PÁGINA 12',
-    flag: '🇦🇷',
-    scope: 'nacional',
-    tagline: 'Mirada crítica y derechos humanos',
-    accentColor: '#0F172A',
-    textColor: '#FFFFFF',
-  },
-  'La Capital': {
-    name: 'La Capital',
-    badge: 'LA CAPITAL',
-    flag: '⚓',
-    scope: 'rosario',
-    tagline: 'Decano de la Prensa Argentina • Rosario',
-    accentColor: '#0284C7',
-    textColor: '#FFFFFF',
-  },
-  'Rosario3': {
-    name: 'Rosario3',
-    badge: 'ROSARIO3',
-    flag: '⚓',
-    scope: 'rosario',
-    tagline: 'El pulso de la ciudad y el Litoral',
-    accentColor: '#F97316',
-    textColor: '#FFFFFF',
-  },
-  'El Ciudadano': {
-    name: 'El Ciudadano',
-    badge: 'EL CIUDADANO',
-    flag: '⚓',
-    scope: 'rosario',
-    tagline: 'Periodismo cooperativo rosarino',
-    accentColor: '#9333EA',
+  'CNN en Español': {
+    name: 'CNN en Español',
+    badge: 'CNN',
+    flag: '🇺🇸',
+    scope: 'eeuu',
+    tagline: 'Líder mundial de noticias en español',
+    accentColor: '#CC0000',
     textColor: '#FFFFFF',
   },
   'BBC Mundo': {
     name: 'BBC Mundo',
     badge: 'BBC MUNDO',
     flag: '🇬🇧',
-    scope: 'internacional',
+    scope: 'europa',
     tagline: 'Servicio mundial en español',
     accentColor: '#B91C1C',
     textColor: '#FFFFFF',
@@ -107,34 +65,134 @@ const NEWSPAPER_DIRECTORY: Record<string, NewspaperBrand> = {
     name: 'El País',
     badge: 'EL PAÍS',
     flag: '🇪🇸',
-    scope: 'internacional',
+    scope: 'europa',
     tagline: 'El periódico global en español',
-    accentColor: '#334155',
+    accentColor: '#1D4ED8',
+    textColor: '#FFFFFF',
+  },
+  'The Guardian': {
+    name: 'The Guardian',
+    badge: 'GUARDIAN',
+    flag: '🇬🇧',
+    scope: 'europa',
+    tagline: 'Independent global journalism',
+    accentColor: '#052962',
     textColor: '#FFFFFF',
   },
   'DW Español': {
     name: 'DW Español',
     badge: 'DW',
     flag: '🇩🇪',
-    scope: 'internacional',
+    scope: 'europa',
     tagline: 'La voz de Alemania para el mundo',
     accentColor: '#0284C7',
     textColor: '#FFFFFF',
   },
+  'RT en Español': {
+    name: 'RT en Español',
+    badge: 'RT',
+    flag: '🇷🇺',
+    scope: 'rusia',
+    tagline: 'Actualidad RT • Cuestione más',
+    accentColor: '#16A34A',
+    textColor: '#FFFFFF',
+  },
+  'Sputnik Mundo': {
+    name: 'Sputnik Mundo',
+    badge: 'SPUTNIK',
+    flag: '🇷🇺',
+    scope: 'rusia',
+    tagline: 'Decimos lo que otros callan',
+    accentColor: '#EA580C',
+    textColor: '#FFFFFF',
+  },
+  'Al Jazeera': {
+    name: 'Al Jazeera',
+    badge: 'AL JAZEERA',
+    flag: '🌏',
+    scope: 'asia',
+    tagline: 'Voz del Medio Oriente y Asia',
+    accentColor: '#D97706',
+    textColor: '#FFFFFF',
+  },
+  'Clarín': {
+    name: 'Clarín',
+    badge: 'CLARÍN',
+    flag: '🇦🇷',
+    scope: 'argentina',
+    tagline: 'El gran diario argentino',
+    accentColor: '#DC2626',
+    textColor: '#FFFFFF',
+  },
+  'La Nación': {
+    name: 'La Nación',
+    badge: 'LA NACIÓN',
+    flag: '🇦🇷',
+    scope: 'argentina',
+    tagline: 'Tradición y análisis político',
+    accentColor: '#1E3A8A',
+    textColor: '#FFFFFF',
+  },
+  'Infobae': {
+    name: 'Infobae',
+    badge: 'INFOBAE',
+    flag: '🌎',
+    scope: 'argentina',
+    tagline: 'Periodismo digital en tiempo real',
+    accentColor: '#EA580C',
+    textColor: '#FFFFFF',
+  },
+  'Ámbito Financiero': {
+    name: 'Ámbito Financiero',
+    badge: 'ÁMBITO',
+    flag: '🇦🇷',
+    scope: 'argentina',
+    tagline: 'Economía, finanzas y mercados',
+    accentColor: '#0F172A',
+    textColor: '#FFFFFF',
+  },
+  'La Capital': {
+    name: 'La Capital',
+    badge: 'LA CAPITAL',
+    flag: '⚓',
+    scope: 'argentina',
+    tagline: 'Decano de la Prensa Argentina • Rosario',
+    accentColor: '#0284C7',
+    textColor: '#FFFFFF',
+  },
+  'El Ciudadano': {
+    name: 'El Ciudadano',
+    badge: 'EL CIUDADANO',
+    flag: '⚓',
+    scope: 'argentina',
+    tagline: 'Periodismo cooperativo rosarino',
+    accentColor: '#9333EA',
+    textColor: '#FFFFFF',
+  },
 };
 
-function getBrandForSource(source: string): NewspaperBrand {
+function getBrandForSource(source: string, cableRegion?: string): NewspaperBrand {
   for (const [key, brand] of Object.entries(NEWSPAPER_DIRECTORY)) {
     if (source.toLowerCase().includes(key.toLowerCase())) {
       return brand;
     }
   }
+
+  const scope: ScopeKey =
+    cableRegion === 'eeuu' ||
+    cableRegion === 'europa' ||
+    cableRegion === 'asia' ||
+    cableRegion === 'rusia' ||
+    cableRegion === 'argentina'
+      ? (cableRegion as ScopeKey)
+      : 'europa';
+
   return {
     name: source,
     badge: source.toUpperCase().slice(0, 10),
     flag: '📰',
-    scope: 'internacional',
-    tagline: 'Agencia informativa',
+    scope,
+    tagline: 'Prensa Internacional',
     accentColor: 'var(--ink)',
     textColor: 'var(--paper)',
   };
@@ -160,7 +218,7 @@ export default function WorldKiosk() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Diarios únicos presentes en los cables
+  // Diarios únicos disponibles ordenados
   const availableSources = useMemo(() => {
     const set = new Set<string>();
     for (const c of cables) {
@@ -171,16 +229,19 @@ export default function WorldKiosk() {
 
   const filteredCables = useMemo(() => {
     return cables.filter((item) => {
-      const brand = getBrandForSource(item.source);
+      const brand = getBrandForSource(item.source, item.region);
 
-      // Filtro por ámbito (Scope)
-      const matchesScope = activeScope === 'all' || brand.scope === activeScope;
+      // Filtro por región/ámbito (Scope)
+      const matchesScope =
+        activeScope === 'all' ||
+        item.region === activeScope ||
+        brand.scope === activeScope;
 
       // Filtro por diario específico
       const matchesSource =
         activeSource === 'all' || item.source.toLowerCase().includes(activeSource.toLowerCase());
 
-      // Filtro por búsqueda
+      // Filtro por búsqueda de texto
       const matchesSearch =
         !search ||
         item.originalTitle.toLowerCase().includes(search.toLowerCase()) ||
@@ -197,12 +258,12 @@ export default function WorldKiosk() {
   if (loading) {
     kioskGridContent = (
       <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: 'var(--font-mono)' }}>
-        <div style={{ fontSize: '1.8rem', marginBottom: '12px' }}>📡</div>
-        <p style={{ color: 'var(--ink)', fontWeight: 600, fontSize: '1.05rem', marginBottom: '6px' }}>
-          Sintonizando teletipos de las agencias mundiales y nacionales...
+        <div style={{ fontSize: '2rem', marginBottom: '14px' }}>📡</div>
+        <p style={{ color: 'var(--ink)', fontWeight: 700, fontSize: '1.1rem', marginBottom: '6px' }}>
+          Conectando cables directos de EEUU, Europa, Asia, Rusia y Argentina...
         </p>
-        <p style={{ color: 'var(--ink-soft)', fontSize: '0.85rem' }}>
-          Conectando cables de ultramar, puertos y redacciones de Buenos Aires y Rosario.
+        <p style={{ color: 'var(--ink-soft)', fontSize: '0.86rem' }}>
+          Sintonizando teletipos oficiales de The New York Times, CNN, BBC, El País, RT, Sputnik, Clarín, La Nación y La Capital.
         </p>
       </div>
     );
@@ -218,11 +279,11 @@ export default function WorldKiosk() {
           borderRadius: '4px',
         }}
       >
-        <p style={{ color: 'var(--ink)', fontSize: '1.1rem', fontWeight: 600, marginBottom: '8px' }}>
+        <p style={{ color: 'var(--ink)', fontSize: '1.1rem', fontWeight: 700, marginBottom: '8px' }}>
           No se encontraron despachos con los filtros seleccionados.
         </p>
         <p style={{ color: 'var(--ink-soft)', fontSize: '0.85rem', marginBottom: '16px' }}>
-          Probá ampliando el ámbito regional o restableciendo el término de búsqueda.
+          Probá seleccionando &ldquo;Todos los Diarios&rdquo; o limpiando la barra de búsqueda.
         </p>
         <button
           type="button"
@@ -232,14 +293,14 @@ export default function WorldKiosk() {
             setSearch('');
           }}
           style={{
-            padding: '8px 18px',
+            padding: '9px 20px',
             backgroundColor: 'var(--ink)',
             color: 'var(--paper)',
             border: 'none',
             borderRadius: '3px',
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.8rem',
-            fontWeight: 700,
+            fontSize: '0.82rem',
+            fontWeight: 800,
             cursor: 'pointer',
           }}
         >
@@ -257,7 +318,7 @@ export default function WorldKiosk() {
         }}
       >
         {filteredCables.map((cable) => {
-          const brand = getBrandForSource(cable.source);
+          const brand = getBrandForSource(cable.source, cable.region);
           return (
             <article
               key={cable.id}
@@ -273,13 +334,13 @@ export default function WorldKiosk() {
                 transition: 'transform 0.15s ease, box-shadow 0.15s ease',
               }}
             >
-              {/* Cabezal de Marca del Diario */}
+              {/* Cabezal del Diario con Identidad Oficial */}
               <div
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '8px 14px',
+                  padding: '9px 14px',
                   backgroundColor: 'var(--paper-elevated)',
                   borderBottom: '1px solid var(--ink)',
                   fontFamily: 'var(--font-mono)',
@@ -290,9 +351,9 @@ export default function WorldKiosk() {
                     style={{
                       backgroundColor: brand.accentColor,
                       color: brand.textColor,
-                      fontSize: '0.68rem',
+                      fontSize: '0.7rem',
                       fontWeight: 800,
-                      padding: '3px 8px',
+                      padding: '3px 9px',
                       borderRadius: '2px',
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -324,7 +385,7 @@ export default function WorldKiosk() {
                 </span>
               </div>
 
-              {/* Imagen del despacho con vignette y tag 1-click */}
+              {/* Imagen del despacho con vignette y acceso 1-click directo */}
               {cable.imageUrl && (
                 <div style={{ position: 'relative', width: '100%', height: '180px', backgroundColor: 'var(--ink-faint)' }}>
                   <Image
@@ -334,34 +395,40 @@ export default function WorldKiosk() {
                     sizes="(max-width: 768px) 100vw, 400px"
                     style={{ objectFit: 'cover' }}
                   />
-                  <div
+                  <a
+                    href={cable.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Abrir artículo original completo en ${cable.source}`}
                     style={{
                       position: 'absolute',
                       top: '10px',
                       right: '10px',
-                      backgroundColor: 'rgba(0, 0, 0, 0.82)',
+                      backgroundColor: 'rgba(0, 0, 0, 0.85)',
                       color: '#FFFFFF',
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.66rem',
-                      fontWeight: 700,
-                      padding: '3px 8px',
+                      fontWeight: 800,
+                      padding: '4px 9px',
                       borderRadius: '2px',
                       letterSpacing: '0.06em',
+                      textDecoration: 'none',
                       backdropFilter: 'blur(3px)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '4px',
+                      gap: '5px',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
                     }}
                   >
-                    <span>1-CLICK ORIGINAL</span>
+                    <span>NOTICIA REAL DIRECTA</span>
                     <span>↗</span>
-                  </div>
+                  </a>
                 </div>
               )}
 
               {/* Contenido Editorial de la Noticia */}
               <div style={{ padding: '18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                {/* Titular Original (100% auténtico e intacto) */}
+                {/* Titular Original (100% auténtico e intacto) con enlace directo */}
                 <h3
                   className="font-display"
                   style={{
@@ -373,7 +440,20 @@ export default function WorldKiosk() {
                     letterSpacing: '-0.015em',
                   }}
                 >
-                  {cable.originalTitle}
+                  <a
+                    href={cable.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: 'inherit',
+                      textDecoration: 'none',
+                      transition: 'color 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = brand.accentColor)}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--ink)')}
+                  >
+                    {cable.originalTitle}
+                  </a>
                 </h3>
 
                 {/* Resumen Original del Diario */}
@@ -390,7 +470,7 @@ export default function WorldKiosk() {
                   {cable.originalSummary}
                 </p>
 
-                {/* EL MARCO IRÓNICO ROSARINO (Sello editorial distintivo) */}
+                {/* EL MARCO IRÓNICO ROSARINO */}
                 <div
                   style={{
                     marginTop: 'auto',
@@ -432,10 +512,10 @@ export default function WorldKiosk() {
                         fontSize: '0.62rem',
                         color: 'var(--ink-soft)',
                         textTransform: 'uppercase',
-                        fontWeight: 600,
+                        fontWeight: 700,
                       }}
                     >
-                      {cable.warningTag || 'OJO ROSARINO'}
+                      {cable.warningTag || 'OJO CRÍTICO'}
                     </span>
                   </div>
 
@@ -465,11 +545,11 @@ export default function WorldKiosk() {
                     }}
                   >
                     <span>* Nota original de {cable.source} no intervenida</span>
-                    <span>Barrancas del Paraná</span>
+                    <span>Lectura directa sin filtros</span>
                   </div>
                 </div>
 
-                {/* Barra de Acciones 1-Click Directo */}
+                {/* Barra de Acciones: 1-Click Directo a la Nota Real */}
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <a
                     href={cable.sourceUrl}
@@ -514,7 +594,6 @@ export default function WorldKiosk() {
                       borderRadius: '3px',
                       cursor: 'pointer',
                       boxShadow: '2px 2px 0px var(--ink-soft)',
-                      transition: 'background-color 0.15s ease',
                     }}
                   >
                     🔍 CLAVES
@@ -541,7 +620,7 @@ export default function WorldKiosk() {
         position: 'relative',
       }}
     >
-      {/* Marco Editorial Superior - Kiosco Emblemático */}
+      {/* Marco Editorial Superior del Kiosco */}
       <div
         style={{
           borderBottom: '2px solid var(--ink)',
@@ -549,7 +628,7 @@ export default function WorldKiosk() {
           marginBottom: '26px',
         }}
       >
-        {/* Barra de metadatos y estado del kiosco */}
+        {/* Barra de metadatos */}
         <div
           style={{
             display: 'flex',
@@ -573,7 +652,7 @@ export default function WorldKiosk() {
                 letterSpacing: '0.09em',
               }}
             >
-              EDICIÓN CENTRAL • KIOSCO DE DIARIOS
+              PRENSA GLOBAL EN TIEMPO REAL
             </span>
             <span
               style={{
@@ -583,7 +662,7 @@ export default function WorldKiosk() {
                 letterSpacing: '0.04em',
               }}
             >
-              ● ACCESO DIRECTO 1-CLICK A LA FUENTE ORIGINAL
+              ● NOTICIAS REALES DIRECTAS • EEUU • EUROPA • ASIA • RUSIA • ARGENTINA
             </span>
           </div>
 
@@ -599,11 +678,11 @@ export default function WorldKiosk() {
               borderRadius: '2px',
             }}
           >
-            {filteredCables.length} DESPACHOS ACTIVOS
+            {filteredCables.length} NOTICIAS ACTIVAS
           </div>
         </div>
 
-        {/* Título Principal y Manifiesto Irónico */}
+        {/* Título Principal y Manifiesto */}
         <div
           style={{
             display: 'flex',
@@ -626,7 +705,7 @@ export default function WorldKiosk() {
                 textTransform: 'uppercase',
               }}
             >
-              El Gran Kiosco de Diarios del Mundo & la Nación
+              Los Mejores Diarios del Mundo & la Nación
             </h2>
             <p
               className="font-body"
@@ -638,12 +717,12 @@ export default function WorldKiosk() {
                 maxWidth: '780px',
               }}
             >
-              Entrá directo con <strong>un solo click a las portadas de los principales diarios</strong> del país y del planeta.
-              La nota original se lee <strong>100% auténtica y sin censura</strong> en el medio emisor; nuestra redacción en las barrancas le estampa una <strong>advertencia irónica al paso</strong> para no comerte ningún verso oficial antes de que te cobren el flete.
+              Sin relleno ni simulaciones: entrá con <strong>un solo click a las noticias reales</strong> de <strong>EEUU</strong> (The New York Times, CNN), <strong>Europa</strong> (El País, BBC Mundo, DW, The Guardian), <strong>Asia</strong> (Al Jazeera), <strong>Rusia</strong> (RT, Sputnik) y <strong>Argentina</strong> (Clarín, La Nación, Infobae, Ámbito, La Capital).
+              Cada despacho incluye una <strong>reseña editorial irónica al paso</strong> de nuestra redacción sin alterar ni una sola coma del texto original.
             </p>
           </div>
 
-          {/* Buscador de cables */}
+          {/* Buscador de noticias */}
           <div style={{ minWidth: '260px', flex: '1 1 280px', maxWidth: '380px' }}>
             <label
               htmlFor="kiosk-search-input"
@@ -658,13 +737,13 @@ export default function WorldKiosk() {
                 textTransform: 'uppercase',
               }}
             >
-              Buscar en los Diarios
+              Buscar en la Prensa Mundial
             </label>
             <div style={{ position: 'relative' }}>
               <input
                 id="kiosk-search-input"
                 type="text"
-                placeholder="Filtrar por titular, diario o ironía..."
+                placeholder="Titular, diario, país o ironía..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 style={{
@@ -704,7 +783,7 @@ export default function WorldKiosk() {
         </div>
       </div>
 
-      {/* Selector de Ámbito Regional (Scope Tabs) */}
+      {/* Selector de Regiones Mundiales: EEUU, Europa, Asia, Rusia, Argentina */}
       <div
         style={{
           display: 'flex',
@@ -776,7 +855,7 @@ export default function WorldKiosk() {
             whiteSpace: 'nowrap',
           }}
         >
-          TODOS LOS CABEZALES ({cables.length})
+          TODOS LOS DIARIOS ({cables.length})
         </button>
 
         {availableSources.map((source) => {
@@ -1014,7 +1093,7 @@ export default function WorldKiosk() {
                   boxShadow: '2px 2px 0px var(--red-urgent)',
                 }}
               >
-                <span>LEER EN {selectedCable.source.toUpperCase()} (ORIGINAL COMPLETO)</span>
+                <span>ABRIR NOTICIA ORIGINAL EN {selectedCable.source.toUpperCase()}</span>
                 <span>↗</span>
               </a>
             </div>
