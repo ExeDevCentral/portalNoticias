@@ -120,7 +120,7 @@ export default function AdminPage() {
 
   const handleGenerate12hEdition = async () => {
     setGenerating12h(true);
-    setEditorial12hMessage('Generando y publicando edición autónoma 12hs (Voz Belgrano, Urquiza y Clásicos)...');
+    setEditorial12hMessage('Generando y publicando edición autónoma 12hs (Voz Rosarina, Puerto y Clásicos)...');
     try {
       const res = await fetch('/api/cron/editorial-12h', { method: 'POST' });
       const data = await res.json();
@@ -365,14 +365,14 @@ export default function AdminPage() {
                   BOT IA EDITORIAL 12HS
                 </span>
                 <span className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)' }}>
-                  Voz Belgrano, Urquiza y Clásicos
+                  Voz Rosarina, Puerto y Clásicos (Central / NOB)
                 </span>
               </div>
               <p
                 className="font-body"
                 style={{ fontSize: '0.84rem', color: 'var(--ink)', margin: '0 0 12px 0', lineHeight: 1.4 }}
               >
-                Emite y publica de inmediato una tirada de 5 crónicas de jerarquía: legado portuario de Urquiza, clásico Newell&apos;s y Central, vigilia belgraniana y debate federal con fotos de prensa reales contextualizadas.
+                Emite y publica de inmediato una tirada de 5 crónicas de jerarquía: operatoria portuaria del Paraná, clásico Newell&apos;s y Central, vigilia cívica en las barrancas y debate federal con fotos de prensa reales contextualizadas.
               </p>
               <button
                 type="button"

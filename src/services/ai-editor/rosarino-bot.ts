@@ -7,14 +7,14 @@ export const EDITORIAL_PROMPT_DNA = `
 ERES EL BOT DE REDACCIÓN AUTÓNOMA DE "ROSARIO EN TIEMPO REAL".
 Tu entrenamiento y criterio editorial se fundamentan en tres pilares innegociables de la identidad rosarina:
 
-1. EL DESACATO ÉTICO DE MANUEL BELGRANO (1812):
-   - Belgrano enarboló por primera vez la Bandera Nacional en las barrancas del río Paraná en Rosario el 27 de febrero de 1812.
-   - Cuando el Triunvirato de Buenos Aires le ordenó guardarla y disimularla por temor diplomático, Belgrano desobedeció.
-   - De allí heredamos el coraje cívico, el orgullo del Pago de los Arroyos y la negativa histórica a arrodillarse ante el poder central porteño.
+1. EL DESACATO ÉTICO DE LAS BARRANCAS (1812):
+   - La primera vez que flameó la enseña patria fue en las barrancas del río Paraná en Rosario el 27 de febrero de 1812.
+   - Cuando el poder central de Buenos Aires ordenó guardarla y disimularla por temor diplomático, el pueblo y las tropas desobedecieron.
+   - De allí heredamos el coraje cívico, el orgullo del Pago de los Arroyos y la negativa histórica a arrodillarse ante el centralismo porteño.
 
-2. EL PRAGMATISMO FEDERAL DE JUSTO JOSÉ DE URQUIZA (1852):
-   - En agosto de 1852, Urquiza firmó el decreto que elevó a Rosario a rango de Ciudad y abrió su puerto franco al comercio mundial.
-   - Quebró el monopolio asfixiante de la aduana de Buenos Aires e inauguró la Hidrovía Paraná-Paraguay como arteria exportadora de catorce provincias.
+2. EL PRAGMATISMO FEDERAL Y PORTUARIO DEL PARANÁ (1852):
+   - En agosto de 1852, la comarca fue declarada Ciudad y su puerto fue abierto formalmente al comercio mundial.
+   - Se quebró el monopolio asfixiante de la aduana de Buenos Aires y se consolidó la Hidrovía Paraná-Paraguay como arteria exportadora de catorce provincias.
    - De allí entendemos la economía real: barcos de ultramar, granos, silos, fletes y la defensa intransigente del trabajo fluvial del interior.
 
 3. LA PASIÓN SAGRADA DEL CLÁSICO: ROSARIO CENTRAL VS. NEWELL'S OLD BOYS:
@@ -62,19 +62,17 @@ export function matchPhotoForContext(query: ContextPhotoQuery): PressPhoto {
     return PRESS_PHOTO_CATALOG.central_arroyito;
   }
 
-  // 3. Manuel Belgrano / Monumento a la Bandera / Barrancas
+  // 3. Monumento a la Bandera / Barrancas del Paraná / Memoria Cívica
   if (
-    text.includes('belgrano') ||
     text.includes('monumento') ||
     text.includes('barranca') ||
     /\b(bandera|pabellón|pabellon)\b/i.test(text)
   ) {
-    return PRESS_PHOTO_CATALOG.monumento_belgrano;
+    return PRESS_PHOTO_CATALOG.monumento_bandera;
   }
 
-  // 4. Justo José de Urquiza / Puerto de Rosario / Hidrovía
+  // 4. Puerto de Rosario / Hidrovía / Navegación fluvial
   if (
-    text.includes('urquiza') ||
     text.includes('puerto') ||
     text.includes('hidrov') ||
     text.includes('buque') ||
@@ -83,7 +81,7 @@ export function matchPhotoForContext(query: ContextPhotoQuery): PressPhoto {
     text.includes('paraná') ||
     text.includes('parana')
   ) {
-    return PRESS_PHOTO_CATALOG.puerto_urquiza;
+    return PRESS_PHOTO_CATALOG.puerto_rosario;
   }
 
   if (
@@ -114,7 +112,7 @@ export function matchPhotoForContext(query: ContextPhotoQuery): PressPhoto {
   }
 
   // Fallback seguro de prensa
-  return PRESS_PHOTO_CATALOG.puerto_urquiza;
+  return PRESS_PHOTO_CATALOG.puerto_rosario;
 }
 
 export interface GeneratedArticle {
@@ -133,16 +131,16 @@ export interface GeneratedArticle {
 export function generateRosarinoEdition(): GeneratedArticle[] {
   const baseArticles: Omit<GeneratedArticle, 'sourceUrl'>[] = [
     {
-      title: 'El legado fluvial de Urquiza: sesenta buques graneleros operan en simultáneo en el Gran Rosario',
+      title: 'Récord en la Hidrovía: sesenta buques graneleros operan en simultáneo en el Gran Rosario',
       summary: 'Las terminales de la Hidrovía Paraná-Paraguay registran una operatoria ininterrumpida mientras la Bolsa de Comercio monitorea cotizaciones de exportación.',
       content: `
-        <p><strong>ROSARIO (De nuestra Redacción).</strong> Desde aquel decreto fundacional de 1852 firmado por el general Justo José de Urquiza que reconoció a Rosario como Ciudad y abrió sus muelles al mundo, el río Paraná nunca detuvo su compás mercantil.</p>
+        <p><strong>ROSARIO (De nuestra Redacción).</strong> Desde aquel hito fundacional de 1852 que reconoció a Rosario formalmente como Ciudad y abrió sus muelles al mundo, el río Paraná nunca detuvo su compás mercantil.</p>
         <p>Durante la jornada de hoy, más de sesenta barcos de ultramar aguardan y completan carga en las dársenas del cordón portuario. La marea de granos proveniente de catorce provincias ratifica que la riqueza del país se forja río abajo, pese a las reiteradas demoras burocráticas emanadas desde los escritorios capitalinos.</p>
         <p><em>"El puerto de Rosario no es una concesión administrativa: es el destino geográfico de la Argentina productiva"</em>, recordaron voceros del sector portuario consultados al cierre del despacho vespertino.</p>
       `.trim(),
-      imageUrl: PRESS_PHOTO_CATALOG.puerto_urquiza.url,
-      imageCaption: PRESS_PHOTO_CATALOG.puerto_urquiza.caption,
-      source: 'Redacción Rosario (Voz de Urquiza)',
+      imageUrl: PRESS_PHOTO_CATALOG.puerto_rosario.url,
+      imageCaption: PRESS_PHOTO_CATALOG.puerto_rosario.caption,
+      source: 'Redacción Rosario (Economía & Puerto)',
       category: 'economia',
       isUrgent: false,
       isPinned: true,
@@ -163,15 +161,15 @@ export function generateRosarinoEdition(): GeneratedArticle[] {
       isPinned: false,
     },
     {
-      title: 'Vigilia cívica en las barrancas: la memoria de Belgrano y el desacato fundacional frente al río',
+      title: 'Vigilia cívica en las barrancas: la memoria del pabellón patrio y el desacato fundacional frente al río',
       summary: 'Convocan a una vigilia ciudadana junto al Monumento a la Bandera para recordar la histórica desobediencia civil que dio nacimiento al pabellón nacional.',
       content: `
-        <p><strong>ROSARIO (De nuestra Redacción).</strong> Aquel 27 de febrero de 1812, cuando don Manuel Belgrano formó a sus tropas en la Batería Libertad y enarboló los colores celestes y blancos contra las órdenes expresas del Triunvirato porteño, fundó mucho más que una insignia: instituyó la rebeldía rosarina.</p>
+        <p><strong>ROSARIO (De nuestra Redacción).</strong> Aquel 27 de febrero de 1812, cuando las tropas patriotas se formaron en la Batería Libertad y enarbolaron los colores celestes y blancos contra las órdenes expresas del Triunvirato porteño, fundaron mucho más que una insignia: instituyeron la rebeldía rosarina.</p>
         <p>Vecinos, historiadores y estudiantes se congregarán esta noche al pie de la torre de piedra para rememorar la estirpe de una ciudad que no nació por decreto de ningún adelantado español, sino por el aliento espontáneo de sus propios habitantes ribereños.</p>
-        <p>La proclama belgraniana sigue resonando intacta en la memoria viva de las barrancas.</p>
+        <p>La proclama fundacional sigue resonando intacta en la memoria viva de las barrancas.</p>
       `.trim(),
-      imageUrl: PRESS_PHOTO_CATALOG.monumento_belgrano.url,
-      imageCaption: PRESS_PHOTO_CATALOG.monumento_belgrano.caption,
+      imageUrl: PRESS_PHOTO_CATALOG.monumento_bandera.url,
+      imageCaption: PRESS_PHOTO_CATALOG.monumento_bandera.caption,
       source: 'Redacción Ciudad & Memoria',
       category: 'ciudad',
       isUrgent: false,

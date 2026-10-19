@@ -319,7 +319,7 @@ export default function HomePage() {
           </span>
         </div>
 
-        {/* SISTEMA DE CRÓNICAS HISTÓRICAS & MANUAL AL PASO (BELGRANO, URQUIZA & CLUBS) */}
+        {/* SISTEMA DE CRÓNICAS HISTÓRICAS & MANUAL AL PASO */}
         <CronicasRosarinas
           activeSection={selectedSection}
           onSelectSection={handleSelectSection}
@@ -345,7 +345,7 @@ export default function HomePage() {
                 Historiadores sugieren que Rosario pudo haber sido la tranquila capital federal de una república pacífica y previsible
               </span>
               <span className="satirical-correction" style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)' }}>
-                Urquiza y Belgrano confirman desde la eternidad que la insubordinación cívica y el clásico del domingo fueron la única opción razonable
+                Las barrancas del Paraná confirman desde la historia que la insubordinación cívica y el clásico del domingo fueron la única opción razonable
               </span>
             </h2>
 
@@ -360,7 +360,7 @@ export default function HomePage() {
                 paddingLeft: '16px',
               }}
             >
-              Desde las barrancas donde don Manuel desobedeció a Buenos Aires izando dos paños de cielo hasta las terminales portuarias que cargan cincuenta millones de toneladas de cereal, la ciudad continúa su pacto secreto: alimentar a la nación mientras reniega cortésmente de su burocracia centralista.
+              Desde las barrancas donde se desobedeció a Buenos Aires izando dos paños de cielo hasta las terminales portuarias que cargan cincuenta millones de toneladas de cereal, la ciudad continúa su pacto secreto: alimentar a la nación mientras reniega cortésmente de su burocracia centralista.
             </p>
 
             {/* Foto de Prensa Tratada */}
@@ -373,7 +373,7 @@ export default function HomePage() {
               />
             </div>
             <div className="press-caption">
-              REGISTRO GRÁFICO: El río Paraná en su curso majestuoso frente a Rosario. A la izquierda, la memoria de las baterías de Belgrano; a lo lejos, las siluetas de buques graneleros aguardando turno en la Hidrovía. (Foto: Archivo Histórico Editorial)
+              REGISTRO GRÁFICO: El río Paraná en su curso majestuoso frente a Rosario. A la izquierda, la memoria de las baterías ribereñas; a lo lejos, las siluetas de buques graneleros aguardando turno en la Hidrovía. (Foto: Archivo Histórico Editorial)
             </div>
 
             {/* Cuerpo de la crónica con método periodístico */}

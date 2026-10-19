@@ -16,20 +16,20 @@ interface CronicasRosarinasProps {
   onSelectSection: (section: RosarioSection) => void;
 }
 
-type DossierTab = 'panoramica' | 'belgrano' | 'urquiza' | 'antropologia';
+type DossierTab = 'panoramica' | 'barrancas' | 'puerto' | 'antropologia';
 
 const CRONICA_TABS: { key: RosarioSection; label: string }[] = [
   { key: 'portada', label: '1812: Barrancas' },
   { key: 'seguridad', label: 'Seguridad & Ciudad' },
-  { key: 'economia', label: '1852: Puerto Urquiza' },
+  { key: 'economia', label: '1852: Puerto Libre' },
   { key: 'futbol', label: 'Manual Fútbol' },
   { key: 'cultura', label: 'Pichincha & Noche' },
 ];
 
 const DOSSIER_TABS: { key: DossierTab; label: string }[] = [
   { key: 'panoramica', label: 'Visión Comparativa' },
-  { key: 'belgrano', label: 'Dossier Belgrano (1812)' },
-  { key: 'urquiza', label: 'Dossier Urquiza (1852)' },
+  { key: 'barrancas', label: 'Dossier Barrancas (1812)' },
+  { key: 'puerto', label: 'Dossier Puerto Libre (1852)' },
   { key: 'antropologia', label: 'Ensayo Antropológico' },
 ];
 
@@ -37,9 +37,9 @@ function renderDossierIcon(key: DossierTab) {
   switch (key) {
     case 'panoramica':
       return <IconFeather size={12} />;
-    case 'belgrano':
+    case 'barrancas':
       return <IconBook size={12} />;
-    case 'urquiza':
+    case 'puerto':
       return <IconAnchor size={12} />;
     case 'antropologia':
       return <IconShield size={12} />;
@@ -148,7 +148,7 @@ export default function CronicasRosarinas({
       </div>
 
       {/* =========================================================================
-          BLOQUE DE PROFUNDIDAD HISTÓRICA & ANTROPOLÓGICA: BELGRANO Y URQUIZA
+          BLOQUE DE PROFUNDIDAD HISTÓRICA & ANTROPOLÓGICA: BARRANCAS (1812) Y PUERTO LIBRE (1852)
          ========================================================================= */}
       <div
         style={{
@@ -191,7 +191,7 @@ export default function CronicasRosarinas({
                 fontWeight: 800,
               }}
             >
-              Los Dos Padres Involuntarios: Manuel Belgrano y Justo José de Urquiza
+              Los Dos Hitos Fundacionales: Las Barrancas (1812) y El Puerto Libre (1852)
             </h3>
           </div>
 
@@ -236,7 +236,7 @@ export default function CronicasRosarinas({
               gap: '24px',
             }}
           >
-            {/* Tarjeta Belgrano */}
+            {/* Tarjeta Barrancas */}
             <div
               style={{
                 backgroundColor: 'var(--paper)',
@@ -260,10 +260,10 @@ export default function CronicasRosarinas({
                 <span>BARRANCAS DEL PARANÁ</span>
               </div>
               <h4 className="font-display" style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>
-                Manuel Belgrano: El símbolo sin linaje colonial
+                Las Barrancas de 1812: El símbolo sin linaje colonial
               </h4>
               <p className="font-body" style={{ fontSize: '0.96rem', lineHeight: 1.6, color: 'var(--ink-soft)', margin: 0 }}>
-                En una comarca ribereña sin cabildo formal, Belgrano comprendió que un ejército patriota no podía luchar con estandartes ajenos. Su creación de la enseña nacional en las barrancas y su posterior negativa a esconderla tras la amonestación del Triunvirato legaron a Rosario su rasgo primordial: <em>la legitimidad del desacato cuando la causa es justa</em>.
+                En una comarca ribereña sin cabildo formal, las tropas y los vecinos comprendieron que un ejército patriota no podía luchar con estandartes ajenos. La creación de la enseña nacional en las barrancas y la firme negativa a esconderla tras la amonestación del Triunvirato legaron a Rosario su rasgo primordial: <em>la legitimidad del desacato cuando la causa es justa</em>.
               </p>
               <div
                 className="font-mono"
@@ -279,7 +279,7 @@ export default function CronicasRosarinas({
               </div>
             </div>
 
-            {/* Tarjeta Urquiza */}
+            {/* Tarjeta Puerto Libre */}
             <div
               style={{
                 backgroundColor: 'var(--paper)',
@@ -303,10 +303,10 @@ export default function CronicasRosarinas({
                 <span>CONFEDERACIÓN ARGENTINA</span>
               </div>
               <h4 className="font-display" style={{ fontSize: '1.2rem', margin: '0 0 8px 0' }}>
-                Justo José de Urquiza: El puerto rebelde y la metrópoli autoforjada
+                El Puerto Libre de 1852: La apertura rebelde y la metrópoli autoforjada
               </h4>
               <p className="font-body" style={{ fontSize: '0.96rem', lineHeight: 1.6, color: 'var(--ink-soft)', margin: 0 }}>
-                Al derrocar a Rosas, Urquiza elevó por decreto a la Villa a la jerarquía de Ciudad y puerto de ultramar para disputar la exclusividad aduanera porteña. La postergación de Rosario como Capital de la República (tres veces sancionada por el Congreso y tres veces vetada por Mitre y Sarmiento) consolidó la doctrina de Nicasio Oroño: <em>Rosario, hija de su propio esfuerzo</em>.
+                En 1852, un decreto federal elevó a la modesta Villa a la jerarquía de Ciudad y puerto de ultramar para disputar la exclusividad aduanera porteña. La postergación de Rosario como Capital de la República (tres veces sancionada por el Congreso y tres veces vetada por Mitre y Sarmiento) consolidó la doctrina de Nicasio Oroño: <em>Rosario, hija de su propio esfuerzo</em>.
               </p>
               <div
                 className="font-mono"
@@ -324,18 +324,18 @@ export default function CronicasRosarinas({
           </div>
         )}
 
-        {/* CONTENIDO 2: DOSSIER PROFUNDO MANUEL BELGRANO */}
-        {dossierTab === 'belgrano' && (
+        {/* CONTENIDO 2: DOSSIER PROFUNDO BARRANCAS 1812 */}
+        {dossierTab === 'barrancas' && (
           <div style={{ backgroundColor: 'var(--paper)', padding: '22px', border: '1px solid var(--ink-faint)' }}>
             <div className="font-mono" style={{ fontSize: '0.74rem', color: 'var(--blue-parana)', fontWeight: 700, marginBottom: '6px' }}>
-              MANUEL BELGRANO EN EL PAGO DE LOS ARROYOS (FEBRERO DE 1812)
+              EL DESACATO ÉTICO EN EL PAGO DE LOS ARROYOS (FEBRERO DE 1812)
             </div>
             <h4 className="font-display" style={{ fontSize: '1.5rem', margin: '0 0 12px 0' }}>
               La invención de un símbolo en una orilla sin cabildo: antropología del juramento
             </h4>
             <div style={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               <p style={{ marginBottom: '14px' }}>
-                A diferencia de Santa Fe la Vieja o Buenos Aires, el caserío de la Capilla del Rosario no poseía acta de fundación real ni linaje de encomenderos. Hacia febrero de 1812, cuando el coronel Manuel Belgrano arribó con el encargo de vigilar los corsarios realistas que bajaban desde Montevideo, encontró un poblado de hacendados, troperos y pescadores sin escudo aristocrático.
+                A diferencia de Santa Fe la Vieja o Buenos Aires, el caserío de la Capilla del Rosario no poseía acta de fundación real ni linaje de encomenderos. Hacia febrero de 1812, cuando el destacamento patriota arribó con el encargo de vigilar los corsarios realistas que bajaban desde Montevideo, encontró un poblado de hacendados, troperos y pescadores sin escudo aristocrático.
               </p>
               <div
                 style={{
@@ -355,32 +355,32 @@ export default function CronicasRosarinas({
                 <div>
                   &ldquo;Siendo preciso enarbolar bandera y no teniéndola, la mandé hacer blanca y celeste, conforme a los colores de la escarapela nacional. Espero que sea de la aprobación de Vuestra Excelencia.&rdquo;
                   <div className="font-mono" style={{ fontSize: '0.75rem', fontStyle: 'normal', color: 'var(--ink-soft)', marginTop: '4px' }}>
-                    — Oficio de Manuel Belgrano al Primer Triunvirato, Batería Libertad, 27 de febrero de 1812.
+                    — Despacho oficial remitido desde la Batería Libertad al Primer Triunvirato, 27 de febrero de 1812.
                   </div>
                 </div>
               </div>
               <p style={{ marginBottom: '14px' }}>
-                La respuesta de Bernardino Rivadavia y el Triunvirato (3 de marzo de 1812) fue fulminante: ordenaron destruir la bandera o sepultarla bajo reserva por prudencia ante la diplomacia británica, que aún exigía sostener la ficción de fidelidad a Fernando VII. Para cuando el correo porteño llegó al Paraná, Belgrano ya marchaba al mando del Ejército del Norte. Al enterarse meses después en Jujuy, Belgrano respondió con una dignidad epistolar que aún resuena: <em>«La guardaré silenciosamente para enarbolarla el día de una gran victoria»</em>.
+                La respuesta de Bernardino Rivadavia y el Triunvirato (3 de marzo de 1812) fue fulminante: ordenaron destruir la bandera o sepultarla bajo reserva por prudencia ante la diplomacia británica, que aún exigía sostener la ficción de fidelidad a Fernando VII. Para cuando el correo porteño llegó al Paraná, la tropa patriota ya marchaba al mando del Ejército del Norte. Al enterarse meses después en Jujuy, el coronel en jefe respondió con una dignidad epistolar que aún resuena: <em>«La guardaré silenciosamente para enarbolarla el día de una gran victoria»</em>.
               </p>
               <p style={{ margin: 0 }}>
-                <strong>Lectura antropológica:</strong> Rosario adoptó este momento fundante como una liturgia cívica laica. Cosme Maciel izando el paño, María Catalina Echeverría de Vidal cosiéndolo en su hogar y el pueblo en silencio frente a las islas del Espinillo fundaron una memoria basada no en la obediencia cortesana, sino en la audacia civil comunitaria.
+                <strong>Lectura antropológica:</strong> Rosario adoptó este momento fundante como una liturgia cónica laica. Cosme Maciel izando el paño, María Catalina Echeverría de Vidal cosiéndolo en su hogar y el pueblo en silencio frente a las islas del Espinillo fundaron una memoria basada no en la obediencia cortesana, sino en la audacia civil comunitaria.
               </p>
             </div>
           </div>
         )}
 
-        {/* CONTENIDO 3: DOSSIER PROFUNDO JUSTO JOSÉ DE URQUIZA */}
-        {dossierTab === 'urquiza' && (
+        {/* CONTENIDO 3: DOSSIER PROFUNDO PUERTO DE LA CONFEDERACIÓN 1852 */}
+        {dossierTab === 'puerto' && (
           <div style={{ backgroundColor: 'var(--paper)', padding: '22px', border: '1px solid var(--ink-faint)' }}>
             <div className="font-mono" style={{ fontSize: '0.74rem', color: 'var(--amber-alert)', fontWeight: 700, marginBottom: '6px' }}>
-              JUSTO JOSÉ DE URQUIZA Y EL PUERTO DE LA CONFEDERACIÓN (1852–1873)
+              EL PUERTO FEDERAL DE LA CONFEDERACIÓN (1852–1873)
             </div>
             <h4 className="font-display" style={{ fontSize: '1.5rem', margin: '0 0 12px 0' }}>
               La geopolítica del río abierto y la capital que la oligarquía vetó tres veces
             </h4>
             <div style={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               <p style={{ marginBottom: '14px' }}>
-                El 5 de agosto de 1852, a instancias del gobernador santafesino Domingo Crespo, el Director Provisorio de la Confederación, Justo José de Urquiza, firmó el decreto que elevó a la modesta Villa del Rosario al rango de <strong>Ciudad</strong>. Urquiza comprendía que la libre navegación de los ríos interiores (garantizada en la Constitución de 1853) carecía de sentido práctico sin un puerto de aguas profundas que compitiera de igual a igual con el monopolio de Buenos Aires.
+                El 5 de agosto de 1852, a instancias del gobernador santafesino Domingo Crespo, el gobierno provisorio de la Confederación firmó el histórico decreto que elevó a la modesta Villa del Rosario al rango de <strong>Ciudad</strong>. La visión federal comprendía que la libre navegación de los ríos interiores (garantizada en la Constitución de 1853) carecía de sentido práctico sin un puerto de aguas profundas que compitiera de igual a igual con el monopolio de Buenos Aires.
               </p>
               <div
                 style={{
@@ -400,7 +400,7 @@ export default function CronicasRosarinas({
                 <div>
                   &ldquo;Rosario no es una dársena provincial: es la boca del comercio del interior de la República. Quien pretenda someterla a la aduana de una sola provincia condena a la Confederación a la miseria perpetua.&rdquo;
                   <div className="font-mono" style={{ fontSize: '0.75rem', fontStyle: 'normal', color: 'var(--ink-soft)', marginTop: '4px' }}>
-                    — Justo José de Urquiza, Mensaje a la Legislatura de Paraná, 1854.
+                    — Mensaje Federal a la Legislatura de Paraná, 1854.
                   </div>
                 </div>
               </div>
@@ -428,10 +428,10 @@ export default function CronicasRosarinas({
                 La matriz cultural de Rosario se explica por una singularidad antropológica: es la única gran concentración urbana de la Argentina que nunca tuvo fundador con título nobiliario ni fue sede virreinal, eclesiástica o burocrática. Mientras Córdoba se edificaba en torno a la teología y Buenos Aires sobre el privilegio fiscal de su Aduana, Rosario creció como una colonia fenicia: dependiente exclusivamente de su calado náutico, el acopio de granos y la inventiva de sus habitantes.
               </p>
               <p style={{ marginBottom: '14px' }}>
-                De <strong>Belgrano</strong> heredó la dimensión moral: el orgullo de haber sido el escenario de la primera gran desobediencia cívica de la patria, donde un símbolo nacional nació del paño cosido por una vecina y no de la heráldica real.
+                Del <strong>desacato de 1812 en las barrancas</strong> heredó la dimensión moral: el orgullo de haber sido el escenario de la primera gran desobediencia cívica de la patria, donde un símbolo nacional nació del paño cosido por una vecina y no de la heráldica real.
               </p>
               <p style={{ marginBottom: '14px' }}>
-                De <strong>Urquiza</strong> recibió la dimensión material: la confirmación de que la riqueza del interior del país podía dialogar directamente con el Atlántico y Europa sin pedir la venia de los salones porteños.
+                De la <strong>apertura portuaria de 1852</strong> recibió la dimensión material: la confirmación de que la riqueza del interior del país podía dialogar directamente con el Atlántico y Europa sin pedir la venia de los salones porteños.
               </p>
               <p style={{ margin: 0 }}>
                 En la intersección de ambas fuerzas floreció la personalidad rosarina moderna: apasionada, escéptica de los dogmas oficiales, refractaria a los mandatos foráneos y consumida por dos amores viscerales: el río Paraná que se va al mar y la pelota de cuero que rueda cada domingo en el Parque o en Arroyito.
@@ -640,11 +640,11 @@ export default function CronicasRosarinas({
                 El Triunvirato ordena conservar los colores hispánicos para mantener prudencia diplomática
               </span>
               <span className="satirical-correction" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)' }}>
-                Belgrano desembarca en el barro rosarino, cose dos trapos celestes y declara fundada la insumisión nacional
+                Se desembarca en el barro rosarino, se cosen dos paños celestes y se declara fundada la insumisión nacional
               </span>
             </h3>
             <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
-              Rosario es una de las pocas ciudades del continente americano que no fue fundada por ningún conquistador con espada y crucifijo, sino que se fue amontonando espontáneamente alrededor de una capilla humilde y el contrabando del río. Por eso, cuando don Manuel Belgrano llegó con sus hombres en 1812 y les preguntó a los pobladores de qué lado estaban, los rosarinos simplemente respondieron: <em>&ldquo;Del que nos deje comerciar en paz sin pagarle alcabalas a Buenos Aires&rdquo;</em>.
+              Rosario es una de las pocas ciudades del continente americano que no fue fundada por ningún conquistador con espada y crucifijo, sino que se fue amontonando espontáneamente alrededor de una capilla humilde y el contrabando del río. Por eso, cuando los oficiales patriotas llegaron con sus tropas en 1812 y les preguntaron a los pobladores de qué lado estaban, los rosarinos simplemente respondieron: <em>&ldquo;Del que nos deje comerciar en paz sin pagarle alcabalas a Buenos Aires&rdquo;</em>.
             </p>
             <div className="font-mono" style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', borderTop: '1px solid var(--ink-faint)', paddingTop: '10px' }}>
               ARCHIVO HISTÓRICO: 27 de febrero de 1812. Las baterías &ldquo;Libertad&rdquo; e &ldquo;Independencia&rdquo; registraron un total de cero disparos contra naves reales pero cien por ciento de efectividad cívica.
@@ -660,7 +660,7 @@ export default function CronicasRosarinas({
                 Comisión bicameral promete pacificación integral mediante 400 folletos impresos en papel satinado
               </span>
               <span className="satirical-correction" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)' }}>
-                Belgrano observa 180 domos de inteligencia artificial en Circunvalación y pregunta por qué no apuntan al puerto porteño
+                El vigía del río observa 180 domos de inteligencia artificial en Circunvalación y pregunta por qué no apuntan al puerto porteño
               </span>
             </h3>
             <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
@@ -674,7 +674,7 @@ export default function CronicasRosarinas({
 
         {activeSection === 'economia' && (
           <div>
-            <span className="badge-deadpan">ECONOMÍA & HIDROVÍA — LA VENGANZA DE URQUIZA</span>
+            <span className="badge-deadpan">ECONOMÍA & HIDROVÍA — LA REBELIÓN DEL PUERTO LIBRE</span>
             <h3 style={{ margin: '10px 0 14px 0' }}>
               <span className="strikethrough-official">
                 Aduana Central celebra récord de retenciones agropecuarias aplicadas desde oficinas con aire acondicionado en Balcarce 50
@@ -684,7 +684,7 @@ export default function CronicasRosarinas({
               </span>
             </h3>
             <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
-              En 1852, Urquiza creó la Aduana de Rosario con derechos diferenciales para que los barcos europeos no tuvieran que arrodillarse ante el puerto de Buenos Aires. Ciento setenta y cuatro años después, la Hidrovía Paraná-Paraguay es la arteria por donde sale el 80% de la harina y aceite de soja de la República. El Paraná es marrón, espeso y majestuoso: lleva en su corriente más dólares que toda la City porteña, pero los rosarinos todavía tienen que cruzar a Entre Ríos en balsa si hay niebla en el puente.
+              En 1852, se creó la Aduana de Rosario con derechos diferenciales para que los barcos europeos no tuvieran que arrodillarse ante el puerto de Buenos Aires. Ciento setenta y cuatro años después, la Hidrovía Paraná-Paraguay es la arteria por donde sale el 80% de la harina y aceite de soja de la República. El Paraná es marrón, espeso y majestuoso: lleva en su corriente más dólares que toda la City porteña, pero los rosarinos todavía tienen que cruzar a Entre Ríos en balsa si hay niebla en el puente.
             </p>
             <div className="font-mono" style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', borderTop: '1px solid var(--ink-faint)', paddingTop: '10px' }}>
               DATO LOGÍSTICO: Calado oficial en 34 pies. Tiempo promedio de carga de un Panamax: 28 horas continuas al son de cumbia santafesina.

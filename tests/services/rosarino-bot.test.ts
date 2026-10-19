@@ -8,9 +8,9 @@ import {
 
 describe('Rosarino Editorial Bot Service', () => {
   describe('Contextual Photo Matcher', () => {
-    it('matches Monumento Nacional a la Bandera for Belgrano and civic identity news', () => {
+    it('matches Monumento Nacional a la Bandera for civic identity and barrancas news', () => {
       const photo = matchPhotoForContext({
-        title: 'Homenaje a Belgrano en las barrancas del Paraná con vigilia ciudadana',
+        title: 'Homenaje a la enseña patria en las barrancas del Paraná con vigilia ciudadana',
         category: 'ciudad',
       });
 
@@ -19,9 +19,9 @@ describe('Rosarino Editorial Bot Service', () => {
       expect(photo.caption.toLowerCase()).toContain('monumento');
     });
 
-    it('matches Puerto de Rosario / Hidrovía for Urquiza and grain export news', () => {
+    it('matches Puerto de Rosario / Hidrovía for grain export and river navigation news', () => {
       const photo = matchPhotoForContext({
-        title: 'El legado portuario de Urquiza: récord de buques en los muelles de la Hidrovía',
+        title: 'Récord portuario: buques graneleros operan en los muelles de la Hidrovía',
         category: 'economia',
       });
 
@@ -51,11 +51,12 @@ describe('Rosarino Editorial Bot Service', () => {
   });
 
   describe('Editorial Edition Generator (12-hour cycle)', () => {
-    it('contains the core Rosarino DNA prompt mentioning Belgrano, Urquiza, and the classic Central/NOB', () => {
-      expect(EDITORIAL_PROMPT_DNA).toContain('Belgrano');
-      expect(EDITORIAL_PROMPT_DNA).toContain('Urquiza');
+    it('contains the core Rosarino DNA prompt with Central and NOB and river identity without Belgrano and Urquiza', () => {
+      expect(EDITORIAL_PROMPT_DNA).not.toContain('Belgrano');
+      expect(EDITORIAL_PROMPT_DNA).not.toContain('Urquiza');
       expect(EDITORIAL_PROMPT_DNA).toContain('Central');
       expect(EDITORIAL_PROMPT_DNA).toContain("Newell's");
+      expect(EDITORIAL_PROMPT_DNA).toContain('Hidrovía');
     });
 
     it('generates a full 12-hour edition with at least 4 contextualized articles', () => {
@@ -67,7 +68,7 @@ describe('Rosarino Editorial Bot Service', () => {
       const hasSports = edition.some((item: GeneratedArticle) => item.category === 'deportes');
       expect(hasSports).toBe(true);
 
-      // Verify at least one article covers economy or port (Urquiza legacy)
+      // Verify at least one article covers economy or port
       const hasPortEconomy = edition.some(
         (item: GeneratedArticle) => item.category === 'economia' || item.title.toLowerCase().includes('puerto')
       );

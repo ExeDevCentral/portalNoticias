@@ -6,17 +6,17 @@ export interface PressPhoto {
 }
 
 export const PRESS_PHOTO_CATALOG: Record<string, PressPhoto> = {
-  monumento_belgrano: {
+  monumento_bandera: {
     url: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80',
     caption: 'Monumento Nacional a la Bandera sobre las barrancas del río Paraná en Rosario, sitio histórico del 27 de febrero de 1812.',
     credit: 'Archivo Fotográfico de Prensa Rosario',
-    tags: ['belgrano', 'monumento', 'bandera', 'barrancas', 'historia', 'civica', 'ciudad'],
+    tags: ['monumento', 'bandera', 'barrancas', 'historia', 'civica', 'ciudad'],
   },
-  puerto_urquiza: {
+  puerto_rosario: {
     url: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80',
     caption: 'Terminal portuaria y dársenas del Gran Rosario sobre la Hidrovía Paraná-Paraguay, polo exportador consagrado desde 1852.',
     credit: 'Cámara de Puertos Fluviales',
-    tags: ['urquiza', 'puerto', 'hidrovia', 'hidrovía', 'parana', 'paraná', 'granos', 'barcos', 'buques', 'economia'],
+    tags: ['puerto', 'hidrovia', 'hidrovía', 'parana', 'paraná', 'granos', 'barcos', 'buques', 'economia'],
   },
   central_arroyito: {
     url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
