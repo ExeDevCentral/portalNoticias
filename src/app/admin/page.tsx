@@ -20,6 +20,8 @@ export default function AdminPage() {
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState('');
   const [actionMessage, setActionMessage] = useState('');
+  const [generating12h, setGenerating12h] = useState(false);
+  const [editorial12hMessage, setEditorial12hMessage] = useState('');
 
   // Manual news form
   const [newsTitle, setNewsTitle] = useState('');
@@ -113,6 +115,25 @@ export default function AdminPage() {
     } finally {
       setSyncing(false);
       setTimeout(() => setSyncMessage(''), 6000);
+    }
+  };
+
+  const handleGenerate12hEdition = async () => {
+    setGenerating12h(true);
+    setEditorial12hMessage('Generando y publicando edición autónoma 12hs (Voz Belgrano, Urquiza y Clásicos)...');
+    try {
+      const res = await fetch('/api/cron/editorial-12h', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setEditorial12hMessage(`✅ ¡Tirada de 12hs publicada con éxito! ${data.count} noticias emitidas e inyectadas en portada.`);
+      } else {
+        setEditorial12hMessage('⚠️ Error al generar edición autónoma.');
+      }
+    } catch {
+      setEditorial12hMessage('❌ Error de conexión al emitir edición.');
+    } finally {
+      setGenerating12h(false);
+      setTimeout(() => setEditorial12hMessage(''), 8000);
     }
   };
 
@@ -316,6 +337,82 @@ export default function AdminPage() {
                 {syncMessage}
               </div>
             )}
+
+            {/* Control del Bot Editorial Autónomo 12hs */}
+            <div
+              style={{
+                marginTop: '24px',
+                padding: '16px',
+                backgroundColor: 'var(--paper)',
+                border: '1px solid var(--red-urgent)',
+                borderLeft: '4px solid var(--red-urgent)',
+                borderRadius: '3px',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <span
+                  style={{
+                    backgroundColor: 'var(--red-urgent)',
+                    color: '#FFFFFF',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.68rem',
+                    fontWeight: 700,
+                    padding: '2px 6px',
+                    borderRadius: '2px',
+                    letterSpacing: '0.06em',
+                  }}
+                >
+                  BOT IA EDITORIAL 12HS
+                </span>
+                <span className="font-mono" style={{ fontSize: '0.72rem', color: 'var(--ink-soft)' }}>
+                  Voz Belgrano, Urquiza y Clásicos
+                </span>
+              </div>
+              <p
+                className="font-body"
+                style={{ fontSize: '0.84rem', color: 'var(--ink)', margin: '0 0 12px 0', lineHeight: 1.4 }}
+              >
+                Emite y publica de inmediato una tirada de 5 crónicas de jerarquía: legado portuario de Urquiza, clásico Newell&apos;s y Central, vigilia belgraniana y debate federal con fotos de prensa reales contextualizadas.
+              </p>
+              <button
+                type="button"
+                onClick={handleGenerate12hEdition}
+                disabled={generating12h}
+                style={{
+                  backgroundColor: 'var(--red-urgent)',
+                  color: '#FFFFFF',
+                  padding: '9px 16px',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  border: 'none',
+                  borderRadius: '2px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  opacity: generating12h ? 0.7 : 1,
+                }}
+              >
+                <span>{generating12h ? 'EMITIENDO EDICIÓN...' : '⚡ EMITIR EDICIÓN AUTÓNOMA 12HS'}</span>
+              </button>
+
+              {editorial12hMessage && (
+                <div
+                  className="font-mono"
+                  style={{
+                    marginTop: '10px',
+                    padding: '8px',
+                    fontSize: '0.75rem',
+                    backgroundColor: 'var(--paper-soft)',
+                    border: '1px solid var(--ink-faint)',
+                    color: 'var(--red-urgent)',
+                  }}
+                >
+                  {editorial12hMessage}
+                </div>
+              )}
+            </div>
 
             <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--ink-faint)' }}>
               <h3 className="font-mono" style={{ fontSize: '0.95rem', margin: '0 0 12px 0', textTransform: 'uppercase' }}>
