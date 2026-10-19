@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { formatDateSpanish } from '../utils/formatters';
 
 interface HeaderProps {
-  currentCategory?: string;
+  readonly currentCategory?: string;
 }
 
 const CATEGORIES = [
@@ -131,26 +131,47 @@ export default function Header({ currentCategory }: HeaderProps) {
             ))}
           </div>
 
-          <Link
-            href="/redaccion"
-            style={{
-              backgroundColor: 'var(--red-urgent)',
-              color: '#FFFFFF',
-              padding: '5px 14px',
-              textDecoration: 'none',
-              fontSize: '0.75rem',
-              letterSpacing: '0.05em',
-              fontWeight: 700,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              borderRadius: '3px',
-              boxShadow: '0 2px 8px var(--red-glow)',
-            }}
-          >
-            <span>SALA DE REDACCIÓN EN VIVO</span>
-            <span>➔</span>
-          </Link>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <Link
+              href="/#kiosco-mundial"
+              style={{
+                border: '1px solid var(--ink)',
+                color: 'var(--ink)',
+                padding: '5px 12px',
+                textDecoration: 'none',
+                fontSize: '0.75rem',
+                letterSpacing: '0.05em',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                borderRadius: '3px',
+                backgroundColor: 'var(--paper-soft)',
+              }}
+            >
+              <span>🌍 KIOSCO MUNDIAL</span>
+            </Link>
+            <Link
+              href="/redaccion"
+              style={{
+                backgroundColor: 'var(--red-urgent)',
+                color: '#FFFFFF',
+                padding: '5px 14px',
+                textDecoration: 'none',
+                fontSize: '0.75rem',
+                letterSpacing: '0.05em',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                borderRadius: '3px',
+                boxShadow: '0 2px 8px var(--red-glow)',
+              }}
+            >
+              <span>SALA DE REDACCIÓN EN VIVO</span>
+              <span>➔</span>
+            </Link>
+          </div>
         </nav>
 
         <div className="rule-single" />

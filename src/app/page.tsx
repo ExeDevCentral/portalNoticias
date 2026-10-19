@@ -8,6 +8,7 @@ import { IconSun, IconMoon, IconArrowRight } from '../components/Icons';
 import BreakingTicker from '../components/BreakingTicker';
 import LiveFeedWire from '../components/LiveFeedWire';
 import CategoryBlock from '../components/CategoryBlock';
+import WorldKiosk from '../components/WorldKiosk';
 import Footer from '../components/Footer';
 import { NewsItem } from '../db/schema';
 
@@ -241,7 +242,26 @@ export default function HomePage() {
                 );
               })}
             </div>
-            <div>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <a
+                href="#kiosco-mundial"
+                style={{
+                  border: '1px solid var(--ink)',
+                  color: 'var(--ink)',
+                  padding: '5px 12px',
+                  textDecoration: 'none',
+                  fontSize: '0.75rem',
+                  letterSpacing: '0.05em',
+                  fontWeight: 700,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  borderRadius: '3px',
+                  backgroundColor: 'var(--paper-soft)',
+                }}
+              >
+                <span>🌍 KIOSCO MUNDIAL</span>
+              </a>
               <Link
                 href="/redaccion"
                 style={{
@@ -496,6 +516,11 @@ export default function HomePage() {
         </main>
 
         <div className="rule-double" style={{ marginTop: '48px', marginBottom: '32px' }} />
+
+        {/* KIOSCO MUNDIAL DE DIARIOS & CABLES CON RESEÑA IRÓNICA */}
+        <WorldKiosk />
+
+        <div className="rule-single" style={{ margin: '32px 0' }} />
 
         {/* Bloques temáticos dinámicos */}
         {categoryNews.deportes.length > 0 && (

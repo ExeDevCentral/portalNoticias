@@ -3,17 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { IconSun, IconMoon } from '../../components/Icons';
-
-interface CableItem {
-  id: string;
-  source: string;
-  category: string;
-  originalTitle: string;
-  originalSummary: string;
-  sourceUrl: string;
-  publishedAt: string;
-  imageUrl: string;
-}
+import type { CableItem } from '@/types/cables';
 
 interface RewrittenArticle {
   officialTitle: string;
@@ -338,6 +328,47 @@ export default function RedaccionPage() {
                   <p style={{ fontSize: '0.88rem', color: 'var(--ink-soft)', marginBottom: '12px', lineHeight: 1.4 }}>
                     {cable.originalSummary}
                   </p>
+
+                  {cable.ironicReview && (
+                    <div
+                      style={{
+                        padding: '8px 10px',
+                        backgroundColor: 'var(--paper)',
+                        borderLeft: '3px solid var(--red-urgent)',
+                        borderTop: '1px solid var(--ink-faint)',
+                        borderRight: '1px solid var(--ink-faint)',
+                        borderBottom: '1px solid var(--ink-faint)',
+                        marginBottom: '12px',
+                        borderRadius: '2px',
+                      }}
+                    >
+                      <span
+                        className="font-mono"
+                        style={{
+                          display: 'block',
+                          fontSize: '0.65rem',
+                          fontWeight: 700,
+                          color: 'var(--red-urgent)',
+                          letterSpacing: '0.05em',
+                          marginBottom: '3px',
+                        }}
+                      >
+                        ⚡ {cable.warningTag || 'RESEÑA IRÓNICA'}
+                      </span>
+                      <p
+                        style={{
+                          fontFamily: 'var(--font-serif)',
+                          fontStyle: 'italic',
+                          fontSize: '0.82rem',
+                          lineHeight: 1.35,
+                          color: 'var(--ink)',
+                          margin: 0,
+                        }}
+                      >
+                        &ldquo;{cable.ironicReview}&rdquo;
+                      </p>
+                    </div>
+                  )}
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <a

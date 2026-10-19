@@ -7,4 +7,7 @@ export interface CableItem {
 	sourceUrl: string;
 	publishedAt: string;
 	imageUrl: string;
+	ironicReview?: string;
+	warningTag?: string;
+	originalIntact?: boolean;
 }

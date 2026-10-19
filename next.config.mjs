@@ -23,6 +23,14 @@ const nextConfig = {
           protocol: 'https',
           hostname: 'www.infobae.com',
         },
+        {
+          protocol: 'https',
+          hostname: 'www.clarin.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'static.dw.com',
+        },
       ],
     },
 };

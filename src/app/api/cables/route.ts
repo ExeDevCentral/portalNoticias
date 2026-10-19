@@ -1,19 +1,22 @@
 import { NextResponse } from 'next/server';
 import Parser from 'rss-parser';
 import type { CableItem } from '@/types/cables';
+import { enrichCableWithIronicReview } from '@/services/world-kiosk/ironic-reviewer';
 
-const ALLOWED_IMAGE_HOSTS = [
+const ALLOWED_IMAGE_HOSTS = new Set([
   'images.unsplash.com',
   'ichef.bbci.co.uk',
   'imagenes.elpais.com',
   'vdmedia.elpais.com',
   'www.infobae.com',
-];
+  'www.clarin.com',
+  'static.dw.com',
+]);
 
 function isAllowedImage(url: string): boolean {
   try {
     const { hostname, protocol } = new URL(url);
-    return protocol === 'https:' && ALLOWED_IMAGE_HOSTS.includes(hostname);
+    return protocol === 'https:' && ALLOWED_IMAGE_HOSTS.has(hostname);
   } catch {
     return false;
   }
@@ -25,7 +28,7 @@ const parser = new Parser({
   },
 });
 
-// Feeds públicos abiertos y gratuitos de agencias y diarios internacionales/locales
+// Feeds públicos abiertos y gratuitos de agencias y diarios internacionales/nacionales
 const PUBLIC_FEEDS = [
   {
     name: 'BBC Mundo',
@@ -38,9 +41,19 @@ const PUBLIC_FEEDS = [
     url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/internacional/portada',
   },
   {
+    name: 'Clarín Mundo',
+    category: 'Actualidad Global',
+    url: 'https://www.clarin.com/rss/mundo/',
+  },
+  {
     name: 'Infobae América',
     category: 'Sociedad y Política',
     url: 'https://www.infobae.com/arc/outboundfeeds/rss/?outputType=xml',
+  },
+  {
+    name: 'DW Español',
+    category: 'Europa & Mundo',
+    url: 'https://rss.dw.com/rdf/rss-sp-all',
   },
 ];
 
@@ -125,14 +138,19 @@ export async function GET(request: Request) {
     );
   }
 
+  const enriched = results.map(enrichCableWithIronicReview);
+
   const filtered = query
-    ? results.filter(
+    ? enriched.filter(
         (r) =>
           r.originalTitle.toLowerCase().includes(query) ||
           r.originalSummary.toLowerCase().includes(query) ||
-          r.source.toLowerCase().includes(query)
+          r.source.toLowerCase().includes(query) ||
+          (r.ironicReview?.toLowerCase().includes(query) ?? false) ||
+          (r.warningTag?.toLowerCase().includes(query) ?? false)
       )
-    : results;
+    : enriched;
 
   return NextResponse.json({ success: true, count: filtered.length, cables: filtered });
 }
+
