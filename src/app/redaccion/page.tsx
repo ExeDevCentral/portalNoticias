@@ -153,11 +153,31 @@ export default function RedaccionPage() {
     }, 400);
   };
 
-  const publishArticle = () => {
-    setPublishedSuccess(true);
-    setTimeout(() => {
-      setPublishedSuccess(false);
-    }, 4000);
+  const publishArticle = async () => {
+    if (!rewrittenArticle) return;
+    try {
+      await fetch('/api/admin/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: rewrittenArticle.satiricalTitle || rewrittenArticle.officialTitle,
+          summary: rewrittenArticle.dek,
+          content: rewrittenArticle.body.map((p) => `<p>${p}</p>`).join(''),
+          imageUrl: rewrittenArticle.imageUrl,
+          source: rewrittenArticle.source || 'Redacción',
+          sourceUrl: rewrittenArticle.sourceUrl,
+          category: 'ciudad',
+          isUrgent: false,
+          isPinned: true,
+        }),
+      });
+      setPublishedSuccess(true);
+      setTimeout(() => {
+        setPublishedSuccess(false);
+      }, 4000);
+    } catch (err) {
+      console.error('Error publishing rewritten article:', err);
+    }
   };
 
   return (
