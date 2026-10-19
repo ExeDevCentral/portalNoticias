@@ -32,6 +32,57 @@ export function enrichCableWithIronicReview(cable: CableItem): CableItem {
 export function generateIronicReview(input: ReviewInput): IronicReviewResult {
   const text = `${input.title} ${input.summary || ''} ${input.category || ''}`.toLowerCase();
 
+  // 0. Identidad Ribereña, Puertos, Hidrovía, Granos y Retenciones
+  if (
+    text.includes('hidrov') ||
+    text.includes('puerto') ||
+    text.includes('buque') ||
+    text.includes('grano') ||
+    text.includes('soja') ||
+    text.includes('cosecha') ||
+    text.includes('retenci') ||
+    text.includes('panamax')
+  ) {
+    const reviews = [
+      'Ochenta buques ultramarinos cargan la riqueza de la pampa húmeda frente a las barrancas mientras en Buenos Aires festejan retenciones con aire acondicionado.',
+      'El río Paraná lleva más dólares que toda la City porteña, pero los rosarinos todavía pagan el combustible más caro del país.',
+      'Treinta y cuatro pies de calado oficial garantizados al son de cumbia santafesina mientras la burocracia centralista pide sellados por duplicado.',
+    ];
+    return {
+      warningTag: 'BARRANCAS & HIDROVÍA',
+      ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
+      originalIntact: true,
+    };
+  }
+
+  // 0.1 Clásico Rosarino, Fútbol Argentino, Central vs Newell's, Boca y River
+  if (
+    !text.includes('banco central') &&
+    !text.includes('banco') &&
+    (
+      text.includes('rosario central') ||
+      (text.includes('central') && (text.includes('fútbol') || text.includes('futbol') || text.includes('gol') || text.includes('clásico') || text.includes('arroyito') || text.includes('canalla'))) ||
+      text.includes('newell') ||
+      text.includes('leproso') ||
+      text.includes('canalla') ||
+      text.includes('arroyito') ||
+      text.includes('coloso') ||
+      (text.includes('boca') && (text.includes('fútbol') || text.includes('river') || text.includes('clásico'))) ||
+      (text.includes('river') && (text.includes('fútbol') || text.includes('boca') || text.includes('clásico')))
+    )
+  ) {
+    const reviews = [
+      'En esta ciudad la elección es binaria, vitalicia e irreversible hasta la cremación: o vapor, riel y grasa obrera, o academia, tiza y cuero inglés.',
+      'En Rosario no existe ser simpatizante de River o de Boca: semejante tibieza en una pizzería de Pellegrini o en un quiosco de Arroyito es causal de compasión médica.',
+      'Once jugadores en la cancha definirán si la ciudad sonríe con prepotencia o si los vecinos se miran de reojo en la cola del almacén hasta el próximo clásico.',
+    ];
+    return {
+      warningTag: 'RELIGIÓN BÍBLICA ROSARINA',
+      ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
+      originalIntact: true,
+    };
+  }
+
   // 1. Economía, Bancos, Inflación, Mercados
   if (
     text.includes('inflac') ||

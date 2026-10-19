@@ -1,22 +1,150 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import type { CableItem } from '@/types/cables';
 
-const NEWSPAPER_TABS = [
-  { key: 'all', label: 'Todos los Diarios', flag: '🌍' },
-  { key: 'BBC Mundo', label: 'BBC Mundo', flag: '🇬🇧' },
-  { key: 'El País', label: 'El País', flag: '🇪🇸' },
-  { key: 'Clarín', label: 'Clarín', flag: '🇦🇷' },
-  { key: 'Infobae', label: 'Infobae', flag: '🌎' },
-  { key: 'DW Español', label: 'DW Español', flag: '🇩🇪' },
+type ScopeKey = 'all' | 'nacional' | 'internacional' | 'rosario';
+
+interface ScopeOption {
+  key: ScopeKey;
+  label: string;
+  icon: string;
+  description: string;
+}
+
+const SCOPES: ScopeOption[] = [
+  { key: 'all', label: 'Todos los Diarios', icon: '🌍', description: 'Cobertura mundial y nacional unificada' },
+  { key: 'nacional', label: 'Prensa Nacional', icon: '🇦🇷', description: 'Clarín, La Nación, Infobae, Página 12' },
+  { key: 'internacional', label: 'Diarios del Mundo', icon: '🌐', description: 'BBC Mundo, El País, DW, The Guardian' },
+  { key: 'rosario', label: 'Diarios de Rosario', icon: '⚓', description: 'La Capital, Rosario3, El Ciudadano' },
 ];
+
+interface NewspaperBrand {
+  name: string;
+  badge: string;
+  flag: string;
+  scope: ScopeKey;
+  tagline: string;
+  accentColor: string;
+  textColor: string;
+}
+
+const NEWSPAPER_DIRECTORY: Record<string, NewspaperBrand> = {
+  'Clarín': {
+    name: 'Clarín',
+    badge: 'CLARÍN',
+    flag: '🇦🇷',
+    scope: 'nacional',
+    tagline: 'El gran diario argentino',
+    accentColor: '#DC2626',
+    textColor: '#FFFFFF',
+  },
+  'La Nación': {
+    name: 'La Nación',
+    badge: 'LA NACIÓN',
+    flag: '🇦🇷',
+    scope: 'nacional',
+    tagline: 'Tradición y análisis político',
+    accentColor: '#1E3A8A',
+    textColor: '#FFFFFF',
+  },
+  'Infobae': {
+    name: 'Infobae',
+    badge: 'INFOBAE',
+    flag: '🌎',
+    scope: 'nacional',
+    tagline: 'Periodismo digital en tiempo real',
+    accentColor: '#EA580C',
+    textColor: '#FFFFFF',
+  },
+  'Página 12': {
+    name: 'Página 12',
+    badge: 'PÁGINA 12',
+    flag: '🇦🇷',
+    scope: 'nacional',
+    tagline: 'Mirada crítica y derechos humanos',
+    accentColor: '#0F172A',
+    textColor: '#FFFFFF',
+  },
+  'La Capital': {
+    name: 'La Capital',
+    badge: 'LA CAPITAL',
+    flag: '⚓',
+    scope: 'rosario',
+    tagline: 'Decano de la Prensa Argentina • Rosario',
+    accentColor: '#0284C7',
+    textColor: '#FFFFFF',
+  },
+  'Rosario3': {
+    name: 'Rosario3',
+    badge: 'ROSARIO3',
+    flag: '⚓',
+    scope: 'rosario',
+    tagline: 'El pulso de la ciudad y el Litoral',
+    accentColor: '#F97316',
+    textColor: '#FFFFFF',
+  },
+  'El Ciudadano': {
+    name: 'El Ciudadano',
+    badge: 'EL CIUDADANO',
+    flag: '⚓',
+    scope: 'rosario',
+    tagline: 'Periodismo cooperativo rosarino',
+    accentColor: '#9333EA',
+    textColor: '#FFFFFF',
+  },
+  'BBC Mundo': {
+    name: 'BBC Mundo',
+    badge: 'BBC MUNDO',
+    flag: '🇬🇧',
+    scope: 'internacional',
+    tagline: 'Servicio mundial en español',
+    accentColor: '#B91C1C',
+    textColor: '#FFFFFF',
+  },
+  'El País': {
+    name: 'El País',
+    badge: 'EL PAÍS',
+    flag: '🇪🇸',
+    scope: 'internacional',
+    tagline: 'El periódico global en español',
+    accentColor: '#334155',
+    textColor: '#FFFFFF',
+  },
+  'DW Español': {
+    name: 'DW Español',
+    badge: 'DW',
+    flag: '🇩🇪',
+    scope: 'internacional',
+    tagline: 'La voz de Alemania para el mundo',
+    accentColor: '#0284C7',
+    textColor: '#FFFFFF',
+  },
+};
+
+function getBrandForSource(source: string): NewspaperBrand {
+  for (const [key, brand] of Object.entries(NEWSPAPER_DIRECTORY)) {
+    if (source.toLowerCase().includes(key.toLowerCase())) {
+      return brand;
+    }
+  }
+  return {
+    name: source,
+    badge: source.toUpperCase().slice(0, 10),
+    flag: '📰',
+    scope: 'internacional',
+    tagline: 'Agencia informativa',
+    accentColor: 'var(--ink)',
+    textColor: 'var(--paper)',
+  };
+}
 
 export default function WorldKiosk() {
   const [cables, setCables] = useState<CableItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeSource, setActiveSource] = useState('all');
+  const [activeScope, setActiveScope] = useState<ScopeKey>('all');
+  const [activeSource, setActiveSource] = useState<string>('all');
   const [search, setSearch] = useState('');
   const [selectedCable, setSelectedCable] = useState<CableItem | null>(null);
 
@@ -32,34 +160,91 @@ export default function WorldKiosk() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredCables = cables.filter((item) => {
-    const matchesSource =
-      activeSource === 'all' || item.source.toLowerCase().includes(activeSource.toLowerCase());
-    const matchesSearch =
-      !search ||
-      item.originalTitle.toLowerCase().includes(search.toLowerCase()) ||
-      item.originalSummary.toLowerCase().includes(search.toLowerCase()) ||
-      (item.ironicReview?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-      (item.warningTag?.toLowerCase().includes(search.toLowerCase()) ?? false);
+  // Diarios únicos presentes en los cables
+  const availableSources = useMemo(() => {
+    const set = new Set<string>();
+    for (const c of cables) {
+      set.add(c.source);
+    }
+    return Array.from(set);
+  }, [cables]);
 
-    return matchesSource && matchesSearch;
-  });
+  const filteredCables = useMemo(() => {
+    return cables.filter((item) => {
+      const brand = getBrandForSource(item.source);
+
+      // Filtro por ámbito (Scope)
+      const matchesScope = activeScope === 'all' || brand.scope === activeScope;
+
+      // Filtro por diario específico
+      const matchesSource =
+        activeSource === 'all' || item.source.toLowerCase().includes(activeSource.toLowerCase());
+
+      // Filtro por búsqueda
+      const matchesSearch =
+        !search ||
+        item.originalTitle.toLowerCase().includes(search.toLowerCase()) ||
+        item.originalSummary.toLowerCase().includes(search.toLowerCase()) ||
+        item.source.toLowerCase().includes(search.toLowerCase()) ||
+        (item.ironicReview?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
+        (item.warningTag?.toLowerCase().includes(search.toLowerCase()) ?? false);
+
+      return matchesScope && matchesSource && matchesSearch;
+    });
+  }, [cables, activeScope, activeSource, search]);
 
   let kioskGridContent: React.ReactNode;
   if (loading) {
     kioskGridContent = (
-      <div style={{ textAlign: 'center', padding: '40px 0', fontFamily: 'var(--font-mono)' }}>
-        <p style={{ color: 'var(--ink-soft)' }}>
-          📡 Sintonizando teletipos de las agencias mundiales...
+      <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ fontSize: '1.8rem', marginBottom: '12px' }}>📡</div>
+        <p style={{ color: 'var(--ink)', fontWeight: 600, fontSize: '1.05rem', marginBottom: '6px' }}>
+          Sintonizando teletipos de las agencias mundiales y nacionales...
+        </p>
+        <p style={{ color: 'var(--ink-soft)', fontSize: '0.85rem' }}>
+          Conectando cables de ultramar, puertos y redacciones de Buenos Aires y Rosario.
         </p>
       </div>
     );
   } else if (filteredCables.length === 0) {
     kioskGridContent = (
-      <div style={{ textAlign: 'center', padding: '40px 0', fontFamily: 'var(--font-mono)' }}>
-        <p style={{ color: 'var(--ink-soft)' }}>
-          No se encontraron despachos con el filtro indicado.
+      <div
+        style={{
+          textAlign: 'center',
+          padding: '48px 24px',
+          fontFamily: 'var(--font-mono)',
+          backgroundColor: 'var(--paper-elevated)',
+          border: '1px dashed var(--ink-faint)',
+          borderRadius: '4px',
+        }}
+      >
+        <p style={{ color: 'var(--ink)', fontSize: '1.1rem', fontWeight: 600, marginBottom: '8px' }}>
+          No se encontraron despachos con los filtros seleccionados.
         </p>
+        <p style={{ color: 'var(--ink-soft)', fontSize: '0.85rem', marginBottom: '16px' }}>
+          Probá ampliando el ámbito regional o restableciendo el término de búsqueda.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            setActiveScope('all');
+            setActiveSource('all');
+            setSearch('');
+          }}
+          style={{
+            padding: '8px 18px',
+            backgroundColor: 'var(--ink)',
+            color: 'var(--paper)',
+            border: 'none',
+            borderRadius: '3px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+          }}
+        >
+          RESTABLECER TODOS LOS FILTROS
+        </button>
       </div>
     );
   } else {
@@ -67,205 +252,278 @@ export default function WorldKiosk() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: '24px',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+          gap: '28px',
         }}
       >
-        {filteredCables.map((cable) => (
-          <article
-            key={cable.id}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              border: '1px solid var(--ink-faint)',
-              backgroundColor: 'var(--paper-soft)',
-              borderRadius: '3px',
-              overflow: 'hidden',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            }}
-          >
-            {/* Imagen del despacho */}
-            {cable.imageUrl && (
-              <div style={{ position: 'relative', width: '100%', height: '170px' }}>
-                <Image
-                  src={cable.imageUrl}
-                  alt={cable.originalTitle}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 360px"
-                  style={{ objectFit: 'cover' }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '8px',
-                    left: '8px',
-                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                    color: '#FFFFFF',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
-                    padding: '2px 8px',
-                    borderRadius: '2px',
-                    backdropFilter: 'blur(2px)',
-                  }}
-                >
-                  {cable.source}
-                </div>
-              </div>
-            )}
-
-            {/* Cuerpo de la noticia */}
-            <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        {filteredCables.map((cable) => {
+          const brand = getBrandForSource(cable.source);
+          return (
+            <article
+              key={cable.id}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                border: '2px solid var(--ink)',
+                backgroundColor: 'var(--paper-card)',
+                borderRadius: '4px',
+                overflow: 'hidden',
+                boxShadow: '4px 4px 0px var(--ink)',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+              }}
+            >
+              {/* Cabezal de Marca del Diario */}
               <div
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '8px 14px',
+                  backgroundColor: 'var(--paper-elevated)',
+                  borderBottom: '1px solid var(--ink)',
                   fontFamily: 'var(--font-mono)',
-                  fontSize: '0.72rem',
-                  color: 'var(--ink-soft)',
-                  marginBottom: '8px',
                 }}
               >
-                <span>{cable.category}</span>
-                <span>{new Date(cable.publishedAt).toLocaleDateString('es-AR')}</span>
-              </div>
-
-              {/* Titular Original (100% auténtico) */}
-              <h3
-                className="font-display"
-                style={{
-                  fontSize: '1.25rem',
-                  fontWeight: 700,
-                  lineHeight: 1.25,
-                  color: 'var(--ink)',
-                  margin: '0 0 10px 0',
-                }}
-              >
-                {cable.originalTitle}
-              </h3>
-
-              {/* Resumen Original */}
-              <p
-                className="font-body"
-                style={{
-                  fontSize: '0.9rem',
-                  color: 'var(--ink-soft)',
-                  lineHeight: 1.45,
-                  margin: '0 0 16px 0',
-                  flex: 1,
-                }}
-              >
-                {cable.originalSummary}
-              </p>
-
-              {/* Caja de la Reseña Irónica */}
-              <div
-                style={{
-                  marginTop: 'auto',
-                  padding: '12px',
-                  backgroundColor: 'var(--paper)',
-                  borderLeft: '3px solid var(--red-urgent)',
-                  borderTop: '1px solid var(--ink-faint)',
-                  borderRight: '1px solid var(--ink-faint)',
-                  borderBottom: '1px solid var(--ink-faint)',
-                  borderRadius: '2px',
-                  marginBottom: '16px',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    marginBottom: '6px',
-                  }}
-                >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span
                     style={{
-                      fontFamily: 'var(--font-mono)',
+                      backgroundColor: brand.accentColor,
+                      color: brand.textColor,
                       fontSize: '0.68rem',
-                      fontWeight: 700,
-                      color: 'var(--red-urgent)',
-                      letterSpacing: '0.06em',
+                      fontWeight: 800,
+                      padding: '3px 8px',
+                      borderRadius: '2px',
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
                     }}
                   >
-                    ⚡ {cable.warningTag || 'ADVERTENCIA EDITORIAL'}
+                    {brand.flag} {brand.badge}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      color: 'var(--ink-soft)',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {cable.category}
                   </span>
                 </div>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontStyle: 'italic',
-                    fontSize: '0.88rem',
-                    lineHeight: 1.35,
-                    color: 'var(--ink)',
-                    margin: '0 0 6px 0',
-                  }}
-                >
-                  &ldquo;{cable.ironicReview}&rdquo;
-                </p>
                 <span
                   style={{
-                    display: 'block',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.65rem',
+                    fontSize: '0.68rem',
                     color: 'var(--ink-soft)',
+                    fontWeight: 500,
                   }}
                 >
-                  * Nota original no influenciada
+                  {new Date(cable.publishedAt).toLocaleDateString('es-AR', {
+                    day: 'numeric',
+                    month: 'short',
+                  })}
                 </span>
               </div>
 
-              {/* Botón 1-Click a la fuente oficial */}
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <a
-                  href={cable.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    flex: 1,
-                    textAlign: 'center',
-                    backgroundColor: 'var(--ink)',
-                    color: 'var(--paper)',
-                    padding: '9px 12px',
-                    textDecoration: 'none',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
-                    borderRadius: '3px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px',
-                    transition: 'background-color 0.15s ease',
-                  }}
-                >
-                  <span>Leer en {cable.source}</span>
-                  <span>↗</span>
-                </a>
+              {/* Imagen del despacho con vignette y tag 1-click */}
+              {cable.imageUrl && (
+                <div style={{ position: 'relative', width: '100%', height: '180px', backgroundColor: 'var(--ink-faint)' }}>
+                  <Image
+                    src={cable.imageUrl}
+                    alt={cable.originalTitle}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                      backgroundColor: 'rgba(0, 0, 0, 0.82)',
+                      color: '#FFFFFF',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.66rem',
+                      fontWeight: 700,
+                      padding: '3px 8px',
+                      borderRadius: '2px',
+                      letterSpacing: '0.06em',
+                      backdropFilter: 'blur(3px)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    <span>1-CLICK ORIGINAL</span>
+                    <span>↗</span>
+                  </div>
+                </div>
+              )}
 
-                <button
-                  type="button"
-                  onClick={() => setSelectedCable(cable)}
-                  title="Ver ficha editorial completa"
+              {/* Contenido Editorial de la Noticia */}
+              <div style={{ padding: '18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                {/* Titular Original (100% auténtico e intacto) */}
+                <h3
+                  className="font-display"
                   style={{
-                    padding: '9px 12px',
-                    backgroundColor: 'transparent',
+                    fontSize: '1.25rem',
+                    fontWeight: 800,
+                    lineHeight: 1.25,
                     color: 'var(--ink)',
-                    border: '1px solid var(--ink-faint)',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.75rem',
-                    borderRadius: '3px',
-                    cursor: 'pointer',
+                    margin: '0 0 10px 0',
+                    letterSpacing: '-0.015em',
                   }}
                 >
-                  🔍
-                </button>
+                  {cable.originalTitle}
+                </h3>
+
+                {/* Resumen Original del Diario */}
+                <p
+                  className="font-body"
+                  style={{
+                    fontSize: '0.92rem',
+                    color: 'var(--ink-soft)',
+                    lineHeight: 1.48,
+                    margin: '0 0 16px 0',
+                    flex: 1,
+                  }}
+                >
+                  {cable.originalSummary}
+                </p>
+
+                {/* EL MARCO IRÓNICO ROSARINO (Sello editorial distintivo) */}
+                <div
+                  style={{
+                    marginTop: 'auto',
+                    padding: '12px 14px',
+                    backgroundColor: 'var(--paper-elevated)',
+                    borderLeft: '4px solid var(--red-urgent)',
+                    borderTop: '1px solid var(--ink-faint)',
+                    borderRight: '1px solid var(--ink-faint)',
+                    borderBottom: '1px solid var(--ink-faint)',
+                    borderRadius: '2px',
+                    marginBottom: '16px',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.68rem',
+                        fontWeight: 800,
+                        color: 'var(--red-urgent)',
+                        letterSpacing: '0.08em',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      <span>⚡ RESEÑA EDITORIAL AL PASO</span>
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.62rem',
+                        color: 'var(--ink-soft)',
+                        textTransform: 'uppercase',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {cable.warningTag || 'OJO ROSARINO'}
+                    </span>
+                  </div>
+
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-serif-body)',
+                      fontStyle: 'italic',
+                      fontSize: '0.94rem',
+                      lineHeight: 1.4,
+                      color: 'var(--ink)',
+                      margin: '0 0 6px 0',
+                    }}
+                  >
+                    &ldquo;{cable.ironicReview}&rdquo;
+                  </p>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.64rem',
+                      color: 'var(--ink-soft)',
+                      borderTop: '1px dashed var(--ink-faint)',
+                      paddingTop: '4px',
+                    }}
+                  >
+                    <span>* Nota original de {cable.source} no intervenida</span>
+                    <span>Barrancas del Paraná</span>
+                  </div>
+                </div>
+
+                {/* Barra de Acciones 1-Click Directo */}
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <a
+                    href={cable.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      flex: 1,
+                      textAlign: 'center',
+                      backgroundColor: 'var(--ink)',
+                      color: 'var(--paper)',
+                      padding: '11px 14px',
+                      textDecoration: 'none',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.78rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.04em',
+                      borderRadius: '3px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      boxShadow: '2px 2px 0px var(--ink-soft)',
+                      transition: 'transform 0.1s ease',
+                    }}
+                  >
+                    <span>LEER EN {cable.source.toUpperCase()}</span>
+                    <span>↗</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCable(cable)}
+                    title="Ver ficha editorial completa y claves"
+                    style={{
+                      padding: '11px 14px',
+                      backgroundColor: 'var(--paper-elevated)',
+                      color: 'var(--ink)',
+                      border: '1px solid var(--ink)',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      borderRadius: '3px',
+                      cursor: 'pointer',
+                      boxShadow: '2px 2px 0px var(--ink-soft)',
+                      transition: 'background-color 0.15s ease',
+                    }}
+                  >
+                    🔍 CLAVES
+                  </button>
+                </div>
               </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </div>
     );
   }
@@ -274,149 +532,289 @@ export default function WorldKiosk() {
     <section
       id="kiosco-mundial"
       style={{
-        margin: '48px 0',
-        padding: '32px 24px',
-        border: '2px solid var(--ink)',
+        margin: '28px 0 48px 0',
+        padding: '36px 28px',
+        border: '3px solid var(--ink)',
         backgroundColor: 'var(--paper)',
         borderRadius: '4px',
-        boxShadow: '4px 4px 0px var(--ink)',
+        boxShadow: '6px 6px 0px var(--ink)',
+        position: 'relative',
       }}
     >
-      {/* Encabezado del Kiosco */}
+      {/* Marco Editorial Superior - Kiosco Emblemático */}
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          flexWrap: 'wrap',
-          gap: '16px',
           borderBottom: '2px solid var(--ink)',
-          paddingBottom: '20px',
-          marginBottom: '24px',
+          paddingBottom: '24px',
+          marginBottom: '26px',
         }}
       >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+        {/* Barra de metadatos y estado del kiosco */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+            marginBottom: '12px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span
               style={{
                 backgroundColor: 'var(--red-urgent)',
                 color: '#FFFFFF',
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.72rem',
-                fontWeight: 700,
-                padding: '3px 8px',
+                fontWeight: 800,
+                padding: '3px 10px',
                 borderRadius: '2px',
-                letterSpacing: '0.08em',
+                letterSpacing: '0.09em',
               }}
             >
-              ACCESO DIRECTO 1-CLICK
+              EDICIÓN CENTRAL • KIOSCO DE DIARIOS
             </span>
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.75rem',
                 color: 'var(--ink-soft)',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.04em',
               }}
             >
-              📡 CABLES DEL MUNDO & OJO CRÍTICO
+              ● ACCESO DIRECTO 1-CLICK A LA FUENTE ORIGINAL
             </span>
           </div>
-          <h2
-            className="font-display"
+
+          <div
             style={{
-              fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-              fontWeight: 900,
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.75rem',
               color: 'var(--ink)',
-              margin: '0 0 6px 0',
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em',
+              fontWeight: 700,
+              backgroundColor: 'var(--paper-elevated)',
+              border: '1px solid var(--ink-faint)',
+              padding: '4px 10px',
+              borderRadius: '2px',
             }}
           >
-            Kiosco Mundial de Diarios
-          </h2>
-          <p
-            className="font-body"
-            style={{
-              fontSize: '1rem',
-              color: 'var(--ink-soft)',
-              margin: 0,
-              maxWidth: '680px',
-            }}
-          >
-            Entrá directo con un solo click a las portadas de los principales diarios del mundo.
-            Nuestra redacción añade una <strong>advertencia irónica</strong> para leer entre líneas,
-            {' '}<strong>sin alterar una sola coma de la nota original</strong>.
-          </p>
+            {filteredCables.length} DESPACHOS ACTIVOS
+          </div>
         </div>
 
-        {/* Buscador de cables */}
-        <div style={{ minWidth: '240px', flex: '1 1 260px', maxWidth: '380px' }}>
-          <input
-            type="text"
-            placeholder="Filtrar por tema, palabra o ironía..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '10px 14px',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              backgroundColor: 'var(--paper-soft)',
-              color: 'var(--ink)',
-              border: '1px solid var(--ink-faint)',
-              borderRadius: '3px',
-              outline: 'none',
-            }}
-          />
+        {/* Título Principal y Manifiesto Irónico */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            flexWrap: 'wrap',
+            gap: '24px',
+          }}
+        >
+          <div style={{ flex: '1 1 540px' }}>
+            <h2
+              className="font-display"
+              style={{
+                fontSize: 'clamp(2.2rem, 4.5vw, 3.4rem)',
+                fontWeight: 900,
+                color: 'var(--ink)',
+                margin: '0 0 10px 0',
+                lineHeight: 1.05,
+                letterSpacing: '-0.025em',
+                textTransform: 'uppercase',
+              }}
+            >
+              El Gran Kiosco de Diarios del Mundo & la Nación
+            </h2>
+            <p
+              className="font-body"
+              style={{
+                fontSize: '1.12rem',
+                lineHeight: 1.5,
+                color: 'var(--ink-soft)',
+                margin: 0,
+                maxWidth: '780px',
+              }}
+            >
+              Entrá directo con <strong>un solo click a las portadas de los principales diarios</strong> del país y del planeta.
+              La nota original se lee <strong>100% auténtica y sin censura</strong> en el medio emisor; nuestra redacción en las barrancas le estampa una <strong>advertencia irónica al paso</strong> para no comerte ningún verso oficial antes de que te cobren el flete.
+            </p>
+          </div>
+
+          {/* Buscador de cables */}
+          <div style={{ minWidth: '260px', flex: '1 1 280px', maxWidth: '380px' }}>
+            <label
+              htmlFor="kiosk-search-input"
+              style={{
+                display: 'block',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.72rem',
+                color: 'var(--ink-soft)',
+                fontWeight: 700,
+                marginBottom: '6px',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Buscar en los Diarios
+            </label>
+            <div style={{ position: 'relative' }}>
+              <input
+                id="kiosk-search-input"
+                type="text"
+                placeholder="Filtrar por titular, diario o ironía..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.85rem',
+                  backgroundColor: 'var(--paper-elevated)',
+                  color: 'var(--ink)',
+                  border: '2px solid var(--ink)',
+                  borderRadius: '3px',
+                  outline: 'none',
+                }}
+              />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch('')}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--ink-soft)',
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.9rem',
+                  }}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Selector de Diarios (Pills) */}
+      {/* Selector de Ámbito Regional (Scope Tabs) */}
       <div
         style={{
           display: 'flex',
           gap: '8px',
           overflowX: 'auto',
-          paddingBottom: '12px',
-          marginBottom: '24px',
+          paddingBottom: '10px',
+          marginBottom: '16px',
         }}
       >
-        {NEWSPAPER_TABS.map((tab) => {
-          const isActive = activeSource === tab.key;
+        {SCOPES.map((scope) => {
+          const isActive = activeScope === scope.key;
           return (
             <button
-              key={tab.key}
+              key={scope.key}
               type="button"
-              onClick={() => setActiveSource(tab.key)}
+              onClick={() => {
+                setActiveScope(scope.key);
+                setActiveSource('all');
+              }}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '6px 14px',
+                gap: '8px',
+                padding: '9px 18px',
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.78rem',
-                fontWeight: isActive ? 700 : 500,
-                border: isActive ? '1px solid var(--red-urgent)' : '1px solid var(--ink-faint)',
-                backgroundColor: isActive ? 'var(--red-urgent)' : 'var(--paper-soft)',
-                color: isActive ? '#FFFFFF' : 'var(--ink)',
+                fontSize: '0.82rem',
+                fontWeight: isActive ? 800 : 600,
+                border: '2px solid var(--ink)',
+                backgroundColor: isActive ? 'var(--ink)' : 'var(--paper-elevated)',
+                color: isActive ? 'var(--paper)' : 'var(--ink)',
                 borderRadius: '3px',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
                 transition: 'all 0.15s ease',
+                boxShadow: isActive ? '2px 2px 0px var(--red-urgent)' : 'none',
               }}
             >
-              <span>{tab.flag}</span>
-              <span>{tab.label}</span>
+              <span style={{ fontSize: '1rem' }}>{scope.icon}</span>
+              <span>{scope.label}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Contenido / Grilla de cables */}
+      {/* Selector de Diarios Específicos (Pills) */}
+      <div
+        style={{
+          display: 'flex',
+          gap: '6px',
+          overflowX: 'auto',
+          paddingBottom: '14px',
+          marginBottom: '28px',
+          borderBottom: '1px solid var(--ink-faint)',
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setActiveSource('all')}
+          style={{
+            padding: '5px 12px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.74rem',
+            fontWeight: activeSource === 'all' ? 700 : 500,
+            border: activeSource === 'all' ? '1px solid var(--red-urgent)' : '1px solid var(--ink-faint)',
+            backgroundColor: activeSource === 'all' ? 'var(--red-urgent)' : 'var(--paper-elevated)',
+            color: activeSource === 'all' ? '#FFFFFF' : 'var(--ink)',
+            borderRadius: '2px',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          TODOS LOS CABEZALES ({cables.length})
+        </button>
+
+        {availableSources.map((source) => {
+          const brand = getBrandForSource(source);
+          const isActive = activeSource.toLowerCase() === source.toLowerCase();
+          return (
+            <button
+              key={source}
+              type="button"
+              onClick={() => setActiveSource(source)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '5px 12px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.74rem',
+                fontWeight: isActive ? 700 : 500,
+                border: isActive ? '1px solid var(--ink)' : '1px solid var(--ink-faint)',
+                backgroundColor: isActive ? 'var(--ink)' : 'var(--paper-elevated)',
+                color: isActive ? 'var(--paper)' : 'var(--ink)',
+                borderRadius: '2px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.12s ease',
+              }}
+            >
+              <span>{brand.flag}</span>
+              <span>{source}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Grilla Principal de Diarios */}
       {kioskGridContent}
 
-      {/* Modal / Ficha Editorial Ampliada */}
+      {/* Modal / Ficha Editorial Ampliada & Verificación 1-Click */}
       {selectedCable && (
         <dialog
           open
@@ -432,13 +830,13 @@ export default function WorldKiosk() {
             maxHeight: '100vh',
             margin: 0,
             border: 'none',
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 9999,
             padding: '16px',
-            backdropFilter: 'blur(3px)',
+            backdropFilter: 'blur(4px)',
           }}
           onKeyDown={(e) => {
             if (e.key === 'Escape') setSelectedCable(null);
@@ -447,12 +845,12 @@ export default function WorldKiosk() {
           <div
             style={{
               backgroundColor: 'var(--paper)',
-              border: '2px solid var(--ink)',
+              border: '3px solid var(--ink)',
               borderRadius: '4px',
-              maxWidth: '640px',
+              maxWidth: '680px',
               width: '100%',
-              padding: '24px',
-              boxShadow: '6px 6px 0px var(--ink)',
+              padding: '28px',
+              boxShadow: '8px 8px 0px var(--ink)',
               position: 'relative',
               maxHeight: '90vh',
               overflowY: 'auto',
@@ -463,35 +861,51 @@ export default function WorldKiosk() {
               onClick={() => setSelectedCable(null)}
               style={{
                 position: 'absolute',
-                top: '12px',
-                right: '12px',
+                top: '14px',
+                right: '14px',
                 background: 'none',
                 border: 'none',
-                fontSize: '1.2rem',
+                fontSize: '1.4rem',
                 cursor: 'pointer',
                 color: 'var(--ink)',
+                fontFamily: 'var(--font-mono)',
               }}
             >
               ✕
             </button>
 
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
-                color: 'var(--red-urgent)',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-              }}
-            >
-              FICHA DE COTEJO EDITORIAL
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.72rem',
+                  color: 'var(--red-urgent)',
+                  fontWeight: 800,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                FICHA DE COTEJO EDITORIAL
+              </span>
+              <span style={{ color: 'var(--ink-soft)', fontSize: '0.75rem' }}>•</span>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.72rem',
+                  color: 'var(--ink-soft)',
+                }}
+              >
+                {selectedCable.source}
+              </span>
+            </div>
 
             <h3
               className="font-display"
               style={{
-                fontSize: '1.4rem',
-                margin: '8px 0 16px 0',
+                fontSize: '1.5rem',
+                fontWeight: 800,
+                lineHeight: 1.25,
+                margin: '0 0 18px 0',
                 color: 'var(--ink)',
               }}
             >
@@ -500,8 +914,8 @@ export default function WorldKiosk() {
 
             <div
               style={{
-                backgroundColor: 'var(--paper-soft)',
-                padding: '14px',
+                backgroundColor: 'var(--paper-elevated)',
+                padding: '16px',
                 border: '1px solid var(--ink-faint)',
                 borderRadius: '3px',
                 marginBottom: '16px',
@@ -512,15 +926,16 @@ export default function WorldKiosk() {
                   fontFamily: 'var(--font-mono)',
                   fontSize: '0.72rem',
                   color: 'var(--ink-soft)',
+                  fontWeight: 700,
                   display: 'block',
-                  marginBottom: '4px',
+                  marginBottom: '6px',
                 }}
               >
-                📰 FUENTE ORIGINAL INTACTA ({selectedCable.source}):
+                📰 TEXTO ORIGINAL EN {selectedCable.source.toUpperCase()}:
               </span>
               <p
                 className="font-body"
-                style={{ fontSize: '0.95rem', margin: 0, color: 'var(--ink)' }}
+                style={{ fontSize: '1rem', lineHeight: 1.5, margin: 0, color: 'var(--ink)' }}
               >
                 {selectedCable.originalSummary}
               </p>
@@ -528,12 +943,12 @@ export default function WorldKiosk() {
 
             <div
               style={{
-                backgroundColor: 'var(--paper-soft)',
-                padding: '14px',
+                backgroundColor: 'var(--paper-elevated)',
+                padding: '16px',
                 borderLeft: '4px solid var(--red-urgent)',
                 border: '1px solid var(--ink-faint)',
                 borderRadius: '3px',
-                marginBottom: '20px',
+                marginBottom: '24px',
               }}
             >
               <span
@@ -541,18 +956,20 @@ export default function WorldKiosk() {
                   fontFamily: 'var(--font-mono)',
                   fontSize: '0.72rem',
                   color: 'var(--red-urgent)',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   display: 'block',
                   marginBottom: '6px',
+                  letterSpacing: '0.06em',
                 }}
               >
-                ⚡ {selectedCable.warningTag}
+                ⚡ {selectedCable.warningTag || 'RESEÑA EDITORIAL AL PASO'}
               </span>
               <p
                 className="font-display"
                 style={{
-                  fontSize: '1.1rem',
+                  fontSize: '1.15rem',
                   fontStyle: 'italic',
+                  lineHeight: 1.4,
                   margin: 0,
                   color: 'var(--ink)',
                 }}
@@ -561,12 +978,12 @@ export default function WorldKiosk() {
               </p>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button
                 type="button"
                 onClick={() => setSelectedCable(null)}
                 style={{
-                  padding: '8px 16px',
+                  padding: '10px 18px',
                   backgroundColor: 'transparent',
                   border: '1px solid var(--ink-faint)',
                   fontFamily: 'var(--font-mono)',
@@ -576,27 +993,28 @@ export default function WorldKiosk() {
                   color: 'var(--ink)',
                 }}
               >
-                Cerrar
+                Volver al Kiosco
               </button>
               <a
                 href={selectedCable.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  padding: '8px 20px',
-                  backgroundColor: 'var(--red-urgent)',
-                  color: '#FFFFFF',
+                  padding: '10px 22px',
+                  backgroundColor: 'var(--ink)',
+                  color: 'var(--paper)',
                   textDecoration: 'none',
                   fontFamily: 'var(--font-mono)',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
                   borderRadius: '3px',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
+                  gap: '8px',
+                  boxShadow: '2px 2px 0px var(--red-urgent)',
                 }}
               >
-                <span>Abrir nota completa en {selectedCable.source}</span>
+                <span>LEER EN {selectedCable.source.toUpperCase()} (ORIGINAL COMPLETO)</span>
                 <span>↗</span>
               </a>
             </div>
