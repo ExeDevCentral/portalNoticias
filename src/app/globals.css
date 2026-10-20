@@ -646,3 +646,60 @@ body {
   background: var(--ink-soft);
 }
 
+/* ========================================================
+   PORTAL DESKTOP RAILS & COMPACT LAYOUT
+   ======================================================== */
+
+.portal-desktop-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1840px;
+  margin: 0 auto;
+  padding: 0 16px;
+  gap: 20px;
+  position: relative;
+}
+
+.portal-main-column {
+  flex: 1;
+  min-width: 0;
+  max-width: 1320px;
+}
+
+.portal-rail-container {
+  display: none;
+  width: 210px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 1380px) {
+  .portal-rail-container {
+    display: block;
+  }
+  div.portal-horizontal-bar-wrapper {
+    display: none;
+  }
+}
+
+@media (max-width: 1379px) {
+  aside.portal-rail-container {
+    display: none;
+  }
+  div.portal-horizontal-bar-wrapper {
+    display: block;
+  }
+}
+
+/* Modern card micro-animations */
+.modern-news-card-compact:hover .font-display,
+.modern-news-card-vertical:hover .font-display {
+  color: var(--blue-parana);
+}
+
+[data-theme="dark"] .modern-news-card-compact:hover .font-display,
+[data-theme="dark"] .modern-news-card-vertical:hover .font-display {
+  color: #93C5FD;
+}
+

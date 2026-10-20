@@ -1,0 +1,150 @@
+export interface MediaOutlet {
+  id: string;
+  name: string;
+  shortName: string;
+  filterKey: string;
+  tagline: string;
+  region: 'rosario' | 'nacional';
+  websiteUrl: string;
+  brandColor: string;
+  badgeBg: string;
+  badgeText: string;
+}
+
+export const ROSARIO_OUTLETS: MediaOutlet[] = [
+  {
+    id: 'lacapital',
+    name: 'La Capital',
+    shortName: 'LC',
+    filterKey: 'La Capital',
+    tagline: 'Decano de la Prensa',
+    region: 'rosario',
+    websiteUrl: 'https://www.lacapital.com.ar',
+    brandColor: '#1E40AF',
+    badgeBg: '#1E3A8A',
+    badgeText: '#93C5FD',
+  },
+  {
+    id: 'rosario3',
+    name: 'Rosario3',
+    shortName: 'R3',
+    filterKey: 'Rosario3',
+    tagline: 'Minuto a minuto local',
+    region: 'rosario',
+    websiteUrl: 'https://www.rosario3.com',
+    brandColor: '#EA580C',
+    badgeBg: '#7C2D12',
+    badgeText: '#FDBA74',
+  },
+  {
+    id: 'elciudadano',
+    name: 'El Ciudadano',
+    shortName: 'EC',
+    filterKey: 'El Ciudadano',
+    tagline: 'Periodismo cooperativo',
+    region: 'rosario',
+    websiteUrl: 'https://www.elciudadanoweb.com',
+    brandColor: '#DC2626',
+    badgeBg: '#7F1D1D',
+    badgeText: '#FCA5A5',
+  },
+  {
+    id: 'notife',
+    name: 'Aire / Notife',
+    shortName: 'SF',
+    filterKey: 'Santa Fe',
+    tagline: 'Provincia & Región',
+    region: 'rosario',
+    websiteUrl: 'https://notife.com',
+    brandColor: '#0284C7',
+    badgeBg: '#0C4A6E',
+    badgeText: '#7DD3FC',
+  },
+  {
+    id: 'bcr',
+    name: 'Bolsa de Comercio',
+    shortName: 'BCR',
+    filterKey: 'Bolsa de Comercio',
+    tagline: 'Granos, Puerto & Agro',
+    region: 'rosario',
+    websiteUrl: 'https://www.bcr.com.ar',
+    brandColor: '#059669',
+    badgeBg: '#064E3B',
+    badgeText: '#6EE7B7',
+  },
+];
+
+export const NATIONAL_OUTLETS: MediaOutlet[] = [
+  {
+    id: 'infobae',
+    name: 'Infobae',
+    shortName: 'INFO',
+    filterKey: 'Infobae',
+    tagline: 'Actualidad 24hs en vivo',
+    region: 'nacional',
+    websiteUrl: 'https://www.infobae.com',
+    brandColor: '#F97316',
+    badgeBg: '#7C2D12',
+    badgeText: '#FFEDD5',
+  },
+  {
+    id: 'clarin',
+    name: 'Clarín',
+    shortName: 'CLA',
+    filterKey: 'Clarín',
+    tagline: 'Edición nacional',
+    region: 'nacional',
+    websiteUrl: 'https://www.clarin.com',
+    brandColor: '#EF4444',
+    badgeBg: '#7F1D1D',
+    badgeText: '#FEE2E2',
+  },
+  {
+    id: 'ambito',
+    name: 'Ámbito Financiero',
+    shortName: 'ÁMB',
+    filterKey: 'Ámbito Financiero',
+    tagline: 'Mercados, dólar & economía',
+    region: 'nacional',
+    websiteUrl: 'https://www.ambito.com',
+    brandColor: '#3B82F6',
+    badgeBg: '#1E3A8A',
+    badgeText: '#DBEAFE',
+  },
+  {
+    id: 'prensafederal',
+    name: 'Prensa Federal',
+    shortName: 'PF',
+    filterKey: 'Prensa Federal',
+    tagline: 'Despachos del país',
+    region: 'nacional',
+    websiteUrl: 'https://www.telam.com.ar',
+    brandColor: '#8B5CF6',
+    badgeBg: '#4C1D95',
+    badgeText: '#EDE9FE',
+  },
+  {
+    id: 'perfil',
+    name: 'Perfil',
+    shortName: 'PRF',
+    filterKey: 'Perfil',
+    tagline: 'Análisis & opinión',
+    region: 'nacional',
+    websiteUrl: 'https://www.perfil.com',
+    brandColor: '#64748B',
+    badgeBg: '#1E293B',
+    badgeText: '#E2E8F0',
+  },
+  {
+    id: 'pagina12',
+    name: 'Página 12',
+    shortName: 'P12',
+    filterKey: 'Página 12',
+    tagline: 'Política y sociedad',
+    region: 'nacional',
+    websiteUrl: 'https://www.pagina12.com.ar',
+    brandColor: '#991B1B',
+    badgeBg: '#450A0A',
+    badgeText: '#FECACA',
+  },
+];

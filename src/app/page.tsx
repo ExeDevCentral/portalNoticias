@@ -4,22 +4,28 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import RosarioHeroBanner from '../components/RosarioHeroBanner';
 import HeroOrbital, { DEFAULT_STORIES, NewsStory } from '../components/HeroOrbital';
-import { IconSun, IconMoon, IconArrowRight, IconClock } from '../components/Icons';
+import { IconSun, IconMoon, IconArrowRight } from '../components/Icons';
 import BreakingTicker from '../components/BreakingTicker';
 import LiveFeedWire from '../components/LiveFeedWire';
 import CategoryBlock from '../components/CategoryBlock';
 import WorldKiosk from '../components/WorldKiosk';
 import Footer from '../components/Footer';
+import { MediaSideRail, MediaHorizontalBar } from '../components/MediaQuickRails';
+import ModernNewsCard from '../components/ModernNewsCard';
 import { NewsItem } from '../db/schema';
-import { formatTimeAgo } from '../utils/formatters';
 
 type MainSectionTab = 'rosario' | 'pais' | 'internacional';
+type RosarioCategoryFilter = 'todas' | 'deportes' | 'seguridad' | 'economia';
 
 export default function HomePage() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [activeTab, setActiveTab] = useState<MainSectionTab>('rosario');
   const [heroMode, setHeroMode] = useState<'banner' | 'orbital'>('banner');
   const [activeStoryIndex, setActiveStoryIndex] = useState(0);
+
+  // Filtros de acceso rápido a diarios y sub-categorías
+  const [selectedSourceFilter, setSelectedSourceFilter] = useState<string | null>(null);
+  const [rosarioCategoryFilter, setRosarioCategoryFilter] = useState<RosarioCategoryFilter>('todas');
 
   const [liveNews, setLiveNews] = useState<NewsItem[]>([]);
   const [urgentNews, setUrgentNews] = useState<{ id: string; title: string; slug?: string }[]>([]);
@@ -66,6 +72,16 @@ export default function HomePage() {
     localStorage.setItem('theme', next);
     document.documentElement.dataset.theme = next;
   };
+
+  // Conteo de notas disponibles por diario para los flancos laterales
+  const sourceCounts = useMemo<Record<string, number>>(() => {
+    const counts: Record<string, number> = {};
+    liveNews.forEach((item) => {
+      const s = item.source === 'La Nación' ? 'Prensa Federal' : item.source;
+      counts[s] = (counts[s] || 0) + 1;
+    });
+    return counts;
+  }, [liveNews]);
 
   // 5 historias curadas de Rosario con gancho editorial
   const orbitalStories = useMemo<NewsStory[]>(() => {
@@ -182,6 +198,7 @@ export default function HomePage() {
       (n) =>
         n.source === 'La Capital' ||
         n.source === 'El Ciudadano' ||
+        n.source.includes('Rosario3') ||
         n.category === 'ciudad' ||
         n.category === 'seguridad'
     );
@@ -194,9 +211,39 @@ export default function HomePage() {
         n.source === 'Prensa Federal' ||
         n.source === 'Clarín' ||
         n.source === 'Infobae' ||
-        n.source === 'Ámbito Financiero'
+        n.source === 'Ámbito Financiero' ||
+        n.source === 'Perfil' ||
+        n.source === 'Página 12'
     );
   }, [liveNews]);
+
+  // Filtrado reactivo al seleccionar un diario en los flancos laterales
+  const filteredLiveNews = useMemo(() => {
+    if (!selectedSourceFilter) return liveNews;
+    const filter = selectedSourceFilter.toLowerCase();
+    return liveNews.filter((n) => {
+      const s = (n.source === 'La Nación' ? 'Prensa Federal' : n.source).toLowerCase();
+      return s.includes(filter) || filter.includes(s);
+    });
+  }, [liveNews, selectedSourceFilter]);
+
+  const filteredRosarioNews = useMemo(() => {
+    if (!selectedSourceFilter) return rosarioWireNews;
+    const filter = selectedSourceFilter.toLowerCase();
+    return rosarioWireNews.filter((n) => {
+      const s = (n.source === 'La Nación' ? 'Prensa Federal' : n.source).toLowerCase();
+      return s.includes(filter) || filter.includes(s);
+    });
+  }, [rosarioWireNews, selectedSourceFilter]);
+
+  const filteredNationalNews = useMemo(() => {
+    if (!selectedSourceFilter) return nationalWireNews;
+    const filter = selectedSourceFilter.toLowerCase();
+    return nationalWireNews.filter((n) => {
+      const s = (n.source === 'La Nación' ? 'Prensa Federal' : n.source).toLowerCase();
+      return s.includes(filter) || filter.includes(s);
+    });
+  }, [nationalWireNews, selectedSourceFilter]);
 
   return (
     <div style={{ minHeight: '100vh', paddingBottom: '60px' }}>
@@ -269,7 +316,7 @@ export default function HomePage() {
 
       {/* 2. Cabecera Principal del Diario */}
       <div className="editorial-container">
-        <header style={{ textAlign: 'center', padding: '20px 0 10px 0' }}>
+        <header style={{ textAlign: 'center', padding: '16px 0 8px 0' }}>
           <div
             style={{
               display: 'flex',
@@ -309,12 +356,12 @@ export default function HomePage() {
           <h1
             className="font-display"
             style={{
-              fontSize: 'clamp(2.4rem, 6vw, 4.8rem)',
+              fontSize: 'clamp(2.2rem, 5.5vw, 4.4rem)',
               fontWeight: 900,
               letterSpacing: '-0.025em',
               lineHeight: 0.95,
               textTransform: 'uppercase',
-              margin: '6px 0',
+              margin: '4px 0',
               color: 'var(--ink)',
             }}
           >
@@ -324,11 +371,11 @@ export default function HomePage() {
           <p
             className="font-body"
             style={{
-              fontSize: '1.08rem',
+              fontSize: '1rem',
               fontStyle: 'italic',
               color: 'var(--ink-soft)',
               maxWidth: '680px',
-              margin: '0 auto 12px auto',
+              margin: '0 auto 10px auto',
             }}
           >
             &ldquo;La inmediatez de los cables, la jerarquía de un gran diario y la memoria rebelde de las barrancas&rdquo;
@@ -465,402 +512,601 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 4. CONTENIDO SEGMENTADO SEGÚN PESTAÑA ACTIVA */}
-      <div className="editorial-container" style={{ marginTop: '20px' }}>
-        {/* ========================================================= */}
-        {/* PESTAÑA 1: ROSARIO & REGIÓN                               */}
-        {/* ========================================================= */}
-        {activeTab === 'rosario' && (
-          <div>
-            {/* Selector de Vista de Portada (Banner Creativo vs Abanico 3D) */}
+      {/* 4. DISPOSICIÓN PRINCIPAL CON FLANCOS LATERALES DE ACCESO RÁPIDO */}
+      <div className="portal-desktop-layout" style={{ marginTop: '18px' }}>
+        {/* FLANCO IZQUIERDO: ACCESO RÁPIDO A DIARIOS DE ROSARIO */}
+        <aside className="portal-rail-container portal-rail-left">
+          <MediaSideRail
+            side="left"
+            activeSource={selectedSourceFilter}
+            onSelectSource={setSelectedSourceFilter}
+            sourceCounts={sourceCounts}
+          />
+        </aside>
+
+        {/* COLUMNA CENTRAL: NOTICIAS Y CONTENIDO EDITORIAL */}
+        <div className="portal-main-column">
+          {/* Barra de Acceso Rápido Horizontal (visible en tablets y móviles) */}
+          <div className="portal-horizontal-bar-wrapper">
+            <MediaHorizontalBar
+              activeSource={selectedSourceFilter}
+              onSelectSource={setSelectedSourceFilter}
+            />
+          </div>
+
+          {/* Banner de Filtrado Activo (cuando el usuario hace clic en un diario) */}
+          {selectedSourceFilter && (
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '10px',
-                fontSize: '0.76rem',
-                fontFamily: 'var(--font-mono)',
+                backgroundColor: 'var(--paper-card)',
+                border: '1px solid var(--blue-parana)',
+                borderLeft: '4px solid var(--blue-parana)',
+                borderRadius: '8px',
+                padding: '10px 16px',
+                marginBottom: '16px',
+                boxShadow: '0 4px 16px rgba(0, 119, 182, 0.15)',
               }}
             >
-              <span style={{ color: 'var(--ink-soft)', fontWeight: 700 }}>
-                CRÓNICAS DESTACADAS DE LA CIUDAD & EL PARANÁ
-              </span>
-
-              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                <span style={{ color: 'var(--ink-soft)', fontSize: '0.7rem' }}>VISTA:</span>
-                <button
-                  type="button"
-                  onClick={() => setHeroMode('banner')}
-                  style={{
-                    padding: '3px 9px',
-                    borderRadius: '3px',
-                    border: '1px solid var(--ink-faint)',
-                    backgroundColor: heroMode === 'banner' ? 'var(--ink)' : 'transparent',
-                    color: heroMode === 'banner' ? 'var(--paper)' : 'var(--ink)',
-                    cursor: 'pointer',
-                    fontSize: '0.72rem',
-                    fontFamily: 'var(--font-mono)',
-                    fontWeight: 700,
-                  }}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.1rem' }}>⚡</span>
+                <span
+                  className="font-mono"
+                  style={{ fontSize: '0.8rem', color: 'var(--ink)' }}
                 >
-                  Banner Moderno
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setHeroMode('orbital')}
-                  style={{
-                    padding: '3px 9px',
-                    borderRadius: '3px',
-                    border: '1px solid var(--ink-faint)',
-                    backgroundColor: heroMode === 'orbital' ? 'var(--ink)' : 'transparent',
-                    color: heroMode === 'orbital' ? 'var(--paper)' : 'var(--ink)',
-                    cursor: 'pointer',
-                    fontSize: '0.72rem',
-                    fontFamily: 'var(--font-mono)',
-                    fontWeight: 700,
-                  }}
-                >
-                  Abanico 3D
-                </button>
+                  Mostrando crónicas de: <strong>{selectedSourceFilter}</strong> •{' '}
+                  <span style={{ color: 'var(--blue-parana)', fontWeight: 700 }}>
+                    {filteredLiveNews.length} artículos disponibles
+                  </span>
+                </span>
               </div>
-            </div>
-
-            {/* Protagonista de Apertura: Banner Moderno o Hero 3D */}
-            {heroMode === 'banner' ? (
-              <RosarioHeroBanner stories={orbitalStories} />
-            ) : (
-              <div id="portada-3d" style={{ marginBottom: '24px' }}>
-                <HeroOrbital
-                  stories={orbitalStories}
-                  selectedIndex={activeStoryIndex}
-                  onStoryChange={setActiveStoryIndex}
-                />
-              </div>
-            )}
-
-            <div className="rule-single" style={{ margin: '24px 0' }} />
-
-            {/* Distribución Limpia en 2 Columnas para Rosario */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: '32px',
-                alignItems: 'start',
-              }}
-            >
-              {/* Columna Izquierda: Los Pilares Rosarinos */}
-              <main style={{ gridColumn: 'span 2' }}>
-                <div id="seccion-futbol">
-                  {categoryNews.deportes.length > 0 ? (
-                    <CategoryBlock
-                      title="Fútbol Rosarino: Newell's y Central"
-                      categoryKey="deportes"
-                      items={categoryNews.deportes}
-                    />
-                  ) : null}
-                </div>
-
-                <div id="seccion-seguridad" style={{ marginTop: '24px' }}>
-                  {categoryNews.seguridad.length > 0 ? (
-                    <CategoryBlock
-                      title="Seguridad Ciudadana & Monitoreo"
-                      categoryKey="seguridad"
-                      items={categoryNews.seguridad}
-                    />
-                  ) : null}
-                </div>
-
-                <div id="seccion-economia" style={{ marginTop: '24px' }}>
-                  {categoryNews.economia.length > 0 ? (
-                    <CategoryBlock
-                      title="Economía, Puerto e Hidrovía del Paraná"
-                      categoryKey="economia"
-                      items={categoryNews.economia}
-                    />
-                  ) : null}
-                </div>
-              </main>
-
-              {/* Columna Derecha: Teletipo Local de Rosario */}
-              <aside style={{ borderLeft: '1px solid var(--ink-faint)', paddingLeft: '22px' }}>
-                <div
-                  style={{
-                    backgroundColor: 'var(--paper-elevated)',
-                    border: '1px solid var(--ink-faint)',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    marginBottom: '14px',
-                    fontSize: '0.74rem',
-                    fontFamily: 'var(--font-mono)',
-                    fontWeight: 800,
-                    color: 'var(--blue-parana)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                  }}
-                >
-                  <span>📍</span>
-                  <span>DESPACHOS DE ROSARIO EN DIRECTO</span>
-                </div>
-                <LiveFeedWire initialItems={rosarioWireNews.length > 0 ? rosarioWireNews : liveNews} />
-              </aside>
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================= */}
-        {/* PESTAÑA 2: EL PAÍS (NOTICIAS NACIONALES & FEDERALES)      */}
-        {/* ========================================================= */}
-        {activeTab === 'pais' && (
-          <div>
-            {/* Banner Cabecera Nacional */}
-            <div
-              style={{
-                padding: '24px 28px',
-                backgroundColor: 'var(--paper-elevated)',
-                border: '1px solid var(--ink-faint)',
-                borderLeft: '5px solid var(--red-urgent)',
-                borderRadius: '6px',
-                marginBottom: '28px',
-              }}
-            >
-              <span
-                className="font-mono"
+              <button
+                type="button"
+                onClick={() => setSelectedSourceFilter(null)}
                 style={{
+                  backgroundColor: 'var(--blue-parana)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '4px 10px',
+                  fontFamily: 'var(--font-mono)',
                   fontSize: '0.72rem',
                   fontWeight: 800,
-                  color: 'var(--red-urgent)',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
+                  cursor: 'pointer',
                 }}
               >
-                🇦🇷 AGENDA FEDERAL Y NACIONAL
-              </span>
-              <h2
-                className="font-display"
-                style={{
-                  fontSize: 'clamp(1.6rem, 3.2vw, 2.4rem)',
-                  fontWeight: 900,
-                  color: 'var(--ink)',
-                  margin: '8px 0 10px 0',
-                }}
-              >
-                El País: Despachos, Economía Federal y Política Nacional
-              </h2>
-              <p
-                className="font-body"
-                style={{
-                  fontSize: '1rem',
-                  color: 'var(--ink-soft)',
-                  margin: 0,
-                  maxWidth: '780px',
-                  lineHeight: 1.5,
-                }}
-              >
-                Información contrastada y en tiempo real de los principales diarios y agencias del país: Clarín,
-                Infobae, Ámbito Financiero y Prensa Federal.
-              </p>
+                ✕ Ver Todos
+              </button>
             </div>
+          )}
 
-            {/* Cuadrícula Limpia de Noticias Nacionales */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: '32px',
-                alignItems: 'start',
-              }}
-            >
-              {/* Columna Izquierda: Crónicas Nacionales */}
-              <main style={{ gridColumn: 'span 2' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  {nationalWireNews.slice(0, 8).map((item) => (
-                    <article
+          {/* VISTA ESPECÍFICA CUANDO UN DIARIO ESTÁ FILTRADO */}
+          {selectedSourceFilter ? (
+            <div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '16px',
+                  borderBottom: '1px solid var(--ink-faint)',
+                  paddingBottom: '8px',
+                }}
+              >
+                <h2
+                  className="font-display"
+                  style={{
+                    fontSize: '1.4rem',
+                    fontWeight: 800,
+                    margin: 0,
+                    color: 'var(--ink)',
+                  }}
+                >
+                  Crónicas y Despachos de {selectedSourceFilter}
+                </h2>
+                <span
+                  className="font-mono"
+                  style={{ fontSize: '0.74rem', color: 'var(--ink-soft)' }}
+                >
+                  {filteredLiveNews.length} despachos
+                </span>
+              </div>
+
+              {filteredLiveNews.length === 0 ? (
+                <div
+                  style={{
+                    padding: '30px',
+                    textAlign: 'center',
+                    backgroundColor: 'var(--paper-card)',
+                    borderRadius: '8px',
+                    border: '1px solid var(--ink-faint)',
+                  }}
+                >
+                  <p style={{ color: 'var(--ink-soft)', margin: 0 }}>
+                    No se encontraron artículos recientes archivados de {selectedSourceFilter}.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSourceFilter(null)}
+                    style={{
+                      marginTop: '12px',
+                      padding: '6px 14px',
+                      backgroundColor: 'var(--blue-parana)',
+                      color: '#FFF',
+                      border: 'none',
+                      borderRadius: '4px',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.76rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Volver a ver todos los diarios
+                  </button>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))',
+                    gap: '12px',
+                  }}
+                >
+                  {filteredLiveNews.map((item) => (
+                    <ModernNewsCard
                       key={item.id}
-                      style={{
-                        padding: '18px 20px',
-                        backgroundColor: 'var(--paper-card)',
-                        border: '1px solid var(--ink-faint)',
-                        borderRadius: '6px',
-                        display: 'grid',
-                        gridTemplateColumns: item.imageUrl ? '1fr 220px' : '1fr',
-                        gap: '20px',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <div>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            marginBottom: '6px',
-                            fontSize: '0.72rem',
-                            fontFamily: 'var(--font-mono)',
-                          }}
-                        >
-                          <span style={{ color: 'var(--red-urgent)', fontWeight: 800 }}>
-                            {item.source === 'La Nación' ? 'Prensa Federal' : item.source}
-                          </span>
-                          <span style={{ color: 'var(--ink-soft)' }}>•</span>
-                          <span style={{ color: 'var(--ink-soft)' }}>{formatTimeAgo(item.publishedAt)}</span>
-                        </div>
-
-                        <Link
-                          href={`/noticia/${item.slug}`}
-                          style={{ textDecoration: 'none', color: 'inherit' }}
-                        >
-                          <h3
-                            className="font-display"
-                            style={{
-                              fontSize: '1.25rem',
-                              fontWeight: 800,
-                              lineHeight: 1.25,
-                              color: 'var(--ink)',
-                              margin: '0 0 8px 0',
-                            }}
-                          >
-                            {item.title}
-                          </h3>
-                        </Link>
-
-                        <p
-                          style={{
-                            fontSize: '0.9rem',
-                            color: 'var(--ink-soft)',
-                            lineHeight: 1.45,
-                            margin: '0 0 12px 0',
-                          }}
-                        >
-                          {item.summary.slice(0, 180)}...
-                        </p>
-
-                        <Link
-                          href={`/noticia/${item.slug}`}
-                          style={{
-                            color: 'var(--red-urgent)',
-                            fontFamily: 'var(--font-mono)',
-                            fontSize: '0.76rem',
-                            fontWeight: 800,
-                            textDecoration: 'none',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                          }}
-                        >
-                          <span>LEER COMPLETA</span>
-                          <IconArrowRight size={12} />
-                        </Link>
-                      </div>
-
-                      {item.imageUrl && (
-                        <div
-                          style={{
-                            height: '140px',
-                            borderRadius: '4px',
-                            overflow: 'hidden',
-                            backgroundColor: '#000',
-                          }}
-                        >
-                          <img
-                            src={item.imageUrl}
-                            alt={item.title}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                          />
-                        </div>
-                      )}
-                    </article>
+                      item={item}
+                      variant="compact"
+                      showCategory={true}
+                    />
                   ))}
                 </div>
-              </main>
+              )}
+            </div>
+          ) : (
+            <>
+              {/* ========================================================= */}
+              {/* PESTAÑA 1: ROSARIO & REGIÓN                               */}
+              {/* ========================================================= */}
+              {activeTab === 'rosario' && (
+                <div>
+                  {/* Selector de Vista de Portada (Banner Creativo vs Abanico 3D) */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '10px',
+                      fontSize: '0.76rem',
+                      fontFamily: 'var(--font-mono)',
+                    }}
+                  >
+                    <span style={{ color: 'var(--ink-soft)', fontWeight: 700 }}>
+                      CRÓNICAS DESTACADAS DE LA CIUDAD & EL PARANÁ
+                    </span>
 
-              {/* Columna Derecha: Teletipo Federal */}
-              <aside style={{ borderLeft: '1px solid var(--ink-faint)', paddingLeft: '22px' }}>
-                <div
-                  style={{
-                    backgroundColor: 'var(--paper-elevated)',
-                    border: '1px solid var(--ink-faint)',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    marginBottom: '14px',
-                    fontSize: '0.74rem',
-                    fontFamily: 'var(--font-mono)',
-                    fontWeight: 800,
-                    color: 'var(--red-urgent)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                  }}
-                >
-                  <span>🇦🇷</span>
-                  <span>CABLES DEL PAÍS AL INSTANTE</span>
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                      <span style={{ color: 'var(--ink-soft)', fontSize: '0.7rem' }}>VISTA:</span>
+                      <button
+                        type="button"
+                        onClick={() => setHeroMode('banner')}
+                        style={{
+                          padding: '3px 9px',
+                          borderRadius: '3px',
+                          border: '1px solid var(--ink-faint)',
+                          backgroundColor: heroMode === 'banner' ? 'var(--ink)' : 'transparent',
+                          color: heroMode === 'banner' ? 'var(--paper)' : 'var(--ink)',
+                          cursor: 'pointer',
+                          fontSize: '0.72rem',
+                          fontFamily: 'var(--font-mono)',
+                          fontWeight: 700,
+                        }}
+                      >
+                        Banner Moderno
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setHeroMode('orbital')}
+                        style={{
+                          padding: '3px 9px',
+                          borderRadius: '3px',
+                          border: '1px solid var(--ink-faint)',
+                          backgroundColor: heroMode === 'orbital' ? 'var(--ink)' : 'transparent',
+                          color: heroMode === 'orbital' ? 'var(--paper)' : 'var(--ink)',
+                          cursor: 'pointer',
+                          fontSize: '0.72rem',
+                          fontFamily: 'var(--font-mono)',
+                          fontWeight: 700,
+                        }}
+                      >
+                        Abanico 3D
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Protagonista de Apertura: Banner Moderno o Hero 3D */}
+                  {heroMode === 'banner' ? (
+                    <RosarioHeroBanner stories={orbitalStories} />
+                  ) : (
+                    <div id="portada-3d" style={{ marginBottom: '24px' }}>
+                      <HeroOrbital
+                        stories={orbitalStories}
+                        selectedIndex={activeStoryIndex}
+                        onStoryChange={setActiveStoryIndex}
+                      />
+                    </div>
+                  )}
+
+                  <div className="rule-single" style={{ margin: '20px 0' }} />
+
+                  {/* SUB-FILTRO DE SECCIONES ROSARINAS PARA ACHICAR LA PÁGINA */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: '8px',
+                      flexWrap: 'wrap',
+                      marginBottom: '16px',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <span
+                      className="font-mono"
+                      style={{ fontSize: '0.72rem', color: 'var(--ink-soft)', fontWeight: 700 }}
+                    >
+                      SECCIONES:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setRosarioCategoryFilter('todas')}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: '4px',
+                        border:
+                          rosarioCategoryFilter === 'todas'
+                            ? '1px solid var(--blue-parana)'
+                            : '1px solid var(--ink-faint)',
+                        backgroundColor:
+                          rosarioCategoryFilter === 'todas'
+                            ? 'var(--blue-parana)'
+                            : 'var(--paper-elevated)',
+                        color: rosarioCategoryFilter === 'todas' ? '#FFFFFF' : 'var(--ink)',
+                        cursor: 'pointer',
+                        fontSize: '0.72rem',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                      }}
+                    >
+                      🗞️ TODAS
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRosarioCategoryFilter('deportes')}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: '4px',
+                        border:
+                          rosarioCategoryFilter === 'deportes'
+                            ? '1px solid var(--blue-parana)'
+                            : '1px solid var(--ink-faint)',
+                        backgroundColor:
+                          rosarioCategoryFilter === 'deportes'
+                            ? 'var(--blue-parana)'
+                            : 'var(--paper-elevated)',
+                        color: rosarioCategoryFilter === 'deportes' ? '#FFFFFF' : 'var(--ink)',
+                        cursor: 'pointer',
+                        fontSize: '0.72rem',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                      }}
+                    >
+                      ⚽ NEWELL&apos;S Y CENTRAL
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRosarioCategoryFilter('seguridad')}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: '4px',
+                        border:
+                          rosarioCategoryFilter === 'seguridad'
+                            ? '1px solid var(--blue-parana)'
+                            : '1px solid var(--ink-faint)',
+                        backgroundColor:
+                          rosarioCategoryFilter === 'seguridad'
+                            ? 'var(--blue-parana)'
+                            : 'var(--paper-elevated)',
+                        color: rosarioCategoryFilter === 'seguridad' ? '#FFFFFF' : 'var(--ink)',
+                        cursor: 'pointer',
+                        fontSize: '0.72rem',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                      }}
+                    >
+                      🛡️ SEGURIDAD CIUDADANA
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRosarioCategoryFilter('economia')}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: '4px',
+                        border:
+                          rosarioCategoryFilter === 'economia'
+                            ? '1px solid var(--blue-parana)'
+                            : '1px solid var(--ink-faint)',
+                        backgroundColor:
+                          rosarioCategoryFilter === 'economia'
+                            ? 'var(--blue-parana)'
+                            : 'var(--paper-elevated)',
+                        color: rosarioCategoryFilter === 'economia' ? '#FFFFFF' : 'var(--ink)',
+                        cursor: 'pointer',
+                        fontSize: '0.72rem',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                      }}
+                    >
+                      🚢 PUERTO & ECONOMÍA
+                    </button>
+                  </div>
+
+                  {/* Distribución Limpia en 2 Columnas para Rosario */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                      gap: '24px',
+                      alignItems: 'start',
+                    }}
+                  >
+                    {/* Columna Izquierda: Bloques de Rosario */}
+                    <main style={{ gridColumn: 'span 2' }}>
+                      {(rosarioCategoryFilter === 'todas' || rosarioCategoryFilter === 'deportes') &&
+                        categoryNews.deportes.length > 0 && (
+                          <div id="seccion-futbol">
+                            <CategoryBlock
+                              title="Fútbol Rosarino: Newell's y Central"
+                              categoryKey="deportes"
+                              icon="⚽"
+                              items={categoryNews.deportes}
+                            />
+                          </div>
+                        )}
+
+                      {(rosarioCategoryFilter === 'todas' || rosarioCategoryFilter === 'seguridad') &&
+                        categoryNews.seguridad.length > 0 && (
+                          <div id="seccion-seguridad">
+                            <CategoryBlock
+                              title="Seguridad Ciudadana & Monitoreo"
+                              categoryKey="seguridad"
+                              icon="🛡️"
+                              items={categoryNews.seguridad}
+                            />
+                          </div>
+                        )}
+
+                      {(rosarioCategoryFilter === 'todas' || rosarioCategoryFilter === 'economia') &&
+                        categoryNews.economia.length > 0 && (
+                          <div id="seccion-economia">
+                            <CategoryBlock
+                              title="Economía, Puerto e Hidrovía del Paraná"
+                              categoryKey="economia"
+                              icon="🚢"
+                              items={categoryNews.economia}
+                            />
+                          </div>
+                        )}
+                    </main>
+
+                    {/* Columna Derecha: Teletipo Local de Rosario */}
+                    <aside style={{ borderLeft: '1px solid var(--ink-faint)', paddingLeft: '16px' }}>
+                      <div
+                        style={{
+                          backgroundColor: 'var(--paper-elevated)',
+                          border: '1px solid var(--ink-faint)',
+                          padding: '7px 10px',
+                          borderRadius: '4px',
+                          marginBottom: '10px',
+                          fontSize: '0.72rem',
+                          fontFamily: 'var(--font-mono)',
+                          fontWeight: 800,
+                          color: 'var(--blue-parana)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        <span>📍</span>
+                        <span>DESPACHOS DE ROSARIO EN DIRECTO</span>
+                      </div>
+                      <LiveFeedWire initialItems={filteredRosarioNews.length > 0 ? filteredRosarioNews : liveNews} />
+                    </aside>
+                  </div>
                 </div>
-                <LiveFeedWire initialItems={nationalWireNews} />
-              </aside>
-            </div>
-          </div>
-        )}
+              )}
 
-        {/* ========================================================= */}
-        {/* PESTAÑA 3: INTERNACIONAL (EL GRAN KIOSCO GLOBAL)           */}
-        {/* ========================================================= */}
-        {activeTab === 'internacional' && (
-          <div>
-            <div
-              style={{
-                padding: '24px 28px',
-                backgroundColor: 'var(--paper-elevated)',
-                border: '1px solid var(--ink-faint)',
-                borderLeft: '5px solid var(--ink)',
-                borderRadius: '6px',
-                marginBottom: '28px',
-              }}
-            >
-              <span
-                className="font-mono"
-                style={{
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  color: 'var(--ink)',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                🌍 PRENSA MUNDIAL Y CORRESPONSALÍAS
-              </span>
-              <h2
-                className="font-display"
-                style={{
-                  fontSize: 'clamp(1.6rem, 3.2vw, 2.4rem)',
-                  fontWeight: 900,
-                  color: 'var(--ink)',
-                  margin: '8px 0 10px 0',
-                }}
-              >
-                El Gran Kiosco: Los Diarios del Mundo en 1 Click
-              </h2>
-              <p
-                className="font-body"
-                style={{
-                  fontSize: '1rem',
-                  color: 'var(--ink-soft)',
-                  margin: 0,
-                  maxWidth: '780px',
-                  lineHeight: 1.5,
-                }}
-              >
-                Filtrá por región (EEUU, Europa, Asia, Rusia y América) y leé directamente los artículos originales de
-                BBC Mundo, El País, Deutsche Welle, The Guardian, CNN y Al Jazeera.
-              </p>
-            </div>
+              {/* ========================================================= */}
+              {/* PESTAÑA 2: EL PAÍS (NOTICIAS NACIONALES & FEDERALES)      */}
+              {/* ========================================================= */}
+              {activeTab === 'pais' && (
+                <div>
+                  {/* Banner Cabecera Nacional */}
+                  <div
+                    style={{
+                      padding: '20px 24px',
+                      backgroundColor: 'var(--paper-elevated)',
+                      border: '1px solid var(--ink-faint)',
+                      borderLeft: '5px solid var(--red-urgent)',
+                      borderRadius: '6px',
+                      marginBottom: '20px',
+                    }}
+                  >
+                    <span
+                      className="font-mono"
+                      style={{
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        color: 'var(--red-urgent)',
+                        letterSpacing: '0.06em',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      🇦🇷 AGENDA FEDERAL Y NACIONAL
+                    </span>
+                    <h2
+                      className="font-display"
+                      style={{
+                        fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)',
+                        fontWeight: 900,
+                        color: 'var(--ink)',
+                        margin: '6px 0 8px 0',
+                      }}
+                    >
+                      El País: Despachos, Economía Federal y Política Nacional
+                    </h2>
+                    <p
+                      className="font-body"
+                      style={{
+                        fontSize: '0.96rem',
+                        color: 'var(--ink-soft)',
+                        margin: 0,
+                        maxWidth: '780px',
+                        lineHeight: 1.45,
+                      }}
+                    >
+                      Información contrastada y en tiempo real de los principales diarios y agencias del país: Clarín,
+                      Infobae, Ámbito Financiero y Prensa Federal.
+                    </p>
+                  </div>
 
-            <WorldKiosk />
-          </div>
-        )}
+                  {/* Cuadrícula Limpia de Noticias Nacionales (2 Columnas Modernas) */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                      gap: '24px',
+                      alignItems: 'start',
+                    }}
+                  >
+                    {/* Columna Izquierda: Crónicas Nacionales en Cuadrícula Compacta */}
+                    <main style={{ gridColumn: 'span 2' }}>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
+                          gap: '12px',
+                        }}
+                      >
+                        {filteredNationalNews.slice(0, 10).map((item) => (
+                          <ModernNewsCard
+                            key={item.id}
+                            item={item}
+                            variant="compact"
+                            showCategory={true}
+                          />
+                        ))}
+                      </div>
+                    </main>
 
-        <Footer />
+                    {/* Columna Derecha: Teletipo Federal */}
+                    <aside style={{ borderLeft: '1px solid var(--ink-faint)', paddingLeft: '16px' }}>
+                      <div
+                        style={{
+                          backgroundColor: 'var(--paper-elevated)',
+                          border: '1px solid var(--ink-faint)',
+                          padding: '7px 10px',
+                          borderRadius: '4px',
+                          marginBottom: '10px',
+                          fontSize: '0.72rem',
+                          fontFamily: 'var(--font-mono)',
+                          fontWeight: 800,
+                          color: 'var(--red-urgent)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        <span>🇦🇷</span>
+                        <span>CABLES DEL PAÍS AL INSTANTE</span>
+                      </div>
+                      <LiveFeedWire initialItems={filteredNationalNews} />
+                    </aside>
+                  </div>
+                </div>
+              )}
+
+              {/* ========================================================= */}
+              {/* PESTAÑA 3: INTERNACIONAL (EL GRAN KIOSCO GLOBAL)           */}
+              {/* ========================================================= */}
+              {activeTab === 'internacional' && (
+                <div>
+                  <div
+                    style={{
+                      padding: '20px 24px',
+                      backgroundColor: 'var(--paper-elevated)',
+                      border: '1px solid var(--ink-faint)',
+                      borderLeft: '5px solid var(--ink)',
+                      borderRadius: '6px',
+                      marginBottom: '20px',
+                    }}
+                  >
+                    <span
+                      className="font-mono"
+                      style={{
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        color: 'var(--ink)',
+                        letterSpacing: '0.06em',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      🌍 PRENSA MUNDIAL Y CORRESPONSALÍAS
+                    </span>
+                    <h2
+                      className="font-display"
+                      style={{
+                        fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)',
+                        fontWeight: 900,
+                        color: 'var(--ink)',
+                        margin: '6px 0 8px 0',
+                      }}
+                    >
+                      El Gran Kiosco: Los Diarios del Mundo en 1 Click
+                    </h2>
+                    <p
+                      className="font-body"
+                      style={{
+                        fontSize: '0.96rem',
+                        color: 'var(--ink-soft)',
+                        margin: 0,
+                        maxWidth: '780px',
+                        lineHeight: 1.45,
+                      }}
+                    >
+                      Filtrá por región (EEUU, Europa, Asia, Rusia y América) y leé directamente los artículos originales de
+                      BBC Mundo, El País, Deutsche Welle, The Guardian, CNN y Al Jazeera.
+                    </p>
+                  </div>
+
+                  <WorldKiosk />
+                </div>
+              )}
+            </>
+          )}
+
+          <Footer />
+        </div>
+
+        {/* FLANCO DERECHO: ACCESO RÁPIDO A DIARIOS NACIONALES */}
+        <aside className="portal-rail-container portal-rail-right">
+          <MediaSideRail
+            side="right"
+            activeSource={selectedSourceFilter}
+            onSelectSource={setSelectedSourceFilter}
+            sourceCounts={sourceCounts}
+          />
+        </aside>
       </div>
     </div>
   );
