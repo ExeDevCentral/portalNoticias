@@ -239,7 +239,7 @@ const FALLBACK_CABLES: CableItem[] = [
   },
   {
     id: 'real-lanacion-1',
-    source: 'La Nación',
+    source: 'Prensa Federal',
     region: 'argentina',
     category: 'Campo & Negocios',
     originalTitle: 'El puerto de Rosario y el Gran Rosario despachan cosecha récord hacia mercados de ultramar',

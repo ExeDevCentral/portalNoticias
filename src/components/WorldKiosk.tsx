@@ -20,7 +20,7 @@ const SCOPES: ScopeOption[] = [
   { key: 'europa', label: 'Europa', icon: '🇪🇺', badge: 'UNIÓN EUROPEA & UK', description: 'BBC Mundo, El País, DW Español, The Guardian' },
   { key: 'asia', label: 'Asia', icon: '🌏', badge: 'MEDIO ORIENTE & ASIA', description: 'Al Jazeera' },
   { key: 'rusia', label: 'Rusia', icon: '🇷🇺', badge: 'EURASIA', description: 'RT en Español, Sputnik Mundo' },
-  { key: 'argentina', label: 'Argentina & Rosario', icon: '🇦🇷', badge: 'NACIONAL & LITORAL', description: 'Clarín, La Nación, Infobae, Ámbito, La Capital' },
+  { key: 'argentina', label: 'Argentina & Rosario', icon: '🇦🇷', badge: 'NACIONAL & LITORAL', description: 'Clarín, Infobae, Ámbito, La Capital, Prensa Federal' },
 ];
 
 interface NewspaperBrand {
@@ -124,12 +124,21 @@ const NEWSPAPER_DIRECTORY: Record<string, NewspaperBrand> = {
     accentColor: '#DC2626',
     textColor: '#FFFFFF',
   },
-  'La Nación': {
-    name: 'La Nación',
-    badge: 'LA NACIÓN',
+  'Prensa Federal': {
+    name: 'Prensa Federal',
+    badge: 'FEDERAL',
     flag: '🇦🇷',
     scope: 'argentina',
-    tagline: 'Tradición y análisis político',
+    tagline: 'Análisis político y agenda del país',
+    accentColor: '#1E3A8A',
+    textColor: '#FFFFFF',
+  },
+  'La Nación': {
+    name: 'Prensa Federal',
+    badge: 'FEDERAL',
+    flag: '🇦🇷',
+    scope: 'argentina',
+    tagline: 'Análisis político y agenda del país',
     accentColor: '#1E3A8A',
     textColor: '#FFFFFF',
   },

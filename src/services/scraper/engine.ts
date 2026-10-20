@@ -12,7 +12,7 @@ export const DEFAULT_FEEDS: FeedSource[] = [
   { name: 'El Ciudadano', url: 'https://www.elciudadanoweb.com/feed/' },
   // Nacionales
   { name: 'Clarín', url: 'https://www.clarin.com/rss/lo-ultimo/' },
-  { name: 'La Nación', url: 'https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml' },
+  { name: 'Prensa Federal', url: 'https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml' },
   { name: 'Infobae', url: 'https://www.infobae.com/arc/outboundfeeds/rss/?outputType=xml' },
   { name: 'Ámbito Financiero', url: 'https://www.ambito.com/rss/home.xml' },
   // Internacionales / Mundo
