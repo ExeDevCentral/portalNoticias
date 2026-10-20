@@ -100,6 +100,17 @@ export class NewsRepository {
     return item || null;
   }
 
+  async clearAllNews(): Promise<void> {
+    this.db.delete(newsItems).run();
+  }
+
+  async setPinnedNews(id: string): Promise<void> {
+    this.db.update(newsItems).set({ isPinned: false }).run();
+    this.db.update(newsItems).set({ isPinned: true }).where(eq(newsItems.id, id)).run();
+  }
+
+
+
   async createLiveAlert(
     alert: Omit<InsertLiveAlert, 'id' | 'createdAt'> & { id?: string; createdAt?: Date }
   ): Promise<LiveAlert> {

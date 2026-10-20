@@ -12,8 +12,21 @@ describe('partitionNewsForHomepage', () => {
 
     const result = partitionNewsForHomepage(mockItems);
     expect(result.hero?.title).toBe('Nota Pinned');
-    expect(result.urgent.length).toBe(1);
-    expect(result.byCategory.deportes.length).toBe(1);
-    expect(result.byCategory.economia.length).toBe(1);
+    expect(result.urgent).toHaveLength(1);
+    expect(result.byCategory.deportes).toHaveLength(1);
+    expect(result.byCategory.economia).toHaveLength(1);
+  });
+
+  it('provides freshest items as ticker when no items are explicitly marked urgent', () => {
+    const mockItems = [
+      { id: '1', title: 'Nota Reciente 1', isPinned: false, isUrgent: false, category: 'politica', publishedAt: new Date() },
+      { id: '2', title: 'Nota Reciente 2', isPinned: false, isUrgent: false, category: 'deportes', publishedAt: new Date() },
+      { id: '3', title: 'Nota Reciente 3', isPinned: false, isUrgent: false, category: 'ciudad', publishedAt: new Date() },
+    ] as any;
+
+    const result = partitionNewsForHomepage(mockItems);
+    expect(result.urgent).toHaveLength(3);
+    expect(result.urgent[0].title).toBe('Nota Reciente 1');
   });
 });
+

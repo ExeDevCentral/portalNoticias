@@ -7,11 +7,19 @@ export interface FeedSource {
 }
 
 export const DEFAULT_FEEDS: FeedSource[] = [
+  // Locales Rosario
   { name: 'La Capital', url: 'https://www.lacapital.com.ar/rss/home.xml' },
   { name: 'El Ciudadano', url: 'https://www.elciudadanoweb.com/feed/' },
+  // Nacionales
   { name: 'Clarín', url: 'https://www.clarin.com/rss/lo-ultimo/' },
   { name: 'La Nación', url: 'https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml' },
+  { name: 'Infobae', url: 'https://www.infobae.com/arc/outboundfeeds/rss/?outputType=xml' },
   { name: 'Ámbito Financiero', url: 'https://www.ambito.com/rss/home.xml' },
+  // Internacionales / Mundo
+  { name: 'BBC Mundo', url: 'https://feeds.bbci.co.uk/mundo/rss.xml' },
+  { name: 'El País', url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/internacional/portada' },
+  { name: 'DW Español', url: 'https://rss.dw.com/rdf/rss-sp-all' },
+  { name: 'The Guardian', url: 'https://www.theguardian.com/world/rss' },
 ];
 
 export interface SyncResult {
@@ -32,7 +40,8 @@ export async function runCrawlerSync(
     try {
       const response = await fetch(feed.url, {
         headers: {
-          'User-Agent': 'RosarioEnTiempoReal/1.0 (+https://rosarioentiempreal.com.ar)',
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 RosarioEnTiempoReal/1.0',
         },
         signal: AbortSignal.timeout(10000),
       });

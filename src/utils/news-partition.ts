@@ -42,9 +42,11 @@ export function partitionNewsForHomepage(items: NewsItem[]): PartitionedNews {
     hero = items[0];
   }
 
+  const effectiveUrgent = urgent.length > 0 ? urgent : items.slice(0, 5);
+
   return {
     hero,
-    urgent,
+    urgent: effectiveUrgent,
     byCategory,
     feed: remaining,
   };

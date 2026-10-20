@@ -40,7 +40,7 @@ describe('NewsRepository', () => {
     });
 
     const latest = await repo.getLatestNews(10);
-    expect(latest.length).toBe(2);
+    expect(latest).toHaveLength(2);
     expect(latest[0].title).toBe('Noticia Reciente');
     expect(latest[0].isUrgent).toBe(true);
   });
@@ -91,7 +91,70 @@ describe('NewsRepository', () => {
     });
 
     const alerts = await repo.getActiveAlerts();
-    expect(alerts.length).toBe(1);
+    expect(alerts).toHaveLength(1);
     expect(alerts[0].title).toContain('Alerta Roja');
   });
+
+  it('clears all news items completely', async () => {
+    await repo.createNewsItem({
+      title: 'Nota para borrar',
+      slug: 'nota-para-borrar',
+      summary: 'Resumen',
+      content: '<p>Cuerpo</p>',
+      imageUrl: 'https://example.com/img.jpg',
+      source: 'La Capital',
+      sourceUrl: 'https://lacapital.com.ar/borrar',
+      category: 'ciudad',
+      isUrgent: false,
+      isPinned: false,
+      publishedAt: new Date(),
+    });
+
+    let news = await repo.getLatestNews(10);
+    expect(news).toHaveLength(1);
+
+    await repo.clearAllNews();
+    news = await repo.getLatestNews(10);
+    expect(news).toHaveLength(0);
+  });
+
+  it('updates pinned status accurately via setPinnedNews', async () => {
+    const item1 = await repo.createNewsItem({
+      title: 'Nota 1',
+      slug: 'nota-1',
+      summary: 'Resumen 1',
+      content: '<p>Cuerpo 1</p>',
+      imageUrl: 'https://example.com/img1.jpg',
+      source: 'La Capital',
+      sourceUrl: 'https://lacapital.com.ar/nota-1',
+      category: 'ciudad',
+      isUrgent: false,
+      isPinned: false,
+      publishedAt: new Date(),
+    });
+
+    const item2 = await repo.createNewsItem({
+      title: 'Nota 2',
+      slug: 'nota-2',
+      summary: 'Resumen 2',
+      content: '<p>Cuerpo 2</p>',
+      imageUrl: 'https://example.com/img2.jpg',
+      source: 'Clarín',
+      sourceUrl: 'https://clarin.com/nota-2',
+      category: 'politica',
+      isUrgent: false,
+      isPinned: false,
+      publishedAt: new Date(),
+    });
+
+    await repo.setPinnedNews(item2!.id);
+    const pinned = await repo.getPinnedNews();
+    expect(pinned?.id).toBe(item2!.id);
+
+    await repo.setPinnedNews(item1!.id);
+    const pinnedNew = await repo.getPinnedNews();
+    expect(pinnedNew?.id).toBe(item1!.id);
+  });
 });
+
+
