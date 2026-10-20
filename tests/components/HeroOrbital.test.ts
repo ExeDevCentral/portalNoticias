@@ -22,7 +22,7 @@ describe('HeroOrbital Real News Cards & Editorial Hooks', () => {
       expect(story.title.length).toBeGreaterThan(15);
       expect(story.summary.length).toBeGreaterThan(20);
       expect(story.source).toBeDefined();
-      expect(story.imageUrl).toMatch(/^https:\/\//);
+      expect(story.imageUrl).toMatch(/^(https:\/\/|\/images\/)/);
     });
   });
 

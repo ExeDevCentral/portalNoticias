@@ -74,7 +74,7 @@ export async function seedDatabase(
       <p>Las tareas buscan mejorar la fluidez del tránsito pesado hacia las terminales portuarias y ordenar los accesos interurbanos en horarios pico.</p>
       <p>Se recomienda a los transportistas y automovilistas circular con precaución respetando la cartelería provisoria.</p>
     `,
-    imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: '/images/hero/circunvalacion-seguridad.jpg',
     source: 'La Capital',
     sourceUrl: 'https://www.lacapital.com.ar/la-ciudad/obras-circunvalacion-accesos.html',
     category: 'ciudad',
@@ -91,7 +91,7 @@ export async function seedDatabase(
       <p>El comando unificado de seguridad dispuso operativos dinámicos de saturación preventiva en avenidas clave y accesos al área metropolitana.</p>
       <p>Los dispositivos incluyen verificación digital de dominios vehiculares y presencia en paradas de transporte público.</p>
     `,
-    imageUrl: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/hero/circunvalacion-seguridad.jpg',
     source: 'Infobae',
     sourceUrl: 'https://www.infobae.com/sociedad/operativo-seguridad-corredores-urbanos.html',
     category: 'seguridad',
@@ -108,7 +108,7 @@ export async function seedDatabase(
       <p>Los cuerpos técnicos de ambos clubes definieron los once titulares tras sesiones a puertas cerradas donde se priorizó el trabajo de pelota parada y coordinación defensiva.</p>
       <p>Las parcialidades siguen de cerca las novedades en la venta y canje de plateas para los próximos encuentros.</p>
     `,
-    imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/hero/clasico-rosarino.jpg',
     source: 'El Ciudadano',
     sourceUrl: 'https://www.elciudadanoweb.com/deportes/newells-central-practicas-liga.html',
     category: 'deportes',
@@ -125,7 +125,7 @@ export async function seedDatabase(
       <p>La Bolsa de Comercio confirmó despachos estables de subproductos oleaginosos y cereales a través de las terminales del cordón fluvial.</p>
       <p>El calado efectivo sobre la Hidrovía Paraná-Paraguay facilita la operatoria logística de buques de gran porte.</p>
     `,
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/hero/puerto-hidrovia.jpg',
     source: 'Ámbito Financiero',
     sourceUrl: 'https://www.ambito.com/economia/puertos-rosario-embarques-granos.html',
     category: 'economia',
@@ -142,7 +142,7 @@ export async function seedDatabase(
       <p>BUENOS AIRES. Mandatarios de la Región Centro y el Litoral participaron de mesas técnicas con funcionarios nacionales para evaluar la marcha de los recursos tributarios coparticipables.</p>
       <p>Los acuerdos contemplan priorizar corredores viales interprovinciales y programas de conectividad productiva.</p>
     `,
-    imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/hero/circunvalacion-seguridad.jpg',
     source: 'Clarín',
     sourceUrl: 'https://www.clarin.com/politica/gobierno-provincias-pautas-fiscales.html',
     category: 'politica',
@@ -159,7 +159,7 @@ export async function seedDatabase(
       <p>LONDRES. La Organización Marítima Internacional y analistas de transporte señalaron la importancia estratégica de las cuencas navegables en el abastecimiento alimentario global.</p>
       <p>Las fluctuaciones arancelarias y las demandas de descarbonización impulsan inversiones en infraestructura portuaria moderna y dragado eficiente.</p>
     `,
-    imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/images/hero/puerto-hidrovia.jpg',
     source: 'BBC Mundo',
     sourceUrl: 'https://www.bbc.com/mundo/noticias-internacional-comercio-maritimo',
     category: 'sociedad',
