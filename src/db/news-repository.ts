@@ -100,6 +100,15 @@ export class NewsRepository {
     return item || null;
   }
 
+  async getNewsById(id: string): Promise<NewsItem | null> {
+    const item = this.db
+      .select()
+      .from(newsItems)
+      .where(eq(newsItems.id, id))
+      .get();
+    return item || null;
+  }
+
   async clearAllNews(): Promise<void> {
     this.db.delete(newsItems).run();
   }

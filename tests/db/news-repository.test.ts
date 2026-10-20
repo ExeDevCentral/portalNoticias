@@ -155,6 +155,32 @@ describe('NewsRepository', () => {
     const pinnedNew = await repo.getPinnedNews();
     expect(pinnedNew?.id).toBe(item1!.id);
   });
+
+  it('retrieves news item by slug and by id', async () => {
+    const item = await repo.createNewsItem({
+      title: 'Nota de Prueba Slug',
+      slug: 'nota-de-prueba-slug',
+      summary: 'Resumen prueba',
+      content: '<p>Cuerpo prueba</p>',
+      imageUrl: 'https://example.com/img3.jpg',
+      source: 'Infobae',
+      sourceUrl: 'https://infobae.com/nota-slug',
+      category: 'sociedad',
+      isUrgent: false,
+      isPinned: false,
+      publishedAt: new Date(),
+    });
+
+    expect(item).not.toBeNull();
+    const bySlug = await repo.getNewsBySlug('nota-de-prueba-slug');
+    expect(bySlug?.id).toBe(item!.id);
+
+    const byId = await repo.getNewsById(item!.id);
+    expect(byId?.slug).toBe('nota-de-prueba-slug');
+
+    const notFoundSlug = await repo.getNewsBySlug('slug-inexistente');
+    expect(notFoundSlug).toBeNull();
+  });
 });
 
 

@@ -866,7 +866,8 @@ export default function HeroOrbital({
                       </div>
 
                       <Link
-                        href={`/noticia/${story.slug}`}
+                        href={story.slug ? `/noticia/${story.slug}` : (story.sourceUrl || '#')}
+                        onClick={(e) => e.stopPropagation()}
                         style={{ textDecoration: 'none', color: 'inherit' }}
                       >
                         <h3
@@ -980,6 +981,7 @@ export default function HeroOrbital({
                             href={story.sourceUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
                             title={`Leer directamente en la fuente oficial (${story.source})`}
                             style={{
                               backgroundColor: 'transparent',
@@ -1002,7 +1004,8 @@ export default function HeroOrbital({
                         )}
 
                         <Link
-                          href={`/noticia/${story.slug}`}
+                          href={story.slug ? `/noticia/${story.slug}` : (story.sourceUrl || '#')}
+                          onClick={(e) => e.stopPropagation()}
                           style={{
                             backgroundColor: story.accentColor,
                             color: '#FFFFFF',

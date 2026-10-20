@@ -1,5 +1,6 @@
 import { NewsRepository } from '../db/news-repository';
 import { runCrawlerSync } from '../services/scraper/engine';
+import { DEFAULT_STORIES } from '../services/hero-stories';
 
 export async function seedDatabase(
   repo: NewsRepository,
@@ -23,11 +24,44 @@ export async function seedDatabase(
           level: 'info',
           active: true,
         });
-        return;
       }
     } catch (err) {
       console.warn('Live crawler sync during seed encountered an issue, falling back to verified baseline:', err);
     }
+  }
+
+  // Ensure bedrock hero editorial stories always exist in the database
+  for (const s of DEFAULT_STORIES) {
+    await repo.createNewsItem({
+      title: s.title,
+      slug: s.slug,
+      summary: s.summary,
+      content: `
+        <p>${s.hook}</p>
+        <p>${s.summary}</p>
+        ${
+          s.keyFacts && s.keyFacts.length > 0
+            ? `<h3>Puntos clave del despacho</h3><ul>${s.keyFacts.map((f) => `<li>${f}</li>`).join('')}</ul>`
+            : ''
+        }
+        <p>Cobertura editorial especial de Rosario en Tiempo Real con información contrastada y fuentes verificadas.</p>
+      `,
+      imageUrl: s.imageUrl,
+      source: s.source,
+      sourceUrl: s.sourceUrl || `https://rosarioentiempreal.com.ar/noticia/${s.slug}`,
+      category: (s.category.toLowerCase().includes('seguridad')
+        ? 'seguridad'
+        : s.category.toLowerCase().includes('deporte') || s.category.toLowerCase().includes('clásico')
+        ? 'deportes'
+        : s.category.toLowerCase().includes('economia') || s.category.toLowerCase().includes('puerto')
+        ? 'economia'
+        : s.category.toLowerCase().includes('rio') || s.category.toLowerCase().includes('ciudad')
+        ? 'ciudad'
+        : 'sociedad') as any,
+      isUrgent: !!s.isBreaking,
+      isPinned: s.id === 'costanera-parana',
+      publishedAt: new Date(Date.now() - 3600000 * 2),
+    });
   }
 
   // Curated genuine dispatches from authentic regional, national and international news agencies
