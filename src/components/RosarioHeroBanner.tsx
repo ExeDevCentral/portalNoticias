@@ -15,89 +15,23 @@ export default function RosarioHeroBanner({ stories = DEFAULT_STORIES }: Rosario
 
   return (
     <section
-      aria-label="Noticias destacadas de Rosario y el Paraná"
+      aria-label="Noticia principal destacada"
       style={{
-        margin: '16px auto 28px auto',
-        maxWidth: '1200px',
+        margin: '0 0 24px 0',
         width: '100%',
         position: 'relative',
       }}
     >
-      {/* 1. Barra Flotante de Métricas en Vivo de Rosario */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '12px',
-          padding: '10px 18px',
-          backgroundColor: 'var(--paper-elevated)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid var(--ink-faint)',
-          borderRadius: '8px 8px 0 0',
-          fontSize: '0.74rem',
-          fontFamily: 'var(--font-mono)',
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: 'rgba(16, 185, 129, 0.15)',
-              color: '#059669',
-              padding: '3px 9px',
-              borderRadius: '20px',
-              fontWeight: 800,
-              letterSpacing: '0.04em',
-            }}
-          >
-            <span
-              style={{
-                width: '7px',
-                height: '7px',
-                borderRadius: '50%',
-                backgroundColor: '#10B981',
-                boxShadow: '0 0 8px #10B981',
-              }}
-            />
-            EN VIVO DESDE EL PARANÁ
-          </span>
-          <span style={{ color: 'var(--ink-soft)', fontWeight: 600 }}>
-            Rosario & Cordón Industrial
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', color: 'var(--ink)' }}>
-          <span title="Altura del Río Paraná frente a Rosario">
-            🌊 <strong>Río Paraná:</strong> 3.42m
-          </span>
-          <span style={{ color: 'var(--ink-faint)' }}>•</span>
-          <span title="Condiciones meteorológicas en la ribera">
-            ⛅ <strong>Rosario:</strong> 22°C (Viento SE)
-          </span>
-          <span style={{ color: 'var(--ink-faint)' }}>•</span>
-          <span title="Mercados de divisas">
-            💵 <strong>Dólar Rosario:</strong> $1.240 / $1.260
-          </span>
-        </div>
-      </div>
-
-      {/* 2. Tarjeta Hero Principal (Glassmorphism + Editorial Rosario) */}
+      {/* Tarjeta Hero Principal (Editorial Rosario de Alta Fidelidad) */}
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           backgroundColor: 'var(--paper-card)',
           border: '1px solid var(--ink-faint)',
-          borderTop: 'none',
-          borderRadius: '0 0 8px 8px',
+          borderRadius: '8px',
           overflow: 'hidden',
-          boxShadow: '0 12px 32px rgba(0, 0, 0, 0.08)',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
         }}
       >
         {/* Imagen Editorial de Gran Impacto */}

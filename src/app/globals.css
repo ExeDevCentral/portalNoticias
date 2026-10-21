@@ -647,48 +647,21 @@ body {
 }
 
 /* ========================================================
-   PORTAL DESKTOP RAILS & COMPACT LAYOUT
+   TIER-1 EDITORIAL ASYMMETRIC GRID (OPENING VIEWPORT)
    ======================================================== */
 
-.portal-desktop-layout {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 1840px;
-  margin: 0 auto;
-  padding: 0 16px;
-  gap: 20px;
-  position: relative;
+.editorial-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 350px;
+  gap: 28px;
+  align-items: start;
+  margin-bottom: 28px;
 }
 
-.portal-main-column {
-  flex: 1;
-  min-width: 0;
-  max-width: 1320px;
-}
-
-.portal-rail-container {
-  display: none;
-  width: 210px;
-  flex-shrink: 0;
-}
-
-@media (min-width: 1380px) {
-  .portal-rail-container {
-    display: block;
-  }
-  div.portal-horizontal-bar-wrapper {
-    display: none;
-  }
-}
-
-@media (max-width: 1379px) {
-  aside.portal-rail-container {
-    display: none;
-  }
-  div.portal-horizontal-bar-wrapper {
-    display: block;
+@media (max-width: 1060px) {
+  .editorial-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
 
