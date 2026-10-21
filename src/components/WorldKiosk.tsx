@@ -513,7 +513,7 @@ export default function WorldKiosk() {
                         gap: '4px',
                       }}
                     >
-                      <span>⚡ RESEÑA EDITORIAL AL PASO</span>
+                      <span>ANÁLISIS EDITORIAL & CONTEXTO</span>
                     </span>
                     <span
                       style={{
@@ -524,21 +524,20 @@ export default function WorldKiosk() {
                         fontWeight: 700,
                       }}
                     >
-                      {cable.warningTag || 'OJO CRÍTICO'}
+                      {cable.warningTag || 'SÍNTESIS ANALÍTICA'}
                     </span>
                   </div>
 
                   <p
                     style={{
                       fontFamily: 'var(--font-serif-body)',
-                      fontStyle: 'italic',
                       fontSize: '0.94rem',
-                      lineHeight: 1.4,
+                      lineHeight: 1.45,
                       color: 'var(--ink)',
                       margin: '0 0 6px 0',
                     }}
                   >
-                    &ldquo;{cable.ironicReview}&rdquo;
+                    {cable.ironicReview}
                   </p>
 
                   <div
@@ -549,12 +548,12 @@ export default function WorldKiosk() {
                       fontFamily: 'var(--font-mono)',
                       fontSize: '0.64rem',
                       color: 'var(--ink-soft)',
-                      borderTop: '1px dashed var(--ink-faint)',
-                      paddingTop: '4px',
+                      borderTop: '1px solid var(--ink-faint)',
+                      paddingTop: '6px',
                     }}
                   >
-                    <span>* Nota original de {cable.source} no intervenida</span>
-                    <span>Lectura directa sin filtros</span>
+                    <span>Despacho verificado de {cable.source}</span>
+                    <span>Cobertura directa sin intermediarios</span>
                   </div>
                 </div>
 
@@ -1050,19 +1049,18 @@ export default function WorldKiosk() {
                   letterSpacing: '0.06em',
                 }}
               >
-                ⚡ {selectedCable.warningTag || 'RESEÑA EDITORIAL AL PASO'}
+                ⚡ {selectedCable.warningTag || 'ANÁLISIS EDITORIAL & CONTEXTO'}
               </span>
               <p
                 className="font-display"
                 style={{
                   fontSize: '1.15rem',
-                  fontStyle: 'italic',
-                  lineHeight: 1.4,
+                  lineHeight: 1.45,
                   margin: 0,
                   color: 'var(--ink)',
                 }}
               >
-                &ldquo;{selectedCable.ironicReview}&rdquo;
+                {selectedCable.ironicReview}
               </p>
             </div>
 

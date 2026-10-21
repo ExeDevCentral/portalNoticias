@@ -58,11 +58,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h5 className="font-mono" style={{ fontSize: '0.8rem', color: 'var(--red-urgent)', marginBottom: '8px', textTransform: 'uppercase' }}>
-              Aviso Editorial
+            <h5 className="font-mono" style={{ fontSize: '0.8rem', color: 'var(--blue-parana)', marginBottom: '8px', textTransform: 'uppercase' }}>
+              Compromiso Editorial
             </h5>
             <p style={{ fontSize: '0.8rem', lineHeight: 1.5 }}>
-              Publicación con método periodístico contemporáneo y crónica satírica documental. Los cables externos pertenecen a sus respectivos autores.
+              Compromiso con el rigor informativo, la pluralidad de fuentes y la inmediatez regional. Los despachos de agencias conservan su autoría y propiedad intelectual de origen.
             </p>
           </div>
         </div>
@@ -70,8 +70,8 @@ export default function Footer() {
         <div className="rule-faint" style={{ margin: '20px 0' }} />
 
         <div className="font-mono" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', flexWrap: 'wrap', gap: '8px' }}>
-          <span>© 2026 ROSARIO EN TIEMPO REAL • TODOS LOS DERECHOS RESERVADOS</span>
-          <span>HECHO EN LAS BARRANCAS DEL PARANÁ</span>
+          <span>© 2026 ROSARIO EN TIEMPO REAL • PERIODISMO DIGITAL INDEPENDIENTE</span>
+          <span>REDACCIÓN METROPOLITANA • ROSARIO, SANTA FE, ARGENTINA</span>
         </div>
       </div>
     </footer>

@@ -12,8 +12,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Rosario en Tiempo Real | Portal de Noticias & Crónica Fluvial',
-  description: 'Plataforma periodística digital e independiente de Rosario y el Gran Rosario. Cobertura en directo las 24 horas, cables fluviales, análisis histórico y seguimiento metropolitano.',
+  title: 'Rosario en Tiempo Real | Diario Digital & Monitoreo Metropolitano',
+  description: 'Plataforma periodística digital e independiente de Rosario y la región. Información verificada, cables de agencia y cobertura en directo las 24 horas.',
   keywords: [
     'Rosario',
     'Noticias Rosario',
@@ -24,12 +24,13 @@ export const metadata: Metadata = {
     'Hidrovía',
     'Puerto Rosario',
     'Monumento a la Bandera',
+    'Seguridad Rosario',
   ],
   authors: [{ name: 'Redacción Rosario en Tiempo Real' }],
   metadataBase: new URL('https://rosarioentiempreal.com.ar'),
   openGraph: {
-    title: 'Rosario en Tiempo Real | Portal de Noticias & Crónica Fluvial',
-    description: 'La velocidad de los cables, la jerarquía de un gran diario y la memoria rebelde de las barrancas.',
+    title: 'Rosario en Tiempo Real | Diario Digital & Monitoreo Metropolitano',
+    description: 'Información verificada, cables de agencia y cobertura continua las 24 horas.',
     type: 'website',
     locale: 'es_AR',
     siteName: 'Rosario en Tiempo Real',
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Rosario en Tiempo Real',
-    description: 'La velocidad de los cables, la jerarquía de un gran diario y la memoria rebelde de las barrancas.',
+    description: 'Información verificada, cables de agencia y cobertura continua las 24 horas.',
   },
   robots: {
     index: true,

@@ -83,38 +83,38 @@ export default function RedaccionPage() {
     let badge = 'INFORME DE REDACCIÓN';
 
     if (cable.originalTitle.toLowerCase().includes('banco') || cable.originalTitle.toLowerCase().includes('inflac') || cable.originalTitle.toLowerCase().includes('dólar')) {
-      satiricalTitle = 'Banqueros y operadores confirman que el dinero seguirá perdiendo valor pero con gráficos elegantes';
+      satiricalTitle = 'Mercados y finanzas: variables cambiarias y tasas de interés marcan la agenda económica';
       badge = 'ECONOMÍA & FINANZAS';
     } else if (cable.originalTitle.toLowerCase().includes('clima') || cable.originalTitle.toLowerCase().includes('río') || cable.originalTitle.toLowerCase().includes('paraná')) {
-      satiricalTitle = 'El río Paraná sigue bajando y subiendo según su propia voluntad sin consultar a los funcionarios de turno';
+      satiricalTitle = 'Hidrovía y ambiente: registros hidrométricos del río Paraná y condiciones de navegación';
       badge = 'RÍO PARANÁ & AMBIENTE';
     } else if (cable.originalTitle.toLowerCase().includes('puerto') || cable.originalTitle.toLowerCase().includes('soja') || cable.originalTitle.toLowerCase().includes('buque')) {
-      satiricalTitle = 'Ochenta barcos graneleros aguardan en rada mientras en los muelles debaten el menú de empanadas';
+      satiricalTitle = 'Operatoria agroexportadora: intensa actividad de carga y muelle en el Gran Rosario';
       badge = 'PUERTO & HIDROVÍA';
     } else if (cable.originalTitle.toLowerCase().includes('fútbol') || cable.originalTitle.toLowerCase().includes('clásico') || cable.originalTitle.toLowerCase().includes('central') || cable.originalTitle.toLowerCase().includes('newell')) {
-      satiricalTitle = 'Ambos bandos coinciden en que el clásico del domingo es cuestión de vida o muerte cívica';
+      satiricalTitle = 'Fútbol y clásico rosarino: expectativas y despliegue táctico de cara a la próxima fecha';
       badge = 'FÚTBOL ROSARINO';
     } else {
-      satiricalTitle = `Autoridades informan que la situación respecto a "${cable.originalTitle.slice(0, 42)}..." está bajo minuciosa observación`;
-      badge = 'DESPACHO DE URGENCIA';
+      satiricalTitle = cable.originalTitle;
+      badge = 'DESPACHO VERIFICADO';
     }
 
-    const dek = `Despacho verificado desde las terminales del Paraná: portavoces oficiales aseguraron que las medidas técnicas ya fueron redactadas y esperan firma ministerial.`;
+    const dek = `Crónica verificada por la Redacción central con datos contrastados y seguimiento de fuentes oficiales.`;
 
     const bodyParagraphs = [
-      `ROSARIO (De nuestra Redacción). Con la solemnidad que caracteriza a las grandes jornadas del Litoral, las autoridades competentes presentaron el informe de situación con copia a las catorce provincias.`,
-      `"Hemos alcanzado un entendimiento razonable con todos los sectores involucrados; el único detalle pendiente es cómo compaginarlo con el calendario civil", señaló un vocero consultado en la Bolsa de Comercio.`,
-      `El despacho concluyó con la ratificación de las guardias permanentes y el monitoreo ininterrumpido sobre la Hidrovía y los accesos metropolitanos.`,
+      `ROSARIO (Redacción Central). Las principales autoridades y organismos sectoriales confirmaron las líneas de acción prioritarias para el seguimiento de la coyuntura regional.`,
+      `El relevamiento destaca la importancia de sostener la previsibilidad operativa y garantizar la articulación fluida entre el sector público y el entramado productivo del Litoral.`,
+      `La cobertura continúa activa con actualizaciones en tiempo real y verificación continua de nuevos despachos informativos.`,
     ];
 
-    const quote = `"La realidad regional avanza siempre un paso antes que los discursos protocolares."`;
-    const imageCaption = `FOTO DE ARCHIVO: Terminal portuaria y dársenas del Gran Rosario durante la operatoria matutina. (Foto: Archivo de Prensa)`;
+    const quote = `"La información precisa y contrastada es la base del periodismo con rigor cívico."`;
+    const imageCaption = `FOTO DE PRENSA: Registro de la actividad en el área metropolitana de Rosario. (Archivo de Redacción)`;
 
     const steps = [
       '1. Recepción del despacho de ' + cable.source + '...',
-      '2. Cotejando datos y fuentes del Litoral...',
-      '3. Formulando titular oficial contrastado...',
-      '4. Redactando crónica periodística en 3 párrafos...',
+      '2. Cotejando datos y fuentes oficiales...',
+      '3. Formulando titular informativo contrastado...',
+      '4. Redactando crónica estructurada en 3 párrafos...',
       '5. Asociando fotografía de prensa y epígrafe...',
       '6. Despacho listo para publicación.',
     ];
@@ -385,7 +385,7 @@ export default function RedaccionPage() {
                       disabled={isStreaming}
                       className="font-mono"
                       style={{
-                        backgroundColor: 'var(--red-urgent)',
+                        backgroundColor: 'var(--blue-parana)',
                         color: '#FFFFFF',
                         border: 'none',
                         padding: '6px 12px',
@@ -395,7 +395,7 @@ export default function RedaccionPage() {
                         opacity: isStreaming ? 0.6 : 1,
                       }}
                     >
-                      ➔ REESCRIBIR AL ESTILO DEL DIARIO
+                      ➔ PROCESAR Y EDITAR NOTA
                     </button>
                   </div>
                 </div>
@@ -407,10 +407,10 @@ export default function RedaccionPage() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <h3 className="font-mono" style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                Mesa de Edición en Streaming (WebSocket)
+                Mesa de Edición y Procesamiento Editorial
               </h3>
               {isStreaming && (
-                <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--red-urgent)', fontWeight: 'bold' }}>
+                <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--blue-parana)', fontWeight: 'bold' }}>
                   ● TRANSMITIENDO PÁRRAFOS...
                 </span>
               )}
@@ -432,8 +432,8 @@ export default function RedaccionPage() {
                 gap: '8px',
               }}
             >
-              <span style={{ color: 'var(--red-urgent)', fontWeight: 'bold' }}>&gt;&gt;</span>
-              <span>{streamProgress || 'Seleccione un cable para iniciar el streaming periodístico...'}</span>
+              <span style={{ color: 'var(--blue-parana)', fontWeight: 'bold' }}>&gt;&gt;</span>
+              <span>{streamProgress || 'Seleccione un cable para iniciar el procesamiento editorial...'}</span>
             </div>
 
             {/* Resultado maquetado con estética editorial */}
@@ -441,24 +441,26 @@ export default function RedaccionPage() {
               <div
                 style={{
                   backgroundColor: 'var(--paper)',
-                  border: '2px solid var(--ink)',
+                  border: '1px solid var(--ink-faint)',
                   padding: '24px',
-                  boxShadow: '4px 4px 0px var(--ink)',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <span className="badge-deadpan">{rewrittenArticle.badge}</span>
-                  <span className="satire-stamp">REESCRIBIENDO LA REALIDAD</span>
+                  <span className="font-mono" style={{ fontSize: '0.7rem', color: 'var(--blue-parana)', fontWeight: 700 }}>
+                    EDICIÓN VERIFICADA
+                  </span>
                 </div>
 
-                {/* Gesto firma: Titular tachado en rojo oficial + Titular satírico */}
                 <div style={{ marginBottom: '16px' }}>
-                  <span className="strikethrough-official" style={{ fontSize: '1rem' }}>
-                    {rewrittenArticle.officialTitle}
-                  </span>
-                  <h2 className="satirical-correction" style={{ fontSize: '1.75rem', marginTop: '4px' }}>
+                  <h2 className="font-display" style={{ fontSize: '1.75rem', fontWeight: 900, marginTop: '4px', color: 'var(--ink)', lineHeight: 1.2 }}>
                     {rewrittenArticle.satiricalTitle}
                   </h2>
+                  <span className="font-mono" style={{ fontSize: '0.76rem', color: 'var(--ink-soft)' }}>
+                    Despacho de origen: {rewrittenArticle.source}
+                  </span>
                 </div>
 
                 {/* Copete */}
@@ -510,7 +512,7 @@ export default function RedaccionPage() {
                       cursor: 'pointer',
                     }}
                   >
-                    {publishedSuccess ? '✓ ¡PUBLICADO EN LA PORTADA!' : '🖨 IMPRIMIR EN PORTADA'}
+                    {publishedSuccess ? '✓ NOTA PUBLICADA CON ÉXITO' : 'PUBLICAR EN PORTADA'}
                   </button>
                 </div>
 

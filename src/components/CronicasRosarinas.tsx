@@ -467,14 +467,14 @@ export default function CronicasRosarinas({
                 letterSpacing: '0.06em',
               }}
             >
-              NOTA AL PASO • OBLIGATORIA
+              ESTUDIO SOCIOCULTURAL • IDENTIDAD DEPORTIVA
             </span>
             <span className="font-mono" style={{ fontSize: '0.8rem', color: 'var(--ink-soft)' }}>
-              CÓDIGO DE CONVIVENCIA REGIONAL N° 1
+              CULTURA POPULAR & COHESIÓN URBANA
             </span>
           </div>
           <span className="font-mono" style={{ fontSize: '0.75rem', color: 'var(--ink-soft)' }}>
-            LECTURA: 4 MINUTOS SIN GRITAR
+            TIEMPO DE LECTURA: 4 MINUTOS
           </span>
         </div>
 
@@ -487,7 +487,7 @@ export default function CronicasRosarinas({
             marginBottom: '8px',
           }}
         >
-          Manual de Iniciación para Extranjeros sobre la Religión Bíblica de Rosario
+          Ensayo Sociológico sobre la Polaridad del Fútbol Rosarino
         </h3>
         <p
           className="font-body"
@@ -500,7 +500,7 @@ export default function CronicasRosarinas({
             paddingBottom: '14px',
           }}
         >
-          Cómo dos escuelas inglesas, un tren de carga y un leprosario municipal crearon la única ciudad del país donde Boca y River producen lástima antropológica.
+          Génesis ferroviaria y pedagógica: cómo el antagonismo constructivo entre Rosario Central y Newell&apos;s Old Boys forjó la personalidad deportiva y social de la ciudad.
         </p>
 
         {/* Columnas del Origen de Central y Newell's */}
@@ -618,7 +618,7 @@ export default function CronicasRosarinas({
               color: 'var(--ink)',
             }}
           >
-            <strong>PRIMER MANDAMIENTO ROSARINO:</strong> En esta ciudad no existe ser &ldquo;simpatizante de River pero hincha de Central&rdquo; ni &ldquo;de Boca y un poco de Newell&apos;s&rdquo;. Proferir semejante herejía en una pizzería de Pellegrini o en un quiosco de Arroyito es causal inmediata de compasión médica. En Rosario la elección es binaria, vitalicia e irreversible hasta la cremación.
+            <strong>SINGULARIDAD IDENTITARIA:</strong> En Rosario la adhesión futbolística es excluyente y profundamente local. La polaridad entre Newell&apos;s Old Boys y Rosario Central estructura la vida cotidiana, las conversaciones públicas y la pertenencia barrial, constituyendo uno de los patrimonios intangibles más singulares de Sudamérica.
           </div>
         </div>
       </div>
@@ -634,100 +634,75 @@ export default function CronicasRosarinas({
       >
         {activeSection === 'portada' && (
           <div>
-            <span className="badge-deadpan">1812 — ACTA DE FUNDACIÓN POR DESOBEDIENCIA</span>
-            <h3 style={{ margin: '10px 0 14px 0' }}>
-              <span className="strikethrough-official">
-                El Triunvirato ordena conservar los colores hispánicos para mantener prudencia diplomática
-              </span>
-              <span className="satirical-correction" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)' }}>
-                Se desembarca en el barro rosarino, se cosen dos paños celestes y se declara fundada la insumisión nacional
-              </span>
+            <span className="badge-deadpan">1812 — BATERÍAS DEL PARANÁ Y GÉNESIS DE LA ENSEÑA PATRIA</span>
+            <h3 style={{ margin: '10px 0 14px 0', fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)' }}>
+              La creación de la enseña nacional en las barrancas y la afirmación de la soberanía civil
             </h3>
-            <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
-              Rosario es una de las pocas ciudades del continente americano que no fue fundada por ningún conquistador con espada y crucifijo, sino que se fue amontonando espontáneamente alrededor de una capilla humilde y el contrabando del río. Por eso, cuando los oficiales patriotas llegaron con sus tropas en 1812 y les preguntaron a los pobladores de qué lado estaban, los rosarinos simplemente respondieron: <em>&ldquo;Del que nos deje comerciar en paz sin pagarle alcabalas a Buenos Aires&rdquo;</em>.
+            <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
+              Rosario creció históricamente sin fundadores militares ni mercedes reales, articulada de forma espontánea alrededor de su orilla fluvial y su vocación de intercambio. En febrero de 1812, las baterías Libertad e Independencia no sólo vigilaron el paso de la escuadra realista: fueron el escenario donde se enarboló por vez primera el paño celeste y blanco, consolidando el compromiso de la población ribereña con la causa emancipadora.
             </p>
             <div className="font-mono" style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', borderTop: '1px solid var(--ink-faint)', paddingTop: '10px' }}>
-              ARCHIVO HISTÓRICO: 27 de febrero de 1812. Las baterías &ldquo;Libertad&rdquo; e &ldquo;Independencia&rdquo; registraron un total de cero disparos contra naves reales pero cien por ciento de efectividad cívica.
+              REGISTRO HISTÓRICO: 27 de febrero de 1812. Baterías Libertad e Independencia en las costas del Pago de los Arroyos.
             </div>
           </div>
         )}
 
         {activeSection === 'seguridad' && (
           <div>
-            <span className="badge-deadpan">SEGURIDAD & CIUDAD — DE LOS CAÑONES AL ANILLO DIGITAL</span>
-            <h3 style={{ margin: '10px 0 14px 0' }}>
-              <span className="strikethrough-official">
-                Comisión bicameral promete pacificación integral mediante 400 folletos impresos en papel satinado
-              </span>
-              <span className="satirical-correction" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)' }}>
-                El vigía del río observa 180 domos de inteligencia artificial en Circunvalación y pregunta por qué no apuntan al puerto porteño
-              </span>
+            <span className="badge-deadpan">SEGURIDAD & CIUDAD — SISTEMA INTEGRADO DE MONITOREO</span>
+            <h3 style={{ margin: '10px 0 14px 0', fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)' }}>
+              Despliegue operativo y tecnología analítica en los corredores metropolitanos
             </h3>
-            <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
-              En 1812, la seguridad metropolitana de Rosario consistía en cuatro cañones de bronce apuntando a los camalotes del Paraná con la esperanza de que ningún bergantín español supiera nadar. Doscientos catorce años después, un anillo perimetral con algoritmos de visión nocturna y reconocimiento de matrículas escanea cada colectivo que ingresa por la Autopista a Córdoba. La única constante es el viento del este, que sigue oliendo a humo de islas y café tostado.
+            <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
+              La gestión del orden público en el conglomerado urbano incorpora herramientas de videovigilancia de última generación: más de 180 domos de alta resolución con lectura automática de patentes y reconocimiento óptico sobre Avenida de Circunvalación y los accesos provinciales. La articulación permanente entre fuerzas locales, provinciales y federales busca garantizar la trazabilidad y la respuesta inmediata ante emergencias.
             </p>
             <div className="font-mono" style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', borderTop: '1px solid var(--ink-faint)', paddingTop: '10px' }}>
-              CENTRO DE MONITOREO METROPOLITANO: 180 cámaras activas, 42 patrullas de alta frecuencia y tres millones de mates cebados por guardia.
+              CENTRO DE MONITOREO METROPOLITANO: Vigilancia continua en cuadrantes estratégicos y coordinación multiagencial.
             </div>
           </div>
         )}
 
         {activeSection === 'economia' && (
           <div>
-            <span className="badge-deadpan">ECONOMÍA & HIDROVÍA — LA REBELIÓN DEL PUERTO LIBRE</span>
-            <h3 style={{ margin: '10px 0 14px 0' }}>
-              <span className="strikethrough-official">
-                Aduana Central celebra récord de retenciones agropecuarias aplicadas desde oficinas con aire acondicionado en Balcarce 50
-              </span>
-              <span className="satirical-correction" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)' }}>
-                Ochenta buques ultramarinos cargan la riqueza de la pampa húmeda frente a las barrancas mientras Rosario paga la nafta más cara del país
-              </span>
+            <span className="badge-deadpan">ECONOMÍA & HIDROVÍA — EL NODO AGROEXPORTADOR GLOBAL</span>
+            <h3 style={{ margin: '10px 0 14px 0', fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)' }}>
+              La cuenca del Paraná y su infraestructura de ultramar como motor productivo
             </h3>
-            <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
-              En 1852, se creó la Aduana de Rosario con derechos diferenciales para que los barcos europeos no tuvieran que arrodillarse ante el puerto de Buenos Aires. Ciento setenta y cuatro años después, la Hidrovía Paraná-Paraguay es la arteria por donde sale el 80% de la harina y aceite de soja de la República. El Paraná es marrón, espeso y majestuoso: lleva en su corriente más dólares que toda la City porteña, pero los rosarinos todavía tienen que cruzar a Entre Ríos en balsa si hay niebla en el puente.
+            <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
+              Desde su habilitación como puerto de ultramar en 1852, las terminales del Gran Rosario conforman el complejo agroindustrial y portuario más eficiente del Cono Sur, canalizando cerca del 80% de las exportaciones agroalimentarias de la Argentina. Con un calado navegable mantenido a 34 pies, el canal troncal de la Hidrovía Paraná-Paraguay conecta directamente la producción de la pampa húmeda con los mercados asiáticos y europeos.
             </p>
             <div className="font-mono" style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', borderTop: '1px solid var(--ink-faint)', paddingTop: '10px' }}>
-              DATO LOGÍSTICO: Calado oficial en 34 pies. Tiempo promedio de carga de un Panamax: 28 horas continuas al son de cumbia santafesina.
+              DATOS DE OPERATORIA: Despacho ininterrumpido en muelles privados y estatales; monitoreo hidrométrico diario.
             </div>
           </div>
         )}
 
         {activeSection === 'futbol' && (
           <div>
-            <span className="badge-deadpan">FÚTBOL & PSICOLOGÍA COLECTIVA</span>
-            <h3 style={{ margin: '10px 0 14px 0' }}>
-              <span className="strikethrough-official">
-                Sociólogos sugieren tomar el clásico con mesura, tranquilidad y perspectiva existencial
-              </span>
-              <span className="satirical-correction" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)' }}>
-                Un millón de ciudadanos suspende el raciocinio durante 96 horas y calcula probabilidades con el almanaque en la mano
-              </span>
+            <span className="badge-deadpan">FÚTBOL & FENOMENOLOGÍA SOCIAL</span>
+            <h3 style={{ margin: '10px 0 14px 0', fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)' }}>
+              El clásico rosarino: liturgia urbana y arraigo barrial incondicional
             </h3>
-            <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
-              El clásico rosarino no es un partido de fútbol: es un juicio universal de noventa minutos donde el perdedor es condenado a seis meses de silencio sepulcral en el asado de los domingos y el ganador adquiere inmunidad parlamentaria para recordar cualquier córner hasta el fin de los tiempos. Quien intente explicar la teoría del juego con números y posesión de balón nunca vio a un abuelo llorar de rodillas en la vereda de Génova y Cordiviola.
+            <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
+              El duelo futbolístico de la ciudad representa uno de los fenómenos de pasión colectiva más intensos de América Latina. Distribuida de manera equilibrada y fervorosa a lo largo de las seccionales, la rivalidad entre Newell&apos;s Old Boys y Rosario Central moviliza a la sociedad con semanas de antelación, conjugando historia, literatura popular y una lealtad deportiva que trasciende generaciones.
             </p>
             <div className="font-mono" style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', borderTop: '1px solid var(--ink-faint)', paddingTop: '10px' }}>
-              ESTADO DEL CLÁSICO: Localidades agotadas tanto en el Coloso Marcelo Bielsa como en el Gigante de Arroyito. Prohibido hablar de otra cosa.
+              COBERTURA DEPORTIVA: Acreditación de prensa internacional y despliegue preventivo en el Parque de la Independencia y Arroyito.
             </div>
           </div>
         )}
 
         {activeSection === 'cultura' && (
           <div>
-            <span className="badge-deadpan">CULTURA & NOCHE — DE PICHINCHA AL RÍO</span>
-            <h3 style={{ margin: '10px 0 14px 0' }}>
-              <span className="strikethrough-official">
-                Guía turística europea describe a Pichincha como un apacible barrio residencial de clase media acomodada
-              </span>
-              <span className="satirical-correction" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)' }}>
-                El antiguo reino de Madame Safó y la Zwi Migdal reconvertido en santuario del vermut tirado y el sándwich Carlitos
-              </span>
+            <span className="badge-deadpan">CULTURA & SOCIEDAD — MEMORIA Y TRANSFORMACIÓN URBANA</span>
+            <h3 style={{ margin: '10px 0 14px 0', fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)' }}>
+              De antiguo barrio ferroportuario a polo gastronómico y creativo contemporáneo
             </h3>
-            <p style={{ fontSize: '1.1rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
-              Hacia 1930, el barrio de Pichincha era el epicentro prostibulario más temido y cinematográfico del Río de la Plata, gobernado por rufianes polacos y franceses con bigote engominado. Hoy los viejos burdeles son cervecerías artesanales donde diseñadores gráficos discuten tipografías comiendo un Carlitos tostado con lomito y queso derretido. La metamorfosis urbana fue total, salvo por la humedad del río, que sigue entrando sin pedir permiso por la calle Jujuy.
+            <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--ink-soft)', marginBottom: '16px' }}>
+              El tradicional sector de Pichincha y el Bajo ha protagonizado un virtuoso proceso de revalorización patrimonial. Aquellas esquinas de intensa actividad obrera y ferroviaria de comienzos del siglo XX conviven hoy con galerías de arte independiente, talleres de diseño, propuestas gastronómicas de vanguardia y el clásico sándwich Carlitos como estandarte del encuentro social rosarino.
             </p>
             <div className="font-mono" style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', borderTop: '1px solid var(--ink-faint)', paddingTop: '10px' }}>
-              PATRIMONIO INMATERIAL: El Carlitos tostado en pan de miga con manteca y ketchup no se negocia. Cualquier intento de ponerle palta es delito federal.
+              CIRCUITO PATRIMONIAL: Preservación de arquitectura histórica y fomento a las industrias creativas locales.
             </div>
           </div>
         )}

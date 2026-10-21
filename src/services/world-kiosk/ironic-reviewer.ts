@@ -32,7 +32,7 @@ export function enrichCableWithIronicReview(cable: CableItem): CableItem {
 export function generateIronicReview(input: ReviewInput): IronicReviewResult {
   const text = `${input.title} ${input.summary || ''} ${input.category || ''}`.toLowerCase();
 
-  // 0. Identidad Ribereña, Puertos, Hidrovía, Granos y Retenciones
+  // 0. Identidad Ribereña, Puertos, Hidrovía, Granos y Logística
   if (
     text.includes('hidrov') ||
     text.includes('puerto') ||
@@ -44,12 +44,12 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
     text.includes('panamax')
   ) {
     const reviews = [
-      'Ochenta buques ultramarinos cargan la riqueza de la pampa húmeda frente a las barrancas mientras en Buenos Aires festejan retenciones con aire acondicionado.',
-      'El río Paraná lleva más dólares que toda la City porteña, pero los rosarinos todavía pagan el combustible más caro del país.',
-      'Treinta y cuatro pies de calado oficial garantizados al son de cumbia santafesina mientras la burocracia centralista pide sellados por duplicado.',
+      'El complejo agroexportador del Gran Rosario y el dragado de la Hidrovía Paraná-Paraguay son determinantes para la competitividad y el ingreso de divisas de la economía nacional.',
+      'La logística fluvial sobre el río Paraná moviliza el mayor volumen de granos de la región, demandando previsibilidad en los accesos y obras de infraestructura sostenidas.',
+      'El calado garantizado a 34 pies permite el tránsito continuo de buques ultramarinos que conectan la producción agroindustrial de Santa Fe con los mercados globales.',
     ];
     return {
-      warningTag: 'BARRANCAS & HIDROVÍA',
+      warningTag: 'HIDROVÍA & LOGÍSTICA FLUVIAL',
       ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
       originalIntact: true,
     };
@@ -72,12 +72,12 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
     )
   ) {
     const reviews = [
-      'En esta ciudad la elección es binaria, vitalicia e irreversible hasta la cremación: o vapor, riel y grasa obrera, o academia, tiza y cuero inglés.',
-      'En Rosario no existe ser simpatizante de River o de Boca: semejante tibieza en una pizzería de Pellegrini o en un quiosco de Arroyito es causal de compasión médica.',
-      'Once jugadores en la cancha definirán si la ciudad sonríe con prepotencia o si los vecinos se miran de reojo en la cola del almacén hasta el próximo clásico.',
+      'El clásico del fútbol rosarino moviliza a la comunidad entera, exigiendo dispositivos integrales de seguridad y ensayos tácticos rigurosos en ambos clubes.',
+      'La pasión de las hinchadas en el Gigante de Arroyito y el Coloso del Parque constituye un patrimonio deportivo y cultural único en el mapa futbolístico argentino.',
+      'Ambos cuerpos técnicos ajustan detalles tácticos y alineaciones titulares ante un cotejo de alta gravitación en la tabla de posiciones.',
     ];
     return {
-      warningTag: 'RELIGIÓN BÍBLICA ROSARINA',
+      warningTag: 'CLÁSICO & ACTUALIDAD DEPORTIVA',
       ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
       originalIntact: true,
     };
@@ -96,12 +96,12 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
     text.includes('deuda')
   ) {
     const reviews = [
-      'Analistas financieros confirman que el dinero seguirá rindiendo menos, pero celebran que la curva del desastre tiene un diseño impecable.',
-      'Especialistas explican que la pérdida del poder adquisitivo era inevitable según un complejo gráfico que solo entienden ellos.',
-      'Banqueros centrales aconsejan moderación y calma mientras revisan sus bonos anuales con café de especialidad.',
+      'El poder adquisitivo del dinero y la trayectoria de la inflación imponen cautela en las decisiones de inversión y en la planificación del presupuesto familiar.',
+      'Analistas del mercado financiero evalúan el impacto de las tasas de interés sobre el crédito productivo y la estabilidad cambiaria.',
+      'Las autoridades monetarias monitorean la liquidez y el valor del dinero frente a las presiones de precios en los principales centros urbanos.',
     ];
     return {
-      warningTag: 'ALERTA DE GRÁFICO ELEGANTE',
+      warningTag: 'CONTEXTO FINANCIERO',
       ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
       originalIntact: true,
     };
@@ -116,12 +116,12 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
     text.includes('elon musk')
   ) {
     const reviews = [
-      'Multimillonarios de Silicon Valley aseguran que esta nueva actualización salvará a la humanidad, siempre y cuando no canceles la suscripción mensual.',
-      'Un algoritmo predice que todos los empleos serán reemplazados por pantallas que muestran errores en tipografía Helvetica.',
-      'Empresas tecnológicas anuncian con bombos y platillos una función que ya existía en 2004 pero ahora tiene luces de neón.',
+      'El avance de la inteligencia artificial y los nuevos algoritmos redefinen la productividad laboral, impulsando marcos regulatorios para garantizar transparencia.',
+      'Grandes empresas tecnológicas aceleran la integración de automatización inteligente en los procesos corporativos y los servicios digitales.',
+      'Expertos señalan la necesidad de capacitación continua frente a la adopción de algoritmos avanzados en la economía del conocimiento.',
     ];
     return {
-      warningTag: 'HUMO DE SILICON VALLEY',
+      warningTag: 'FUTURO TECNOLÓGICO & ALGORITMOS',
       ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
       originalIntact: true,
     };
@@ -140,12 +140,12 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
     text.includes('embajad')
   ) {
     const reviews = [
-      'Veinte delegaciones volaron en primera clase para comprometerse formalmente a redactar un próximo borrador no vinculante.',
-      'Diplomáticos de alta alcurnia declaran "profunda preocupación" ante la cámara mientras evalúan el menú de la cena oficial.',
-      'Las partes alcanzaron un consenso histórico: volver a reunirse en una ciudad europea con mejor clima.',
+      'Las delegaciones diplomáticas buscan consolidar acuerdos multilaterales con metas verificables para garantizar estabilidad en las cadenas de suministro.',
+      'Los pronunciamientos conjuntos reflejan negociaciones complejas para conciliar intereses soberanos en foros de cooperación internacional.',
+      'Los organismos internacionales priorizan el diálogo diplomático y la articulación comercial como pilares de resolución pacífica de controversias.',
     ];
     return {
-      warningTag: 'CHAMUYO PROTOCOLAR',
+      warningTag: 'DIPLOMACIA & POLÍTICA EXTERIOR',
       ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
       originalIntact: true,
     };
@@ -162,18 +162,18 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
     text.includes('cop')
   ) {
     const reviews = [
-      'Se anuncian severos compromisos de reducción de emisiones para cuando ninguno de los funcionarios presentes esté con vida para rendir cuentas.',
-      'Científicos confirman que el calor en verano y el frío en invierno son alarmantes según el último powerpoint.',
-      'Prometen plantar árboles en algún continente lejano tras gastar toneladas de combustible de aviación.',
+      'Los informes meteorológicos y ambientales destacan la urgencia de inversiones en infraestructura hídrica resiliente ante eventos climáticos severos.',
+      'Las metas de transición energética exigen financiamiento sustentable y compromisos de reducción de emisiones por parte de los principales emisores globales.',
+      'Científicos del clima advierten sobre la variabilidad de precipitaciones y su impacto directo en los rindes agropecuarios de la cuenca del Plata.',
     ];
     return {
-      warningTag: 'PROMESAS A 2050',
+      warningTag: 'TRANSICIÓN ECOLÓGICA & CLIMA',
       ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
       originalIntact: true,
     };
   }
 
-  // 5. Deportes, Fútbol
+  // 5. Deportes, Fútbol general
   if (
     text.includes('fútbol') ||
     text.includes('futbol') ||
@@ -185,12 +185,12 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
     text.includes('fichaje')
   ) {
     const reviews = [
-      'Once millonarios corriendo en pantalones cortos definirán el estado anímico y la estabilidad cívica de millones hasta el domingo.',
-      'El director técnico declara que "el grupo está fuerte" minutos antes de que la comisión directiva prepare su telegrama.',
-      'Tragedia nacional evitada gracias a que una pelota de cuero pegó en el poste izquierdo.',
+      'El rendimiento de los planteles y las decisiones de los cuerpos técnicos marcan el desarrollo de una fecha clave en el calendario deportivo.',
+      'El mercado de pases y la gestión de recursos de los clubes profesionales concentran la atención de analistas y simpatizantes.',
+      'La preparación física y el trabajo táctico semanal definen las chances de competencia en los certámenes de primera división.',
     ];
     return {
-      warningTag: 'GRAVEDAD EXISTENCIAL DOMINGUERA',
+      warningTag: 'ANÁLISIS DEPORTIVO',
       ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
       originalIntact: true,
     };
@@ -207,12 +207,12 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
     text.includes('campaña')
   ) {
     const reviews = [
-      'El oficialismo asegura que todo marcha según lo planeado, mientras la oposición promete arreglarlo todo destruyendo lo anterior.',
-      'Se aprueba una comisión investigadora para determinar por qué las comisiones anteriores no investigaron nada.',
-      'Líderes políticos prometen austeridad implacable desde despachos recién alfombrados.',
+      'El debate parlamentario y los acuerdos interbloques definen el avance de iniciativas legislativas con impacto presupuestario e institucional.',
+      'Los líderes de las distintas fuerzas políticas fijan posicionamientos públicos de cara a las próximas instancias del calendario cívico.',
+      'Analistas institucionales señalan la importancia del consenso federal para garantizar la gobernabilidad y la solidez de las políticas de Estado.',
     ];
     return {
-      warningTag: 'OPTIMISMO NO CHEQUEADO',
+      warningTag: 'BALANCE POLÍTICO & INSTITUCIONAL',
       ironicReview: reviews[Math.abs(hashString(input.title)) % reviews.length],
       originalIntact: true,
     };
@@ -220,14 +220,14 @@ export function generateIronicReview(input: ReviewInput): IronicReviewResult {
 
   // Fallback general / Noticias de sociedad y misceláneas
   const fallbackReviews = [
-    'El artículo promete revelaciones impactantes sobre cuestiones que ya sospechábamos desde el martes pasado.',
-    'Portavoces oficiales confirmaron que la situación está bajo minuciosa observación mientras esperan que el problema se resuelva solo.',
-    'Testigos presenciales afirman que todo ocurrió exactamente como no debería haber ocurrido.',
-    'Expertos coinciden en que la solución existe, pero implementarla requeriría trabajar un fin de semana.',
+    'Despacho verificado con seguimiento editorial continuo y cotejo de fuentes de primera línea.',
+    'Información de actualidad contrastada por la Redacción para brindar contexto claro y objetivo.',
+    'Seguimiento periodístico integral sobre los acontecimientos destacados del ámbito metropolitano e internacional.',
+    'Cobertura en tiempo real con datos chequeados y atribución directa a las agencias oficiales de noticias.',
   ];
 
   return {
-    warningTag: 'ADVERTENCIA AL LECTOR',
+    warningTag: 'SÍNTESIS EDITORIAL',
     ironicReview: fallbackReviews[Math.abs(hashString(input.title)) % fallbackReviews.length],
     originalIntact: true,
   };

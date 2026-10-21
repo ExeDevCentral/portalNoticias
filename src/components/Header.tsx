@@ -75,16 +75,16 @@ export default function Header({ currentCategory }: HeaderProps) {
         </Link>
 
         <p
-          className="font-body"
+          className="font-mono"
           style={{
-            fontSize: '1.15rem',
-            fontStyle: 'italic',
+            fontSize: '0.8rem',
             color: 'var(--ink-soft)',
-            maxWidth: '680px',
-            margin: '0 auto',
+            letterSpacing: '0.04em',
+            margin: '8px auto 0 auto',
+            textTransform: 'uppercase',
           }}
         >
-          &ldquo;La velocidad de los cables, la jerarquía de un gran diario y la memoria rebelde de las barrancas&rdquo;
+          Periodismo independiente, cables de agencia y cobertura metropolitana continua
         </p>
 
         <div className="rule-double" />
