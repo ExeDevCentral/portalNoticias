@@ -676,3 +676,38 @@ body {
   color: #93C5FD;
 }
 
+
+/* Mobile Editorial News Feed Enhancements */
+@media (max-width: 768px) {
+  .news-grid, .editorial-subgrid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .news-card-img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 8px;
+  }
+  .editorial-headline {
+    font-size: clamp(1.35rem, 5vw, 1.85rem) !important;
+    line-height: 1.25 !important;
+  }
+  .breaking-ticker {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+  .category-pill {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .editorial-container {
+    padding-inline: 12px !important;
+  }
+}
