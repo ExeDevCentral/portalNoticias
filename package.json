@@ -27,5 +27,12 @@
     "drizzle-kit": "^0.31.11",
     "typescript": "^5.7.3",
     "vitest": "^5.0.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExeDevCentral/portalNoticias.git"
+  },
+  "homepage": "https://github.com/ExeDevCentral/portalNoticias",
+  "description": "Portal de noticias desarrollado con Next.js.",
+  "license": "MIT"
 }
